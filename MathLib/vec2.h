@@ -7,6 +7,11 @@ union vec2
 
 	//access by individual component
 	struct { float x, y; };
+
+	float operator[](int x) 
+	{
+		return  v[x];
+	}
 };
 
 // arithmetic operators

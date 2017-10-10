@@ -36,6 +36,9 @@ int main()
 	vecZ -= vecA;
 	printVec2(vecZ);
 
+	std::cout << vecZ[0] << std::endl;
+
+
 	getchar();
 	return 0;
 }
