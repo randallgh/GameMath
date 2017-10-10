@@ -25,6 +25,17 @@ int main()
 	printVec2(vecE);
 	printVec2(vecF);
 
+	printVec2(vecE / 2);
+	printVec2(-vecE);
+
+	vec2 vecZ = { 0,0 };
+	vecZ += vecA;
+	vecZ += vecA;
+	printVec2(vecZ);
+
+	vecZ -= vecA;
+	printVec2(vecZ);
+
 	getchar();
 	return 0;
 }
