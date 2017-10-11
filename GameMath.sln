@@ -12,6 +12,11 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "X-TestSpace", "X-TestSpace\
 		{3587AB14-BF56-4179-A514-215B1EFC9469} = {3587AB14-BF56-4179-A514-215B1EFC9469}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "X-SFWTest", "X-SFWTest\X-SFWTest.vcxproj", "{0C394268-05ED-4BE5-8135-9560C9738717}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3587AB14-BF56-4179-A514-215B1EFC9469} = {3587AB14-BF56-4179-A514-215B1EFC9469}
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -44,6 +49,14 @@ Global
 		{6DAA28E7-04B0-40A1-8CD3-58FC3C3C3639}.Release|x64.Build.0 = Release|x64
 		{6DAA28E7-04B0-40A1-8CD3-58FC3C3C3639}.Release|x86.ActiveCfg = Release|Win32
 		{6DAA28E7-04B0-40A1-8CD3-58FC3C3C3639}.Release|x86.Build.0 = Release|Win32
+		{0C394268-05ED-4BE5-8135-9560C9738717}.Debug|x64.ActiveCfg = Debug|x64
+		{0C394268-05ED-4BE5-8135-9560C9738717}.Debug|x64.Build.0 = Debug|x64
+		{0C394268-05ED-4BE5-8135-9560C9738717}.Debug|x86.ActiveCfg = Debug|Win32
+		{0C394268-05ED-4BE5-8135-9560C9738717}.Debug|x86.Build.0 = Debug|Win32
+		{0C394268-05ED-4BE5-8135-9560C9738717}.Release|x64.ActiveCfg = Release|x64
+		{0C394268-05ED-4BE5-8135-9560C9738717}.Release|x64.Build.0 = Release|x64
+		{0C394268-05ED-4BE5-8135-9560C9738717}.Release|x86.ActiveCfg = Release|Win32
+		{0C394268-05ED-4BE5-8135-9560C9738717}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
