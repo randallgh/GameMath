@@ -1,11 +1,33 @@
 #include <iostream>
+#include <cassert>
+
 
 #include "mathutils.h"
 #include "vec2.h"
+#include "vec3.h"
 
 void printVec2(vec2 vec);
 
 int main() 
+{
+	//vector2s();
+	{
+		vec3 v1 = { 0,0,0 };
+		vec3 v2 = { 1,0,0 };
+		assert(v1 != v2);
+	};
+
+	{
+		vec3 v1 = { 0,0,0 };
+		vec3 v2 = { 1,1,1 };
+		assert((v1 += v2) == v2);
+	};
+
+	getchar();
+	return 0;
+}
+
+void vector2s()
 {
 	std::cout << min(9, 0) << std::endl;
 	std::cout << max(9, 0) << std::endl;
@@ -37,10 +59,6 @@ int main()
 	printVec2(vecZ);
 
 	std::cout << vecZ[0] << std::endl;
-
-
-	getchar();
-	return 0;
 }
 
 void printVec2(vec2 vec)
