@@ -129,7 +129,7 @@ vec2 normal(const vec2 v)
 vec2 normalize(vec2 &v)
 {
 	v /= magnitude(v);
-	return vec2();
+	return v;
 }
 
 float dot(vec2 &v1, vec2 &v2)

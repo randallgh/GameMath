@@ -1,4 +1,5 @@
 #pragma once
+
 #include "vec2.h"
 
 class Player
@@ -11,5 +12,6 @@ public:
 	vec2 velocity;
 
 	void draw();
+	void update();
 };
 

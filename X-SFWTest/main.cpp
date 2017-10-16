@@ -14,10 +14,11 @@ int main()
 	vec2 test = { 0,0 };
 	Player player;
 	player.position = { 200,200 };
+	player.velocity = { 1,1 };
 
 	while (sfw::stepContext())
 	{
-		std::cout << test.x << std::endl;
+		player.update();
 		player.draw();
 	}
 

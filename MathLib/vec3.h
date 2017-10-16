@@ -30,3 +30,16 @@ vec3 &operator/=(vec3 &lhs, const float rhs);
 // logical operators
 bool operator==(const vec3 &lhs, const vec3 &rhs);
 bool operator!=(const vec3 &lhs, const vec3 &rhs);
+
+//Function
+vec3 min(vec3 a, vec3 b);
+vec3 max(vec3 a, vec3 b);
+float magnitude(const vec3 v);
+vec3 normal(const vec3 v);
+vec3 normalize(vec3 &v);
+float dot(vec3 &v1, vec3 &v2);
+//Use this for two points
+float distance(vec3 &v1, vec3 &v2);
+vec3 &clamp(vec3 &v, const vec3 &min, const vec3 &max);
+
+vec3 cross(vec3 &v, vec3 &w);

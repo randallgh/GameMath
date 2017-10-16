@@ -23,6 +23,40 @@ int main()
 		assert((v1 += v2) == v2);
 	};
 
+	{
+		vec3 v1 = { 0,0,0 };
+		vec3 v2 = { 1,1,1 };
+		assert(min(v1,v2) == v1);
+	};
+
+	{
+		vec3 v1 = { 0,0,0 };
+		vec3 v2 = { 1,1,1 };
+		assert(max(v1, v2) == v2);
+	};
+
+	{
+		vec3 v1 = { 0,0,0 };
+		vec3 v2 = { 1,1,1 };
+		for (int i = 0; i < 200; ++i)
+		{
+			v1 *= i;
+			v2 *= i;
+			assert(min(v1,v2) == v1);
+		}
+	};
+
+	{
+		vec3 v1 = { 0,0,0 };
+		vec3 v2 = { 1,1,1 };
+
+		v1[0] = 1;
+		v1[1] = 1;
+		v1[2] = 1;
+
+		assert(v1 == v2);
+	}
+
 	getchar();
 	return 0;
 }

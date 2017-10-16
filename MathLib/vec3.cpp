@@ -27,13 +27,13 @@ vec3 operator-(const vec3 & lhs, const vec3 & rhs)
 
 vec3 operator*(const vec3 & lhs, const float & rhs)
 {
-	vec3 retval = { lhs.x - rhs, lhs.y - rhs, lhs.z - rhs };
+	vec3 retval = { lhs.x * rhs, lhs.y * rhs, lhs.z * rhs };
 	return retval;
 }
 
 vec3 operator*(const float & lhs, const vec3 & rhs)
 {
-	vec3 retval = { lhs - rhs.x, lhs - rhs.y, lhs - rhs.z };
+	vec3 retval = { lhs * rhs.x, lhs * rhs.y, lhs * rhs.z };
 	return retval;
 }
 
@@ -93,4 +93,69 @@ bool operator!=(const vec3 & lhs, const vec3 & rhs)
 		return false;
 	}
 	return true;
+}
+
+vec3 min(vec3 a, vec3 b)
+{
+	return magnitude(a) < magnitude(b) ? a : b;
+}
+
+vec3 max(vec3 a, vec3 b)
+{
+	return magnitude(a) > magnitude(b) ? a : b;
+}
+
+float magnitude(const vec3 v)
+{
+	return sqrt(pow(v.x, 2) + pow(v.y, 2) + pow(v.z, 2));
+}
+
+vec3 normal(const vec3 v)
+{
+	vec3 retval = v / magnitude(v);
+	return retval;
+}
+
+vec3 normalize(vec3 & v)
+{
+	v /= magnitude(v);
+	return v;
+}
+
+float dot(vec3 & v1, vec3 & v2)
+{
+	return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
+}
+
+float distance(vec3 & v1, vec3 & v2)
+{
+	return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v2.y, 2) + pow(v2.z - v2.z, 2));
+}
+
+vec3 &clamp(vec3 & v, const vec3 & min, const vec3 & max)
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		if (v[i] >= max[i])
+		{
+			v[i] = max[i];
+		}
+		if (v[i] <= min[i])
+		{
+			v[i] = min[i];
+		}
+	}
+	
+	return v;
+}
+
+vec3 cross(vec3 & v, vec3 & w)
+{
+	vec3 retval = {};
+
+	retval.x =	 (v.y * w.z) - (v.z * w.y);
+	retval.y = -((v.x * w.z) - (v.z * w.x));
+	retval.z =   (v.x * w.y) - (v.y * w.x);
+
+	return retval;
 }

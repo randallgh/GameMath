@@ -10,10 +10,14 @@ Player::Player()
 
 Player::~Player()
 {
-
 }
 
 void Player::draw()
 {
 	sfw::drawCircle(position.x, position.y, 10, 12, WHITE);
+}
+
+void Player::update()
+{
+	position += velocity * sfw::getDeltaTime();
 }
