@@ -4,12 +4,24 @@
 #include "mathutils.h"
 #include "vec2.h"
 #include "vec3.h"
+#include "mat3x3.h"
 
 void printVec2(vec2 vec);
 
 int main() 
 {
 	//vector2s();
+	//vector3s();
+
+
+
+	getchar();
+	return 0;
+}
+
+void vector3s()
+{
+	
 	{
 		vec3 v1 = { 0,0,0 };
 		vec3 v2 = { 1,0,0 };
@@ -25,7 +37,7 @@ int main()
 	{
 		vec3 v1 = { 0,0,0 };
 		vec3 v2 = { 1,1,1 };
-		assert(min(v1,v2) == v1);
+		assert(min(v1, v2) == v1);
 	};
 
 	{
@@ -41,7 +53,7 @@ int main()
 		{
 			v1 *= i;
 			v2 *= i;
-			assert(min(v1,v2) == v1);
+			assert(min(v1, v2) == v1);
 		}
 	};
 
@@ -56,8 +68,6 @@ int main()
 		assert(v1 == v2);
 	}
 
-	getchar();
-	return 0;
 }
 
 void vector2s()
