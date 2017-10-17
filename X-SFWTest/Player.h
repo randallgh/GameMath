@@ -10,6 +10,9 @@ public:
 
 	vec2 position;
 	vec2 velocity;
+	vec2 acceleration;
+
+	float mass;
 
 	void draw();
 	void update();

@@ -159,6 +159,22 @@ vec2 lerp(vec2 start, vec2 end, float a)
 	return retval;
 }
 
+vec2 clamp(vec2 & v, const vec2 & min, const vec2 & max)
+{
+	for (int i = 0; i < 2; ++i)
+	{
+		if (v[i] >= max[i])
+		{
+			v[i] = max[i];
+		}
+		if (v[i] <= min[i])
+		{
+			v[i] = min[i];
+		}
+	}
+	return v;
+}
+
 vec2 min(vec2 a, vec2 b)
 {
 	return magnitude(a) < magnitude(b) ? a : b;

@@ -19,5 +19,6 @@ void Player::draw()
 
 void Player::update()
 {
+	velocity = velocity + acceleration * sfw::getDeltaTime();
 	position += velocity * sfw::getDeltaTime();
 }

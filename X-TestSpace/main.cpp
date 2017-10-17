@@ -1,7 +1,6 @@
 #include <iostream>
 #include <cassert>
 
-
 #include "mathutils.h"
 #include "vec2.h"
 #include "vec3.h"
