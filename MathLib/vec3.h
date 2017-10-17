@@ -37,9 +37,9 @@ vec3 max(vec3 a, vec3 b);
 float magnitude(const vec3 v);
 vec3 normal(const vec3 v);
 vec3 normalize(vec3 &v);
-float dot(vec3 &v1, vec3 &v2);
+float dot(const vec3 &v1, const vec3 &v2);
 //Use this for two points
 float distance(vec3 &v1, vec3 &v2);
 vec3 &clamp(vec3 &v, const vec3 &min, const vec3 &max);
 
-vec3 cross(vec3 &v, vec3 &w);
+vec3 cross(const vec3 &v, const vec3 &w);

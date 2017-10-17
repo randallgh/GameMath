@@ -7,12 +7,29 @@
 #include "mat3x3.h"
 
 void printVec2(vec2 vec);
+void printVec3(vec3 vec);
+
+void printMat3(mat3x3 &A)
+{
+	for (int i = 0; i < 3; ++i)
+	{
+		std::cout << A.m[i * 3] << A.m[(i * 3) + 1] << A.m[(i * 3) + 2] << std::endl;
+	}
+}
 
 int main() 
 {
 	//vector2s();
 	//vector3s();
 
+	mat3x3 test = mat3x3::identity();
+	printMat3(test);
+
+	printMat3(test * test);
+
+	printVec3(test[0]);
+	printVec3(test[1]);
+	printVec3(test[2]);
 
 
 	getchar();
@@ -107,4 +124,9 @@ void vector2s()
 void printVec2(vec2 vec)
 {
 	std::cout << "x: " << vec.x << " y: " << vec.y << std::endl;
+}
+
+void printVec3(vec3 vec)
+{
+	std::cout << "x: " << vec.x << " y: " << vec.y << " z: " << vec.z << std::endl;
 }

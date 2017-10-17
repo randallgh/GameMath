@@ -122,7 +122,7 @@ vec3 normalize(vec3 & v)
 	return v;
 }
 
-float dot(vec3 & v1, vec3 & v2)
+float dot(const vec3 & v1, const vec3 & v2)
 {
 	return (v1.x * v2.x) + (v1.y * v2.y) + (v1.z * v2.z);
 }
@@ -149,13 +149,11 @@ vec3 &clamp(vec3 & v, const vec3 & min, const vec3 & max)
 	return v;
 }
 
-vec3 cross(vec3 & v, vec3 & w)
+vec3 cross(const vec3 & v, const vec3 & w)
 {
-	vec3 retval = {};
-
-	retval.x =	 (v.y * w.z) - (v.z * w.y);
-	retval.y = -((v.x * w.z) - (v.z * w.x));
-	retval.z =   (v.x * w.y) - (v.y * w.x);
-
-	return retval;
+	return vec3{
+		(v.y * w.z) - (v.z * w.y),
+		-((v.x * w.z) - (v.z * w.x)),
+		(v.x * w.y) - (v.y * w.x)
+	};
 }
