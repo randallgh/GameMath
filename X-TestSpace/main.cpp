@@ -31,6 +31,31 @@ int main()
 	printVec3(test[1]);
 	printVec3(test[2]);
 
+	mat3x3 A = translate(vec2{1,0});
+	printMat3(A);
+	printMat3(A * inverse(A));
+	assert((A * inverse(A)) == test);
+
+	mat3x3 Z = mat3x3::zero();
+	mat3x3 I = mat3x3::identity();
+	vec3 v = { 1,2,3 };
+
+	assert(I + Z == I);
+	assert(Z + I == I);
+	assert(I - Z == I);
+	assert(!(Z - I == I));
+	assert(transpose (I) == I);
+	assert(I*A == A);
+	assert(A*I == A);	
+	assert(I*v == v);
+
+
+	mat3x3 T = scale(vec2{ 1,2 })*
+			   rotate(90)*
+			   translate(vec2{ 3,0 });
+
+	assert((T[2].xy == vec2{ 0,6 }));
+
 
 	getchar();
 	return 0;

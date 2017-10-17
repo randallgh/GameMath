@@ -1,4 +1,5 @@
 #include "vec3.h"
+#include "mathutils.h"
 
 #include <cmath>
 #include <cfloat>
@@ -75,9 +76,9 @@ vec3 & operator/=(vec3 & lhs, const float rhs)
 
 bool operator==(const vec3 & lhs, const vec3 & rhs)
 {
-	if(abs(lhs.x - rhs.x) < FLT_EPSILON &&
-		abs(lhs.y - rhs.y) < FLT_EPSILON &&
-		abs(lhs.z - rhs.z) < FLT_EPSILON)
+	if(abs(lhs.x - rhs.x)  <= EPSILON &&
+		abs(lhs.y - rhs.y) <= EPSILON &&
+		abs(lhs.z - rhs.z) <= EPSILON)
 	{
 		return true;
 	}
@@ -86,9 +87,9 @@ bool operator==(const vec3 & lhs, const vec3 & rhs)
 
 bool operator!=(const vec3 & lhs, const vec3 & rhs)
 {
-	if (abs(lhs.x - rhs.x) < FLT_EPSILON &&
-		abs(lhs.y - rhs.y) < FLT_EPSILON &&
-		abs(lhs.z - rhs.z) < FLT_EPSILON)
+	if (abs(lhs.x - rhs.x) <= EPSILON &&
+		abs(lhs.y - rhs.y) <= EPSILON &&
+		abs(lhs.z - rhs.z) <= EPSILON)
 	{
 		return false;
 	}

@@ -1,9 +1,14 @@
 #pragma once
+#include "vec2.h"
 
 union vec3
 {
 	float v[3];
+
 	struct { float x, y, z; };
+
+	//access as vec2
+	vec2 xy;
 
 	float &operator[](int index);
 	float operator[](int index) const;

@@ -1,5 +1,7 @@
 #pragma once
 #include "vec3.h"
+#include "vec2.h"
+
 
 union mat3x3
 {
@@ -24,6 +26,8 @@ union mat3x3
 					   0,0,0 };
 	}
 };
+bool operator==(const mat3x3 &A, const mat3x3 &B);
+bool operator!=(const mat3x3 &A, const mat3x3 &B);
 
 mat3x3 operator+(const mat3x3 &A, const mat3x3 &B);
 mat3x3 operator-(const mat3x3 &A, const mat3x3 &B);
@@ -36,3 +40,7 @@ mat3x3 transpose(const mat3x3 &A); //flips the rows and columns
 //Unknown
 float determinant(const mat3x3 &A);
 mat3x3 inverse(const mat3x3 &A);
+
+mat3x3 translate(const vec2 &t);
+mat3x3 scale(const vec2 &s);
+mat3x3 rotate(float deg);

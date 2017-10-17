@@ -1,27 +1,58 @@
 #include "mat3x3.h"
+#include <cmath>
 
 vec3 & mat3x3::operator[](size_t idx)
 {
-	vec3 retval = {};
-	int index = 0;
-	for (int i = 0 + (idx * 3); i < 3 + (idx * 3); ++i)
-	{
-		retval[index] = m[i];
-		++index;
-	}
-	return retval;
+	//vec3 retval = {};
+	//int index = 0;
+	//for (int i = 0 + (idx * 3); i < 3 + (idx * 3); ++i)
+	//{
+	//	retval[index] = m[i];
+	//	++index;
+	//}
+	//return retval;
+
+	return c[idx];
 }
 
 const vec3 & mat3x3::operator[](size_t idx) const
 {
-	vec3 retval = {};
-	int index = 0;
-	for (int i = 0 + (idx * 3); i < 3 + ( idx * 3); ++i)
+	//vec3 retval = {};
+	//int index = 0;
+	//for (int i = 0 + (idx * 3); i < 3 + ( idx * 3); ++i)
+	//{
+	//	retval[index] = m[i];
+	//	++index;
+	//}
+	//return retval;
+
+	return c[idx];
+}
+
+bool operator==(const mat3x3 & A, const mat3x3 & B)
+{
+	for (int i = 0; i < 9; ++i)
 	{
-		retval[index] = m[i];
-		++index;
+		if(A.m[i] != B.m[i])
+		{
+			return false;
+		}
 	}
-	return retval;
+	
+	return true;
+}
+
+bool operator!=(const mat3x3 & A, const mat3x3 & B)
+{
+	for (int i = 0; i < 9; ++i)
+	{
+		if (A.m[i] != B.m[i])
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 mat3x3 operator+(const mat3x3 & A, const mat3x3 & B)
@@ -50,15 +81,14 @@ mat3x3 operator-(const mat3x3 & A, const mat3x3 & B)
 
 mat3x3 operator*(const mat3x3 & A, const mat3x3 & B)
 {
+	const mat3x3 aT = transpose(A);
 	mat3x3 retval = mat3x3::zero();
-	for (int row = 0; row < 3; ++row)
+
+	for (int b_i = 0; b_i < 3; ++b_i)
 	{
-		for (int col = 0; col < 3; ++col)
+		for (int a_i = 0; a_i < 3; ++a_i)	
 		{
-			for (int index = 0; index < 3; ++index)
-			{
-				retval.m[row + (col * 3)] += A.m[row + (index * 3)] * B.m[index + (col * 3)];
-			}
+			retval.mm[b_i][a_i] = dot(aT[a_i], B[b_i]);
 		}
 	}
 	return retval;
@@ -97,4 +127,27 @@ mat3x3 inverse(const mat3x3 & A)
 			cross(A[0],A[1])*di,
 		}
 	);
+}
+
+mat3x3 translate(const vec2 & t)
+{
+	return mat3x3{ 1,0,0,
+				   0,1,0,
+				   t.x,t.y,1 };
+}
+
+mat3x3 scale(const vec2 & s)
+{
+	return mat3x3{ s.x,0,0,
+				   0,s.y,0,
+				   0,0,1 };
+}
+
+mat3x3 rotate(float deg)
+{
+	float rad = deg * 0.0174533;
+
+	return mat3x3{ cosf(rad),  sinf(rad),  0,
+				   -sinf(rad), cosf(rad),  0,
+				   0,         0,         1 };
 }

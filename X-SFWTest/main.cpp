@@ -13,8 +13,8 @@ int main()
 
 	vec2 test = { 0,0 };
 	Player player;
-	player.position = { 200,200 };
-	player.velocity = { 5,5 };
+	player.position = { 400,300 };
+	player.velocity = { 0,0 };
 
 	player.mass = 1;
 	player.acceleration = { 0,0 };
@@ -36,11 +36,20 @@ int main()
 	vec2 dragV = { 0.2,0.2 };
 	while (sfw::stepContext())
 	{
-		clamp(player.position, min, max);
+		//clamp(player.position, min, max);
 		clamp(player.acceleration, -maxAcceleration, maxAcceleration);
 		clamp(player.velocity, -maxVelocity, maxVelocity);
 
-		player.update();
+		player.update();		
+		//float viewMatrix[16] = {1,0,0,0, 
+		//						0,1,0,0,
+		//						0,0,1,0, 
+		//						0,0,0,1};
+
+		////sfw::setProjectionMatrix(sfw::identity);
+
+		//sfw::setViewMatrix(viewMatrix);
+
 		player.draw();
 
 		if (player.acceleration.x > 0)

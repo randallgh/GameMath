@@ -1,4 +1,5 @@
 #include "vec2.h"
+#include "mathutils.h"
 
 #include <cmath>
 #include <cfloat>
@@ -75,12 +76,12 @@ bool operator==(const vec2 & lhs, const vec2 & rhs)
 	for (int i = 0; i < qty; ++i)
 	{
 		// is the discrepancy within acceptable limits?
-		if (std::abs(lhs.v[i] - rhs.v[i]) < FLT_EPSILON)
+		if (std::abs(lhs.v[i] - rhs.v[i]) <= EPSILON)
 		{
-			return false;
+			return true;
 		}
 	}
-	return true;
+	return false;
 }
 
 bool operator!=(const vec2 & lhs, const vec2 & rhs)
@@ -95,12 +96,12 @@ bool operator!=(const vec2 & lhs, const vec2 & rhs)
 	for (int i = 0; i < qty; ++i)
 	{
 		// is the discrepancy within acceptable limits?
-		if (std::abs(lhs.v[i] - rhs.v[i]) < FLT_EPSILON)
+		if (std::abs(lhs.v[i] - rhs.v[i]) <= EPSILON)
 		{
-			return true;
+			return false;
 		}
 	}
-	return false;
+	return true;
 }
 
 float &vec2::operator[](int x)
