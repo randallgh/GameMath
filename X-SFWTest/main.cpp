@@ -12,19 +12,28 @@ int main()
 	sfw::initContext(800,600,"SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
 
-	vec2 test = { 0,0 };
-
 	Transform myTransform;
 	myTransform.position = vec2{ 300,400 };
 	myTransform.dimension = vec2{ 1,1 };
-	//myTransform.angle = 90;
+	myTransform.angle = 90;
+
+	Transform myBaby;
+	myBaby.position = vec2{ 30,30 };
+	myBaby.dimension = vec2{ 1,1 };
+	myBaby.e_parent = &myTransform;
+	myBaby.angle = 0;
 
 	while (sfw::stepContext())
 	{
 		float t = sfw::getDeltaTime();
-		myTransform.angle += sfw::getDeltaTime() * 200;
-		myTransform.dimension = vec2{ sinf(t/2 + 1) + 2, sinf(t/2 + 1) + 2 };
-		DrawMatrix(myTransform.GetLocalTransform(), 40);
+		myTransform.angle += sfw::getDeltaTime() * 100;
+		myBaby.angle += sfw::getDeltaTime() * -100;
+
+		/*myTransform.dimension = vec2{ sinf(t/2 + 1), sinf(t/2 + 1) + 2 };
+		myBaby.position = vec2{ 0, sinf(t)*1000};*/
+		
+		DrawMatrix(myTransform.GetGlobalTransform(), 40);
+		DrawMatrix(myBaby.GetGlobalTransform(), 30);
 	}
 
 	sfw::termContext();
