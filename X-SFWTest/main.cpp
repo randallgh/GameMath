@@ -4,14 +4,35 @@
 #include "mathutils.h"
 #include "vec2.h"
 
+#include "Transform.h"
 #include "Player.h"
 
 int main() 
 {
-	sfw::initContext(800,600,"Physics Test");
+	sfw::initContext(800,600,"SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
 
 	vec2 test = { 0,0 };
+
+	Transform myTransform;
+	myTransform.position = vec2{ 300,400 };
+	myTransform.dimension = vec2{ 1,1 };
+	//myTransform.angle = 90;
+
+	while (sfw::stepContext())
+	{
+		float t = sfw::getDeltaTime();
+		myTransform.angle += sfw::getDeltaTime() * 200;
+		myTransform.dimension = vec2{ sinf(t/2 + 1) + 2, sinf(t/2 + 1) + 2 };
+		DrawMatrix(myTransform.GetLocalTransform(), 40);
+	}
+
+	sfw::termContext();
+	return 0;
+}
+
+void playerThing()
+{
 	Player player;
 	player.position = { 400,300 };
 	player.velocity = { 0,0 };
@@ -31,16 +52,15 @@ int main()
 
 	vec2 maxAcceleration = { 100,100 };
 	vec2 maxVelocity = { 100,100 };
-	
+
 	vec2 dragA = { 0.4,0.4 };
 	vec2 dragV = { 0.2,0.2 };
-	while (sfw::stepContext())
-	{
+	
 		//clamp(player.position, min, max);
 		clamp(player.acceleration, -maxAcceleration, maxAcceleration);
 		clamp(player.velocity, -maxVelocity, maxVelocity);
 
-		player.update();		
+		player.update();
 		//float viewMatrix[16] = {1,0,0,0, 
 		//						0,1,0,0,
 		//						0,0,1,0, 
@@ -105,8 +125,4 @@ int main()
 		{
 			player.acceleration += d;
 		}
-		
-	}
-
-	return 0;
 }
