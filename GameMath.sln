@@ -24,6 +24,10 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sfwgame", "sfwgame\sfwgame.
 	EndProjectSection
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A-Botes2D", "A-Botes2D\A-Botes2D.vcxproj", "{716A930C-EDE4-4D64-882D-F7A348A191B0}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3587AB14-BF56-4179-A514-215B1EFC9469} = {3587AB14-BF56-4179-A514-215B1EFC9469}
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA} = {185C82C6-FC56-455C-8343-D6D73CDB0EFA}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
