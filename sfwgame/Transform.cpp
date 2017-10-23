@@ -1,5 +1,4 @@
 #include "Transform.h"
-
 #include "sfwdraw.h"
 
 Transform::Transform()

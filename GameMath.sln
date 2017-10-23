@@ -15,6 +15,12 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "X-SFWTest", "X-SFWTest\X-SFWTest.vcxproj", "{0C394268-05ED-4BE5-8135-9560C9738717}"
 	ProjectSection(ProjectDependencies) = postProject
 		{3587AB14-BF56-4179-A514-215B1EFC9469} = {3587AB14-BF56-4179-A514-215B1EFC9469}
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA} = {185C82C6-FC56-455C-8343-D6D73CDB0EFA}
+	EndProjectSection
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sfwgame", "sfwgame\sfwgame.vcxproj", "{185C82C6-FC56-455C-8343-D6D73CDB0EFA}"
+	ProjectSection(ProjectDependencies) = postProject
+		{3587AB14-BF56-4179-A514-215B1EFC9469} = {3587AB14-BF56-4179-A514-215B1EFC9469}
 	EndProjectSection
 EndProject
 Global
@@ -57,6 +63,14 @@ Global
 		{0C394268-05ED-4BE5-8135-9560C9738717}.Release|x64.Build.0 = Release|x64
 		{0C394268-05ED-4BE5-8135-9560C9738717}.Release|x86.ActiveCfg = Release|Win32
 		{0C394268-05ED-4BE5-8135-9560C9738717}.Release|x86.Build.0 = Release|Win32
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Debug|x64.ActiveCfg = Debug|x64
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Debug|x64.Build.0 = Debug|x64
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Debug|x86.ActiveCfg = Debug|Win32
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Debug|x86.Build.0 = Debug|Win32
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Release|x64.ActiveCfg = Release|x64
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Release|x64.Build.0 = Release|x64
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Release|x86.ActiveCfg = Release|Win32
+		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
