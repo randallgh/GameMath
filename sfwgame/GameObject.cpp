@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Transform.h"
+#include "Collider.h"
 
 GameObject::GameObject()
 {
@@ -9,6 +10,16 @@ GameObject::GameObject()
 
 GameObject::~GameObject()
 {
+}
+
+void GameObject::update()
+{
+	if (transform != nullptr) {
+
+	}
+	if (collider != nullptr) {
+		collider->update();
+	}
 }
 
 

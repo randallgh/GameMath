@@ -7,14 +7,19 @@ class Ship : public GameObject
 {
 public:
 	Ship();
-	Ship(Hull * h, int hc);
+	Ship(Hull ** h, int hc);
 	~Ship();
 
+	float heading;
+
 	//Hull
-	Hull * hull;
+	Hull ** hull;
 	int HULL_COUNT;
 	//Main Batteries
 	//Torpedo tubes
+	//Engine
+	float enginePower;
+	float horsepower;
 
 
 	void update();

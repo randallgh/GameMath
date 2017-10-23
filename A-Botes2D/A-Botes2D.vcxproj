@@ -132,6 +132,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hull.h" />
+    <ClInclude Include="main.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Ship.h" />
   </ItemGroup>

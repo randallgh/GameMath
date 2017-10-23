@@ -17,6 +17,8 @@ public:
 	std::string tag;
 	std::string name;
 
+	void update();
+
 private:
 
 };
