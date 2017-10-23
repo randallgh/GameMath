@@ -10,8 +10,6 @@ public:
 	Ship(Hull ** h, int hc);
 	~Ship();
 
-	float heading;
-
 	//Hull
 	Hull ** hull;
 	int HULL_COUNT;

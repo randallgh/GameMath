@@ -176,6 +176,16 @@ vec2 clamp(vec2 & v, const vec2 & min, const vec2 & max)
 	return v;
 }
 
+vec2 degreeToVector(float d, float m)
+{
+	return vec2{m * cosf(d * Deg2Rad), m * sinf(d*Deg2Rad)};
+}
+
+float VectorToDegree(vec2 vec)
+{ 
+	return atan2f(vec.y, vec.x) * Rad2Deg;
+}
+
 vec2 min(vec2 a, vec2 b)
 {
 	return magnitude(a) < magnitude(b) ? a : b;

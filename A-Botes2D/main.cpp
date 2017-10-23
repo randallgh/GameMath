@@ -10,6 +10,11 @@
 
 #include <iostream>
 
+bool up;
+bool down;
+bool left;
+bool right;
+
 int main()
 {
 	ScreenInfo SCR_INFO;
@@ -24,16 +29,16 @@ int main()
 
 	akizukiHull[0]->radius = 30;
 
-	akizukiHull[1]->transform->position = { 0,15 };
+	akizukiHull[1]->transform->position = { 15,0 };
 	akizukiHull[1]->radius = 30;
 
-	akizukiHull[2]->transform->position = { 0,-15 };
+	akizukiHull[2]->transform->position = { -15,0 };
 	akizukiHull[2]->radius = 30;
 
 	Ship Akizuki(akizukiHull, 3);
 	Akizuki.transform->dimension = { 1,1 };
 	Akizuki.transform->position = { 400, 300 };
-	Akizuki.enginePower = 50000;
+	Akizuki.horsepower = 50000;
 	Akizuki.collider->mass = 3700;
 
 	/*for (int i = 0; i < 3; ++i)
@@ -45,23 +50,22 @@ int main()
 	{
 		float t = sfw::getDeltaTime();
 
-		bool up = sfw::getKey(KEY_UP);
-		bool down = sfw::getKey(KEY_DOWN);
-		bool left = sfw::getKey(KEY_LEFT);
-		bool right = sfw::getKey(KEY_RIGHT);
-
+		up = sfw::getKey(KEY_UP);
+		down = sfw::getKey(KEY_DOWN);
+		left = sfw::getKey(KEY_LEFT);
+		right = sfw::getKey(KEY_RIGHT);
 
 		if (up) {
-
+			Akizuki.enginePower += 0.25f;
 		}
 		else if (down) {
+			Akizuki.enginePower -= 0.25f;
 		}
 		else if (left) {
+			Akizuki.transform->angle += 1;
 		}
 		else if (right) {
-		}
-		else {
-			Akizuki.collider->velocity = { 0,0 };
+			Akizuki.transform->angle -= 1;
 		}
 
 		Akizuki.update();

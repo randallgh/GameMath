@@ -51,3 +51,6 @@ float distance(vec2 &v1, vec2 &v2);
 //A from 0.0 to 1.0
 vec2 lerp(vec2 start, vec2 end, float a);
 vec2 clamp(vec2 &v, const vec2 &min, const vec2 &max);
+
+vec2 degreeToVector(float d, float m);
+float VectorToDegree(vec2 vec);

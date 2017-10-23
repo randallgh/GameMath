@@ -28,8 +28,7 @@ Ship::~Ship()
 
 void Ship::update()
 {
-	transform->angle = (horsepower / collider->mass) * enginePower;
-
+	collider->velocity = degreeToVector( transform->angle, 1) * ((horsepower / collider->mass) * enginePower);
 	collider->update();
 	for (int i = 0; i < HULL_COUNT; ++i)
 	{
