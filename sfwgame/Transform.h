@@ -21,3 +21,4 @@ private:
 };
 
 void DrawMatrix(const mat3x3 &t, float drawing_scale);
+void DrawTexture(unsigned sprite, const mat3x3 &t);

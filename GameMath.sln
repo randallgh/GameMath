@@ -23,6 +23,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "sfwgame", "sfwgame\sfwgame.
 		{3587AB14-BF56-4179-A514-215B1EFC9469} = {3587AB14-BF56-4179-A514-215B1EFC9469}
 	EndProjectSection
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "A-Botes2D", "A-Botes2D\A-Botes2D.vcxproj", "{716A930C-EDE4-4D64-882D-F7A348A191B0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|x64 = Debug|x64
@@ -71,6 +73,14 @@ Global
 		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Release|x64.Build.0 = Release|x64
 		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Release|x86.ActiveCfg = Release|Win32
 		{185C82C6-FC56-455C-8343-D6D73CDB0EFA}.Release|x86.Build.0 = Release|Win32
+		{716A930C-EDE4-4D64-882D-F7A348A191B0}.Debug|x64.ActiveCfg = Debug|x64
+		{716A930C-EDE4-4D64-882D-F7A348A191B0}.Debug|x64.Build.0 = Debug|x64
+		{716A930C-EDE4-4D64-882D-F7A348A191B0}.Debug|x86.ActiveCfg = Debug|Win32
+		{716A930C-EDE4-4D64-882D-F7A348A191B0}.Debug|x86.Build.0 = Debug|Win32
+		{716A930C-EDE4-4D64-882D-F7A348A191B0}.Release|x64.ActiveCfg = Release|x64
+		{716A930C-EDE4-4D64-882D-F7A348A191B0}.Release|x64.Build.0 = Release|x64
+		{716A930C-EDE4-4D64-882D-F7A348A191B0}.Release|x86.ActiveCfg = Release|Win32
+		{716A930C-EDE4-4D64-882D-F7A348A191B0}.Release|x86.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
