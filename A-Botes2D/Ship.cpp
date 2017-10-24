@@ -23,6 +23,7 @@ Ship::Ship( Hull ** h, int hc, NavalBattery ** mG, int mGC)
 
 	transform = new Transform();
 	collider = new Collider(this);
+	isEnabled = true;
 
 	for (int i = 0; i < HULL_COUNT; ++i)
 	{
@@ -37,6 +38,7 @@ Ship::Ship( Hull ** h, int hc, NavalBattery ** mG, int mGC)
 
 Ship::~Ship()
 {
+
 }
 
 void Ship::setGunAngle(vec2 pos)
@@ -44,8 +46,8 @@ void Ship::setGunAngle(vec2 pos)
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i) 
 	{
 		vec2 normalVec = normal(pos - (cam->mat * mainGuns[i]->transform->GetGlobalTransform()).c[2].xy);
-		mainGuns[i]->transform->angle = VectorToDegree(normalVec);
-		std::cout << mainGuns[i]->transform->angle << std::endl;
+		mainGuns[i]->transform->angle = VectorToDegree(normalVec) - transform->angle;
+		std::cout << mainGuns[i]->transform->angle - transform->angle << std::endl;
 	}
 }
 

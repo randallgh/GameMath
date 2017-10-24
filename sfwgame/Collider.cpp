@@ -20,6 +20,7 @@ Collider::~Collider()
 
 void Collider::update()
 {
+	if (!gameObject->isEnabled) { return; }
 	gameObject->transform->position += velocity * sfw::getDeltaTime();
 }
 

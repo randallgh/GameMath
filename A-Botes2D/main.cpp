@@ -10,6 +10,7 @@
 #include "Ship.h"
 #include "Hull.h"
 #include "NavalBattery.h"
+#include "Shell.h"
 
 #include "drawutils.h"
 
@@ -60,7 +61,9 @@ int main()
 
 	for (int i = 0; i < mainGunNum; ++i)
 	{
-		akizukiMainGuns[i] = new NavalBattery(vec2{0,0});
+		akizukiMainGuns[i] = new NavalBattery(vec2{0,0}, 3.0f);
+		akizukiMainGuns[i]->shellType1 = new Shell();
+		akizukiMainGuns[i]->shellType1->setupShell("Shell", "Shell", 3, 1000, 10, 1000, 19000);
 	}
 	akizukiMainGuns[0]->transform->position = { -(17 * 3),0 };
 	akizukiMainGuns[1]->transform->position = { -(17 * 1),0 };
@@ -123,7 +126,6 @@ int main()
 		}
 
 		Akizuki.update();
-		
 
 		mainCam->SetupMatrix(Akizuki.transform);
 		for (int i = 0; i < Akizuki.MAIN_GUNS_COUNT; ++i) {
