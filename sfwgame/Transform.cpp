@@ -4,7 +4,7 @@
 Transform::Transform()
 {
 	position = { 0,0 };
-	dimension = { 0,0 };
+	dimension = { 1,1 };
 	angle = 0;
 
 	e_parent = nullptr;

@@ -6,15 +6,19 @@
 #include "mathutils.h"
 #include "sfwdraw.h"
 #include "Camera.h"
+#include "NavalBattery.h"
 
 Ship::Ship()
 {
+
 }
 
-Ship::Ship( Hull ** h, int hc)
+Ship::Ship( Hull ** h, int hc, NavalBattery ** mG, int mGC)
 {
 	hull = h;
+	mainGuns = mG;
 	HULL_COUNT = hc;
+	MAIN_GUNS_COUNT = mGC;
 
 	transform = new Transform();
 	collider = new Collider(this);
@@ -22,6 +26,11 @@ Ship::Ship( Hull ** h, int hc)
 	for (int i = 0; i < HULL_COUNT; ++i)
 	{
 		hull[i]->transform->e_parent = transform;
+	}
+
+	for (int i = 0; i < MAIN_GUNS_COUNT; ++i)
+	{
+		mainGuns[i]->transform->e_parent = transform;
 	}
 }
 

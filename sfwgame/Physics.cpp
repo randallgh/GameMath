@@ -42,7 +42,9 @@ void Physics::update()
 			if (i != o)
 			{
 				//std::cout << "Checking COLLISION" << std::endl;
-				float dist = distance(colliders[i]->gameObject->transform->position, colliders[o]->gameObject->transform->position);
+				float dist = 
+					distance(colliders[i]->gameObject->transform->GetGlobalTransform().c[2].xy,
+					colliders[o]->gameObject->transform->GetGlobalTransform().c[2].xy);
 				if (dist <= (colliders[i]->radius + colliders[o]->radius))
 				{
 					//colliders[i]->collided = colliders[o];

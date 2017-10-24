@@ -128,12 +128,16 @@
   <ItemGroup>
     <ClCompile Include="Hull.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="NavalBattery.cpp" />
+    <ClCompile Include="Shell.cpp" />
     <ClCompile Include="Ship.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hull.h" />
     <ClInclude Include="main.h" />
+    <ClInclude Include="NavalBattery.h" />
     <ClInclude Include="Screen.h" />
+    <ClInclude Include="Shell.h" />
     <ClInclude Include="Ship.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

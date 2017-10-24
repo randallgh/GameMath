@@ -1,13 +1,14 @@
-#include "Transform.h"
-#include "Collider.h"
-
 #include "sfwdraw.h"
 #include "Screen.h"
 #include "Camera.h"
 
+#include "Transform.h"
+#include "Collider.h"
+
 //Ship
 #include "Ship.h"
 #include "Hull.h"
+#include "NavalBattery.h"
 
 #include "drawutils.h"
 
@@ -31,50 +32,47 @@ float inputTimeMax = 0.5;
 
 Transform mousePos;
 
+
 int main()
 {
 	ScreenInfo SCR_INFO;
 	sfw::initContext(SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT, SCR_INFO.SCR_NAME);
+	Camera * mainCam = new Camera(SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT);
 
-	Hull ** akizukiHull = new Hull*[3];
-	for (int i = 0; i < 3; ++i) 
+	float length = 136;
+	int hullNum = 4;
+	int mainGunNum = 4;
+	Hull ** akizukiHull = new Hull*[hullNum];
+	NavalBattery ** akizukiMainGuns = new NavalBattery*[mainGunNum];
+	for (int i = 0; i < hullNum; ++i)
 	{
 		akizukiHull[i] = new Hull();
-		akizukiHull[i]->transform->dimension = { 1,1 };
+		akizukiHull[i]->radius = (length/4);
+		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
 	}
+	akizukiHull[0]->transform->position = { -(17 * 3),0 };
+	akizukiHull[1]->transform->position = { -(17 * 1),0 };
+	akizukiHull[2]->transform->position = { (17 * 1),0 };
+	akizukiHull[3]->transform->position = { (17 * 3),0 };
 
-	akizukiHull[0]->radius = 30;
+	for (int i = 0; i < mainGunNum; ++i)
+	{
+		akizukiMainGuns[i] = new NavalBattery(vec2{0,0});
+	}
+	Ship Akizuki(akizukiHull, hullNum, akizukiMainGuns,mainGunNum);
 
-	akizukiHull[1]->transform->position = { 15,0 };
-	akizukiHull[1]->radius = 30;
 
-	akizukiHull[2]->transform->position = { -15,0 };
-	akizukiHull[2]->radius = 30;
-
-	Ship Akizuki(akizukiHull, 3);
 	Akizuki.transform->dimension = { 1,1 };
 	Akizuki.transform->position = { 400, 300 };
 	Akizuki.horsepower = 50000;
 	Akizuki.collider->mass = 3700;
 
-	Camera * mainCam = new Camera();
-	Akizuki.cam = mainCam;
-	
+	//point of ref
 	Transform test;
-
-	/*for (int i = 0; i < 3; ++i)
-	{
-		akizukiHull[i]->transform->e_parent = Akizuki.transform;
-	}*/
+	Akizuki.cam = mainCam;
 
 	while (sfw::stepContext())
 	{
-		
-
-		vec2 target = Akizuki.transform->GetGlobalTransform().c[2].xy;
-		mat3x3 proj = translate({ (float)SCR_INFO.SCR_WIDTH/2, (float)SCR_INFO.SCR_HEIGHT/2 }) * scale({ 1,1 });
-		mat3x3 view = inverse(translate(target));
-		mainCam->mat = proj * view;
 
 		float t = sfw::getDeltaTime();
 
@@ -86,13 +84,13 @@ int main()
 		right = sfw::getKey(KEY_RIGHT);
 
 		if (up && (lup != true)) {
-			printf("Up\n");
+			//printf("Up\n");
 			Akizuki.enginePower += 0.1f;
 			lup = true;
 			ldown = false;
 		}
 		else if (down && (ldown != true)) {
-			printf("Down\n");
+			//printf("Down\n");
 			Akizuki.enginePower -= 0.1f;
 			lup = false;
 			ldown = true;
@@ -116,15 +114,12 @@ int main()
 		}
 
 		Akizuki.update();
-
-		std::cout << "X: " << sfw::getMouseX() << "Y: " << sfw::getMouseY() << std::endl;
-		std::cout << "PX: " << Akizuki.transform->position.x << "PY: " << Akizuki.transform->position.y << std::endl;
+		mainCam->SetupMatrix(Akizuki.transform);
 		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
 		for (int i = 0; i < Akizuki.HULL_COUNT; ++i) {
-			drawVecLine( 
-				(mainCam->mat * Akizuki.hull[i]->transform->GetGlobalTransform()).c[2].xy ,
-				(mousePos.GetGlobalTransform() * mainCam->mat).c[2].xy
-				, RED, mainCam->mat.m);
+			drawVecLine(
+				(mainCam->mat * Akizuki.hull[i]->transform->GetGlobalTransform()).c[2].xy,
+				(mousePos.GetGlobalTransform() * mainCam->mat).c[2].xy, RED);
 		}
 
 		

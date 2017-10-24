@@ -2,7 +2,6 @@
 #include <string>
 
 class Collider;
-class PlayerData;
 
 class Physics
 {
@@ -11,7 +10,6 @@ public:
 	~Physics();
 	void update();
 	bool addCollider(Collider * collider);
-	PlayerData * playerData;
 
 private:
 	static const int MAX_COLLIDERS = 500;
