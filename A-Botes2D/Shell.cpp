@@ -6,14 +6,15 @@
 #include "Ship.h"
 #include "Camera.h"
 #include "vec2.h"
+#include "Physics.h"
 
 #include <string>
 #include <iostream>
 
 Shell::Shell()
 {
-	tag = "THIS IS A BIG ASS SHITTING TAG";
-	name = "THIS IS A BIG ASS SHITTING NAME";
+	tag = "Shell";
+	name = "Shell";
 	speed = 0;
 	life = 0;
 	maxLife = 0;
@@ -28,7 +29,7 @@ Shell::~Shell()
 	//delete collider;
 }
 
-void Shell::setupShell(std::string t, std::string n, float r, float spe, 
+void Shell::setupShell(Physics * phys, std::string t, std::string n, float r, float spe, 
 					   float lif, float dam, int mDis)
 {
 	tag = t;
@@ -42,13 +43,13 @@ void Shell::setupShell(std::string t, std::string n, float r, float spe,
 	damage = dam;
 	maxDistance = mDis;
 
+	isEnabled = true;
 	transform = new Transform();
-	collider = new Collider(this);
-
+	if (collider == nullptr) { collider = new Collider(this, phys); }
 	isEnabled = false;
 }
 
-void Shell::setupShell(const Shell &s)
+void Shell::setupShell(const Shell &s, Physics * phys)
 {
 	tag = s.tag;
 	name = s.name;
@@ -61,13 +62,13 @@ void Shell::setupShell(const Shell &s)
 	damage = s.damage;
 	maxDistance = s.maxDistance;
 
+	isEnabled = true;
 	transform = new Transform();
-	collider = new Collider(this);
-
+	if (collider == nullptr){ collider = new Collider(this, phys); }
 	isEnabled = false;
 }
 
-void Shell::setupShell(const Shell * s)
+void Shell::setupShell(const Shell * s, Physics * phys)
 {
 	//tag.resize((*s).tag.length());
 	tag = (*s).tag;
@@ -81,9 +82,9 @@ void Shell::setupShell(const Shell * s)
 	damage = (*s).damage;
 	maxDistance = (*s).maxDistance;
 
+	isEnabled = true;
 	transform = new Transform();
-	collider = new Collider(this);
-
+	if (collider == nullptr) { collider = new Collider(this, phys); }
 	isEnabled = false;
 }
 

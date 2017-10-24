@@ -2,6 +2,7 @@
 #include "Screen.h"
 #include "Camera.h"
 #include "Input.h"
+#include "Physics.h"
 
 #include "Transform.h"
 #include "Collider.h"
@@ -35,15 +36,64 @@ float inputTimeMax = 0.5;
 Transform mousePos;
 
 //Game Controllers
+Camera * mainCam = new Camera();
+Physics * physics = new Physics(mainCam);
 Input * input = new Input();
+
+
+Ship * Akizuki;
+
+void setupAkizuki();
+void pInput();
 
 int main()
 {
 	ScreenInfo SCR_INFO;
 	sfw::initContext(SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT, SCR_INFO.SCR_NAME);
-	Camera * mainCam = new Camera(SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT);
+	
+	mainCam->screenWidth = SCR_INFO.SCR_WIDTH; 
+	mainCam->screenHeight = SCR_INFO.SCR_HEIGHT;
 	unsigned int stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
+	setupAkizuki();
+
+	//point of ref
+	Transform test;
+	
+
+	while (sfw::stepContext())
+	{
+		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
+
+		pInput();
+
+		Akizuki->update();
+		physics->update();
+		mainCam->SetupMatrix(Akizuki->transform);
+
+		if (sfw::getMouseButton(1)) {
+			test.position = Akizuki->transform->GetGlobalTransform().c[2].xy;
+		}
+
+		for (int i = 0; i < Akizuki->MAIN_GUNS_COUNT; ++i) {
+			drawVecLine(
+				(mainCam->mat * Akizuki->mainGuns[i]->transform->GetGlobalTransform()).c[2].xy,
+				(mousePos.GetGlobalTransform()).c[2].xy, RED);
+		}
+		Akizuki->setGunAngle(mousePos.GetGlobalTransform().c[2].xy);
+		Akizuki->draw();
+		DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
+
+		sfw::drawString(stringBitmap, "Test", 0, SCR_INFO.SCR_HEIGHT - 50, 15.0f, 15.0f);
+
+	}
+
+	sfw::termContext();
+	return 0;
+}
+
+void setupAkizuki() 
+{
 	float length = 136;
 	int hullNum = 4;
 	int mainGunNum = 4;
@@ -51,8 +101,10 @@ int main()
 	NavalBattery ** akizukiMainGuns = new NavalBattery*[mainGunNum];
 	for (int i = 0; i < hullNum; ++i)
 	{
-		akizukiHull[i] = new Hull();
-		akizukiHull[i]->radius = (length/4)/2;
+		akizukiHull[i] = new Hull(physics);
+		akizukiHull[i]->name = "Akizuki Hull";
+		akizukiHull[i]->tag = "Akizuki Hull";
+		akizukiHull[i]->radius = (length / 4) / 2;
 		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
 	}
 	akizukiHull[0]->transform->position = { -(17 * 3),0 };
@@ -62,9 +114,9 @@ int main()
 
 	for (int i = 0; i < mainGunNum; ++i)
 	{
-		akizukiMainGuns[i] = new NavalBattery(vec2{0,0}, 3.0f);
+		akizukiMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
 		akizukiMainGuns[i]->shellType1 = new Shell();
-		akizukiMainGuns[i]->shellType1->setupShell("Shell", "Shell", 1, 1000, 10, 1000, 19000);
+		akizukiMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
 	}
 	akizukiMainGuns[0]->transform->position = { -(17 * 3),0 };
 	akizukiMainGuns[1]->transform->position = { -(17 * 1),0 };
@@ -72,82 +124,55 @@ int main()
 	akizukiMainGuns[3]->transform->position = { (17 * 3),0 };
 
 
-	Ship Akizuki(akizukiHull, hullNum, akizukiMainGuns,mainGunNum);
+	Akizuki = new  Ship("Akizuki", "Akizuki", physics, akizukiHull, hullNum, akizukiMainGuns, mainGunNum);
 
 
-	Akizuki.transform->dimension = { 1,1 };
-	Akizuki.transform->position = { 0, 0 };
-	Akizuki.horsepower = 50000;
-	Akizuki.collider->mass = 3700;
-
-	//point of ref
-	Transform test;
-	Akizuki.cam = mainCam;
-
-	while (sfw::stepContext())
-	{
-
-		float t = sfw::getDeltaTime();
-		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
-
-		inputTimer += t;
-		up = sfw::getKey(KEY_UP);
-		down = sfw::getKey(KEY_DOWN);
-		left = sfw::getKey(KEY_LEFT);
-		right = sfw::getKey(KEY_RIGHT);
-
-		if (up && (lup != true)) {
-			//printf("Up\n");
-			Akizuki.enginePower += 0.1f;
-			lup = true;
-			ldown = false;
-		}
-		else if (down && (ldown != true)) {
-			//printf("Down\n");
-			Akizuki.enginePower -= 0.1f;
-			lup = false;
-			ldown = true;
-		}
-		else if (left) {
-			Akizuki.transform->angle += 1;
-		}
-		else if (right) {
-			Akizuki.transform->angle -= 1;
-		}
-
-		if (inputTimer >= inputTimeMax) 
-		{
-			lup = false;
-			ldown = false;
-			inputTimer = 0;
-		}
-
-		Akizuki.update();
-		mainCam->SetupMatrix(Akizuki.transform);
+	Akizuki->transform->dimension = { 1,1 };
+	Akizuki->transform->position = { 0, 0 };
+	Akizuki->horsepower = 50000;
+	Akizuki->collider->mass = 3700;
 
 
-		if (sfw::getMouseButton(1)) {
-			test.position = Akizuki.transform->GetGlobalTransform().c[2].xy;
-		}
+	Akizuki->cam = mainCam;
+}
 
-		if (sfw::getMouseButton(0)) 
-		{
-			Akizuki.shootAllGuns((mousePos.GetGlobalTransform()).c[2].xy);
-		}
+void pInput()
+{
+	float t = sfw::getDeltaTime();
+	inputTimer += t;
+	up = sfw::getKey(KEY_UP);
+	down = sfw::getKey(KEY_DOWN);
+	left = sfw::getKey(KEY_LEFT);
+	right = sfw::getKey(KEY_RIGHT);
 
-		for (int i = 0; i < Akizuki.MAIN_GUNS_COUNT; ++i) {
-			drawVecLine(
-				(mainCam->mat * Akizuki.mainGuns[i]->transform->GetGlobalTransform()).c[2].xy,
-				(mousePos.GetGlobalTransform()).c[2].xy, RED);
-		}
-		Akizuki.setGunAngle(mousePos.GetGlobalTransform().c[2].xy);
-		Akizuki.draw();
-		DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
-
-		sfw::drawString(stringBitmap, "Test", 0, SCR_INFO.SCR_HEIGHT - 50, 15.0f, 15.0f);
-
+	if (up && (lup != true)) {
+		//printf("Up\n");
+		Akizuki->enginePower += 0.1f;
+		lup = true;
+		ldown = false;
+	}
+	else if (down && (ldown != true)) {
+		//printf("Down\n");
+		Akizuki->enginePower -= 0.1f;
+		lup = false;
+		ldown = true;
+	}
+	else if (left) {
+		Akizuki->transform->angle += 1;
+	}
+	else if (right) {
+		Akizuki->transform->angle -= 1;
 	}
 
-	sfw::termContext();
-	return 0;
+	if (inputTimer >= inputTimeMax)
+	{
+		lup = false;
+		ldown = false;
+		inputTimer = 0;
+	}
+
+	if (sfw::getMouseButton(0))
+	{
+		Akizuki->shootAllGuns((mousePos.GetGlobalTransform()).c[2].xy);
+	}
 }

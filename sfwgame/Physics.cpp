@@ -2,13 +2,15 @@
 #include "Collider.h"
 #include "GameObject.h"
 #include "Transform.h"
+#include "Camera.h"
 
 #include <iostream>
 
 #include "sfwdraw.h"
 
-Physics::Physics()
+Physics::Physics(Camera * c)
 {
+	cam = c;
 	colliders = new Collider*[MAX_COLLIDERS];
 	for (int i = 0; i < MAX_COLLIDERS; ++i)
 	{
@@ -37,37 +39,71 @@ void Physics::update()
 
 		for (int o = 1; o < MAX_COLLIDERS; ++o)
 		{
-			if (colliders[i] == nullptr) { continue; };
+			if (colliders[o] == nullptr) { continue; };
 			if (!colliders[o]->gameObject->isEnabled) { continue; };
 			if (i != o)
 			{
 				//std::cout << "Checking COLLISION" << std::endl;
 				float dist = 
-					distance(colliders[i]->gameObject->transform->GetGlobalTransform().c[2].xy,
-					colliders[o]->gameObject->transform->GetGlobalTransform().c[2].xy);
+					distance((cam->mat * colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy,
+					(cam->mat *  colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy);
 				if (dist <= (colliders[i]->radius + colliders[o]->radius))
 				{
 					//colliders[i]->collided = colliders[o];
 					//colliders[o]->collided = colliders[i];
+
+					//colliders[o]->gameObject->tag.resize(colliders[o]->gameObject->tag.size());
+					//colliders[i]->gameObject->tag.resize(colliders[i]->gameObject->tag.size());
+
+					switch (isCollide(i, o, "Shell"))
+					{
+					case 0:
+						continue;
+					default:
+						break;
+					}
+
+					switch (isCollide(i, o, "Akizuki Hull"))
+					{
+					case 0:
+						continue;
+					default:
+						break;
+					}
+
+					switch (isCollide(i, o, "Akizuki","Akizuki Hull"))
+					{
+					case 0:
+						continue;
+					case 1:
+						continue;
+					default:
+						break;
+					}
+
+					vec2 posI = (cam->mat * colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy;
+					vec2 posO = (cam->mat * colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy;
 
 					std::cout << "[WARNING - PHYSICS] Unhandled Collision: "
 						<< std::endl
 						<< i
 						<< " "
 						<< colliders[i]->gameObject->name
-						<< " X: " << colliders[i]->gameObject->transform->position.x
-						<< " Y: " << colliders[i]->gameObject->transform->position.y
+						<< " X: " << posI.x
+						<< " Y: " << posI.y
 						<< " AND "
 						<< std::endl
 						<< o
 						<< " "
 						<< colliders[o]->gameObject->name
-						<< " X: " << colliders[o]->gameObject->transform->position.x
-						<< " Y: " << colliders[o]->gameObject->transform->position.y
+						<< " X: " << posO.x
+						<< " Y: " << posO.y
 						<< std::endl
 						<< "Distance: "
 						<< dist
 						<< std::endl;
+
+					//getchar();
 
 				}
 			}
@@ -86,7 +122,7 @@ bool Physics::addCollider(Collider * collider)
 			colliders[i] = collider;
 			return true;
 		}
-		else if (!colliders[i]->gameObject->isEnabled && !(colliders[i]->gameObject->tag.compare("Bullet") == 0) && !(colliders[i]->gameObject->tag.compare("EBullet") == 0))
+		else if ((colliders[i]->gameObject->tag.compare("null") == 0))
 		{
 			std::cout << "[INFO - PHYSICS] EDITED COLLIDER AT: " << i << " X: " << collider->gameObject->transform->position.x << " Y: " << collider->gameObject->transform->position.y << std::endl;
 			colliders[i] = collider;
@@ -107,6 +143,16 @@ int Physics::isCollide(int i, int o, std::string tag1, std::string tag2)
 	{
 		//std::cout << colliders[i]->gameObject->gameObject->tag << " " << colliders[o]->gameObject->gameObject->tag << " COLLISION" << std::endl;
 		return 1;
+	}
+	return -1;
+}
+
+int Physics::isCollide(int i, int o, std::string tag)
+{
+	if (colliders[i]->gameObject->tag.compare(tag) == 0 && colliders[o]->gameObject->tag.compare(tag) == 0)
+	{
+		//std::cout << colliders[i]->gameObject->gameObject->tag << " " << colliders[o]->gameObject->gameObject->tag << " COLLISION" << std::endl;
+		return 0;
 	}
 	return -1;
 }

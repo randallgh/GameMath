@@ -1,15 +1,16 @@
 #include "Hull.h"
 #include "Transform.h"
 #include "Collider.h"
+#include "Physics.h"
 
-Hull::Hull()
+Hull::Hull(Physics * phys)
 {
-	tag = "hull";
-	name = "null hull";
-	isEnabled = false;
+	tag = "Hull";
+	name = "Hull";
 
+	isEnabled = true;
 	transform = new Transform();
-	collider = new Collider(this);
+	collider = new Collider(this, phys);
 }
 
 

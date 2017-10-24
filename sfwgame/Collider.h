@@ -2,6 +2,8 @@
 #include "GameObject.h"
 #include "vec2.h"
 
+class Physics;
+
 static enum ColliderType
 {
 	Circle
@@ -12,7 +14,7 @@ static enum ColliderType
 class Collider
 {
 public:
-	Collider(GameObject * go);
+	Collider(GameObject * go, Physics * phys);
 	~Collider();
 
 	void update();

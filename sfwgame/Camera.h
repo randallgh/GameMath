@@ -5,7 +5,7 @@
 class Camera : public GameObject
 {
 public:
-	Camera(float w, float h);
+	Camera();
 	~Camera();
 
 	float screenWidth; 

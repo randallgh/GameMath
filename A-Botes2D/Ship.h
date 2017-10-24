@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "vec2.h"
 
+class Physics;
 class Hull;
 class Camera;
 class NavalBattery;
@@ -10,7 +11,7 @@ class Ship : public GameObject
 {
 public:
 	Ship();
-	Ship(Hull ** h, int hc, NavalBattery ** mG, int mGC);
+	Ship(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC);
 	~Ship();
 
 	Camera * cam;
@@ -28,6 +29,8 @@ public:
 	//Engine
 	float enginePower;
 	float horsepower;
+
+	void setup(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC);
 
 	void shootAllGuns(vec2 pos);
 	void setGunAngle(vec2 pos);

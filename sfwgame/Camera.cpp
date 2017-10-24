@@ -1,12 +1,16 @@
 #include "Camera.h"
 #include "Transform.h"
 
-Camera::Camera(float w, float h)
-{
-	screenWidth = w;
-	screenHeight = h;
-}
+//Camera::Camera(float w, float h)
+//{
+//	screenWidth = w;
+//	screenHeight = h;
+//}
 
+
+Camera::Camera()
+{
+}
 
 Camera::~Camera()
 {

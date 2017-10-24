@@ -1,11 +1,12 @@
 #pragma once
 #include "GameObject.h"
 
+class Physics;
 
 class Hull : public GameObject
 {
 public:
-	Hull();
+	Hull(Physics * phys);
 	~Hull();
 
 	//Rendering

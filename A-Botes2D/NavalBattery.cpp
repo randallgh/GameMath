@@ -5,12 +5,14 @@
 #include "sfwdraw.h"
 #include "Shell.h"
 #include "Collider.h"
+#include "Physics.h"
 #include <iostream>
 
-NavalBattery::NavalBattery(vec2 pos, float reload)
+NavalBattery::NavalBattery(Physics * phys, vec2 pos, float reload)
 {
 	isEnabled = true;
 	transform = new Transform();
+	physics = phys;
 
 	reloadTime = reload;
 	reloadTimer = 0;
@@ -55,7 +57,7 @@ void NavalBattery::shoot(vec2 pos)
 		if (shell != nullptr)
 		{
 			//std::cout << "Pos X: " << pos.x << "Y: " << pos.y << std::endl;
-			shell->setupShell(shellType1);
+			shell->setupShell(shellType1, physics);
 			shell->parentShip = parentShip;
 			shell->reset();
 			shell->transform->position = transform->GetGlobalTransform().c[2].xy;
@@ -80,6 +82,7 @@ Shell * NavalBattery::findNextShell()
 		if (shells[i] == nullptr)
 		{
 			shells[i] = new Shell();
+			shells[i]->isEnabled = false;
 			++numShells;
 			return shells[i];
 		}

@@ -5,11 +5,12 @@
 
 class Ship;
 class Shell;
+class Physics;
 
 class NavalBattery : public GameObject
 {
 public:
-	NavalBattery(vec2 pos, float reload);
+	NavalBattery(Physics * phys, vec2 pos, float reload);
 	~NavalBattery();
 
 	float reloadTime;
@@ -26,6 +27,7 @@ public:
 
 	Ship * parentShip;
 	Shell * shellType1;
+	Physics * physics;
 
 private:
 	Shell* findNextShell();

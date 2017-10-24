@@ -7,6 +7,7 @@
 #include "sfwdraw.h"
 #include "Camera.h"
 #include "NavalBattery.h"
+#include "Physics.h"
 #include <iostream>
 
 Ship::Ship()
@@ -14,15 +15,18 @@ Ship::Ship()
 
 }
 
-Ship::Ship( Hull ** h, int hc, NavalBattery ** mG, int mGC)
+Ship::Ship(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC)
 {
+	tag = t;
+	name = n;
+
 	hull = h;
 	mainGuns = mG;
 	HULL_COUNT = hc;
 	MAIN_GUNS_COUNT = mGC;
 
 	transform = new Transform();
-	collider = new Collider(this);
+	collider = new Collider(this, phys);
 	isEnabled = true;
 
 	for (int i = 0; i < HULL_COUNT; ++i)
@@ -40,6 +44,34 @@ Ship::Ship( Hull ** h, int hc, NavalBattery ** mG, int mGC)
 Ship::~Ship()
 {
 
+}
+
+
+
+void Ship::setup(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC)
+{
+	tag = t;
+	name = n;
+
+	hull = h;
+	mainGuns = mG;
+	HULL_COUNT = hc;
+	MAIN_GUNS_COUNT = mGC;
+
+	transform = new Transform();
+	collider = new Collider(this, phys);
+	isEnabled = true;
+
+	for (int i = 0; i < HULL_COUNT; ++i)
+	{
+		hull[i]->transform->e_parent = transform;
+	}
+
+	for (int i = 0; i < MAIN_GUNS_COUNT; ++i)
+	{
+		mainGuns[i]->transform->e_parent = transform;
+		mainGuns[i]->parentShip = this;
+	}
 }
 
 void Ship::shootAllGuns(vec2 pos)
