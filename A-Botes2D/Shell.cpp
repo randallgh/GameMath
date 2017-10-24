@@ -2,11 +2,16 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "sfwdraw.h"
+#include "drawutils.h"
+#include "Ship.h"
+#include "Camera.h"
+
+#include <string>
 
 Shell::Shell()
 {
-	tag = "null";
-	name = "null";
+	tag = "THIS IS A BIG ASS SHITTING TAG";
+	name = "THIS IS A BIG ASS SHITTING NAME";
 	speed = 0;
 	life = 0;
 	maxLife = 0;
@@ -62,6 +67,7 @@ void Shell::setupShell(const Shell &s)
 
 void Shell::setupShell(const Shell * s)
 {
+	//tag.resize((*s).tag.length());
 	tag = (*s).tag;
 	name = (*s).name;
 	radius = (*s).radius;
@@ -90,10 +96,13 @@ void Shell::update()
 {
 	if (!isEnabled) { return; }
 	life += sfw::getDeltaTime();
-	if (life >= maxLife || distanceTraveled >= maxDistance) { isEnabled == false; return; }
+	if (life >= maxLife || distanceTraveled >= maxDistance) { isEnabled = false; return; }
 	collider->update();
 }
 
 void Shell::draw()
 {
+	if (!isEnabled) { return; }
+	drawVecCircle((parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy, radius, 12);
+	//DrawMatrix(parentShip->cam->mat * transform->GetGlobalTransform(), 10);
 }

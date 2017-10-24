@@ -22,6 +22,7 @@ public:
 
 	Shell ** shells = new Shell*[MAX_SHELLS];
 	int MAX_SHELLS = 20;
+	int numShells = 0;
 
 	Ship * parentShip;
 	Shell * shellType1;

@@ -63,7 +63,7 @@ int main()
 	{
 		akizukiMainGuns[i] = new NavalBattery(vec2{0,0}, 3.0f);
 		akizukiMainGuns[i]->shellType1 = new Shell();
-		akizukiMainGuns[i]->shellType1->setupShell("Shell", "Shell", 3, 1000, 10, 1000, 19000);
+		akizukiMainGuns[i]->shellType1->setupShell("Shell", "Shell", 3, 1000, 1, 1000, 19000);
 	}
 	akizukiMainGuns[0]->transform->position = { -(17 * 3),0 };
 	akizukiMainGuns[1]->transform->position = { -(17 * 1),0 };
@@ -75,7 +75,7 @@ int main()
 
 
 	Akizuki.transform->dimension = { 1,1 };
-	Akizuki.transform->position = { 400, 300 };
+	Akizuki.transform->position = { 0, 0 };
 	Akizuki.horsepower = 50000;
 	Akizuki.collider->mass = 3700;
 
@@ -121,13 +121,19 @@ int main()
 			inputTimer = 0;
 		}
 
-		if (sfw::getMouseButton(0)) {
+		Akizuki.update();
+		mainCam->SetupMatrix(Akizuki.transform);
+
+
+		if (sfw::getMouseButton(1)) {
 			test.position = Akizuki.transform->GetGlobalTransform().c[2].xy;
 		}
 
-		Akizuki.update();
+		if (sfw::getMouseButton(0)) 
+		{
+			Akizuki.shootAllGuns(mousePos.GetGlobalTransform().c[2].xy);
+		}
 
-		mainCam->SetupMatrix(Akizuki.transform);
 		for (int i = 0; i < Akizuki.MAIN_GUNS_COUNT; ++i) {
 			drawVecLine(
 				(mainCam->mat * Akizuki.mainGuns[i]->transform->GetGlobalTransform()).c[2].xy,

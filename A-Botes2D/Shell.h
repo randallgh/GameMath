@@ -1,5 +1,8 @@
 #pragma once
 #include "GameObject.h"
+
+class Ship;
+
 class Shell : public GameObject
 {
 public:
@@ -18,6 +21,8 @@ public:
 	float radius;
 
 	Collider * collider;
+	Ship * parentShip;
+
 	/*
 	t   | tag
 	n   | name

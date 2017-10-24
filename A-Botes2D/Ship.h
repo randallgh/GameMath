@@ -29,7 +29,7 @@ public:
 	float enginePower;
 	float horsepower;
 
-
+	void shootAllGuns(vec2 pos);
 	void setGunAngle(vec2 pos);
 	void update();
 	void draw();

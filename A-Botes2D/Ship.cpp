@@ -33,6 +33,7 @@ Ship::Ship( Hull ** h, int hc, NavalBattery ** mG, int mGC)
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i)
 	{
 		mainGuns[i]->transform->e_parent = transform;
+		mainGuns[i]->parentShip = this;
 	}
 }
 
@@ -41,13 +42,21 @@ Ship::~Ship()
 
 }
 
+void Ship::shootAllGuns(vec2 pos)
+{
+	for (int i = 0; i < MAIN_GUNS_COUNT; ++i) 
+	{
+		mainGuns[i]->shoot(pos);
+	}
+}
+
 void Ship::setGunAngle(vec2 pos)
 {
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i) 
 	{
 		vec2 normalVec = normal(pos - (cam->mat * mainGuns[i]->transform->GetGlobalTransform()).c[2].xy);
 		mainGuns[i]->transform->angle = VectorToDegree(normalVec) - transform->angle;
-		std::cout << mainGuns[i]->transform->angle - transform->angle << std::endl;
+		//std::cout << mainGuns[i]->transform->angle - transform->angle << std::endl;
 	}
 }
 
@@ -61,6 +70,10 @@ void Ship::update()
 	{
 		hull[i]->update();
 	}
+	for (int i = 0; i < MAIN_GUNS_COUNT; ++i) 
+	{
+		mainGuns[i]->update();
+	}
 
 }
 
@@ -71,12 +84,14 @@ void Ship::draw()
 		vec2 pos = (cam->mat * hull[i]->transform->GetGlobalTransform()).c[2].xy;
 		//DrawMatrix(cam->mat * hull[i]->transform->GetGlobalTransform(), 20);
 		sfw::drawCircle(pos.x, pos.y, hull[i]->radius, 12, WHITE);
+		hull[i]->draw();
 	}
-	for (int i = 0; i < HULL_COUNT; ++i)
+	for (int i = 0; i < MAIN_GUNS_COUNT; ++i)
 	{
-		vec2 pos = (cam->mat * hull[i]->transform->GetGlobalTransform()).c[2].xy;
-		DrawMatrix(cam->mat * mainGuns[i]->transform->GetGlobalTransform(), 20);
+		vec2 pos = (cam->mat * mainGuns[i]->transform->GetGlobalTransform()).c[2].xy;
+		//DrawMatrix(cam->mat * mainGuns[i]->transform->GetGlobalTransform(), 20);
 		sfw::drawCircle(pos.x, pos.y, 10, 12, YELLOW);
+		mainGuns[i]->draw();
 	}
 	//DrawMatrix(transform->GetGlobalTransform(), 30);
 }
