@@ -1,6 +1,7 @@
 #include "sfwdraw.h"
 #include "Screen.h"
 #include "Camera.h"
+#include "Input.h"
 
 #include "Transform.h"
 #include "Collider.h"
@@ -32,6 +33,8 @@ float inputTimeMax = 0.5;
 
 Transform mousePos;
 
+//Game Controllers
+Input * input = new Input();
 
 int main()
 {
@@ -47,7 +50,7 @@ int main()
 	for (int i = 0; i < hullNum; ++i)
 	{
 		akizukiHull[i] = new Hull();
-		akizukiHull[i]->radius = (length/4);
+		akizukiHull[i]->radius = (length/4)/2;
 		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
 	}
 	akizukiHull[0]->transform->position = { -(17 * 3),0 };
@@ -59,6 +62,12 @@ int main()
 	{
 		akizukiMainGuns[i] = new NavalBattery(vec2{0,0});
 	}
+	akizukiMainGuns[0]->transform->position = { -(17 * 3),0 };
+	akizukiMainGuns[1]->transform->position = { -(17 * 1),0 };
+	akizukiMainGuns[2]->transform->position = { (17 * 1),0 };
+	akizukiMainGuns[3]->transform->position = { (17 * 3),0 };
+
+
 	Ship Akizuki(akizukiHull, hullNum, akizukiMainGuns,mainGunNum);
 
 
@@ -75,9 +84,9 @@ int main()
 	{
 
 		float t = sfw::getDeltaTime();
+		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
 
 		inputTimer += t;
-
 		up = sfw::getKey(KEY_UP);
 		down = sfw::getKey(KEY_DOWN);
 		left = sfw::getKey(KEY_LEFT);
@@ -114,15 +123,15 @@ int main()
 		}
 
 		Akizuki.update();
-		mainCam->SetupMatrix(Akizuki.transform);
-		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
-		for (int i = 0; i < Akizuki.HULL_COUNT; ++i) {
-			drawVecLine(
-				(mainCam->mat * Akizuki.hull[i]->transform->GetGlobalTransform()).c[2].xy,
-				(mousePos.GetGlobalTransform() * mainCam->mat).c[2].xy, RED);
-		}
-
 		
+
+		mainCam->SetupMatrix(Akizuki.transform);
+		for (int i = 0; i < Akizuki.MAIN_GUNS_COUNT; ++i) {
+			drawVecLine(
+				(mainCam->mat * Akizuki.mainGuns[i]->transform->GetGlobalTransform()).c[2].xy,
+				(mousePos.GetGlobalTransform()).c[2].xy, RED);
+		}
+		Akizuki.setGunAngle(mousePos.GetGlobalTransform().c[2].xy);
 		Akizuki.draw();
 		DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
 

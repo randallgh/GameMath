@@ -1,5 +1,6 @@
 #pragma once
 #include "GameObject.h"
+#include "vec2.h"
 
 class Hull;
 class Camera;
@@ -29,6 +30,7 @@ public:
 	float horsepower;
 
 
+	void setGunAngle(vec2 pos);
 	void update();
 	void draw();
 };

@@ -7,6 +7,7 @@
 #include "sfwdraw.h"
 #include "Camera.h"
 #include "NavalBattery.h"
+#include <iostream>
 
 Ship::Ship()
 {
@@ -38,23 +39,42 @@ Ship::~Ship()
 {
 }
 
+void Ship::setGunAngle(vec2 pos)
+{
+	for (int i = 0; i < MAIN_GUNS_COUNT; ++i) 
+	{
+		vec2 normalVec = normal(pos - (cam->mat * mainGuns[i]->transform->GetGlobalTransform()).c[2].xy);
+		mainGuns[i]->transform->angle = VectorToDegree(normalVec);
+		std::cout << mainGuns[i]->transform->angle << std::endl;
+	}
+}
+
 void Ship::update()
 {
 	clamp(enginePower,1,0);
 	collider->velocity = degreeToVector( transform->angle, 1) * ((horsepower / collider->mass) * enginePower) * 10;
 	collider->update();
+
 	for (int i = 0; i < HULL_COUNT; ++i)
 	{
 		hull[i]->update();
 	}
+
 }
 
 void Ship::draw()
 {
 	for (int i = 0; i < HULL_COUNT; ++i) 
 	{
-		DrawMatrix(cam->mat * hull[i]->transform->GetGlobalTransform(), hull[i]->radius);
+		vec2 pos = (cam->mat * hull[i]->transform->GetGlobalTransform()).c[2].xy;
+		//DrawMatrix(cam->mat * hull[i]->transform->GetGlobalTransform(), 20);
+		sfw::drawCircle(pos.x, pos.y, hull[i]->radius, 12, WHITE);
 	}
-
+	for (int i = 0; i < HULL_COUNT; ++i)
+	{
+		vec2 pos = (cam->mat * hull[i]->transform->GetGlobalTransform()).c[2].xy;
+		DrawMatrix(cam->mat * mainGuns[i]->transform->GetGlobalTransform(), 20);
+		sfw::drawCircle(pos.x, pos.y, 10, 12, YELLOW);
+	}
 	//DrawMatrix(transform->GetGlobalTransform(), 30);
 }

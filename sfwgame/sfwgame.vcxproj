@@ -23,6 +23,7 @@
     <ClCompile Include="Collider.cpp" />
     <ClCompile Include="drawutils.cpp" />
     <ClCompile Include="GameObject.cpp" />
+    <ClCompile Include="Input.cpp" />
     <ClCompile Include="Physics.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
@@ -31,6 +32,7 @@
     <ClInclude Include="Collider.h" />
     <ClInclude Include="drawutils.h" />
     <ClInclude Include="GameObject.h" />
+    <ClInclude Include="Input.h" />
     <ClInclude Include="Physics.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>

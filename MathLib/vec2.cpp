@@ -183,7 +183,8 @@ vec2 degreeToVector(float d, float m)
 
 float VectorToDegree(vec2 vec)
 { 
-	return atan2f(vec.y, vec.x) * Rad2Deg;
+	vec2 retval = normal(vec);
+	return atan2(retval.y, retval.x) * 180 / PI;
 }
 
 vec2 min(vec2 a, vec2 b)
