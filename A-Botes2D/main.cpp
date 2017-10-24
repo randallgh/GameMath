@@ -60,6 +60,7 @@ int main()
 	Camera * mainCam = new Camera();
 	Akizuki.cam = mainCam;
 	
+	Transform test;
 
 	/*for (int i = 0; i < 3; ++i)
 	{
@@ -110,18 +111,25 @@ int main()
 			inputTimer = 0;
 		}
 
+		if (sfw::getMouseButton(0)) {
+			test.position = Akizuki.transform->GetGlobalTransform().c[2].xy;
+		}
+
+		Akizuki.update();
+
 		std::cout << "X: " << sfw::getMouseX() << "Y: " << sfw::getMouseY() << std::endl;
 		std::cout << "PX: " << Akizuki.transform->position.x << "PY: " << Akizuki.transform->position.y << std::endl;
 		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
 		for (int i = 0; i < Akizuki.HULL_COUNT; ++i) {
 			drawVecLine( 
-				(mainCam->mat * Akizuki.hull[i]->transform->GetGlobalTransform() ).c[2].xy ,
+				(mainCam->mat * Akizuki.hull[i]->transform->GetGlobalTransform()).c[2].xy ,
 				(mousePos.GetGlobalTransform() * mainCam->mat).c[2].xy
 				, RED, mainCam->mat.m);
 		}
 
-		Akizuki.update();
+		
 		Akizuki.draw();
+		DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
 
 		//sfw::drawString(stringBitmap, playerPos.c_str(), 0, SCR_INFO.SCR_HEIGHT - 50, 15.0f, 15.0f);
 
