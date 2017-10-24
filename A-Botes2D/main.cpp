@@ -42,6 +42,7 @@ int main()
 	ScreenInfo SCR_INFO;
 	sfw::initContext(SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT, SCR_INFO.SCR_NAME);
 	Camera * mainCam = new Camera(SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT);
+	unsigned int stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
 	float length = 136;
 	int hullNum = 4;
@@ -63,7 +64,7 @@ int main()
 	{
 		akizukiMainGuns[i] = new NavalBattery(vec2{0,0}, 3.0f);
 		akizukiMainGuns[i]->shellType1 = new Shell();
-		akizukiMainGuns[i]->shellType1->setupShell("Shell", "Shell", 3, 1000, 1, 1000, 19000);
+		akizukiMainGuns[i]->shellType1->setupShell("Shell", "Shell", 1, 1000, 10, 1000, 19000);
 	}
 	akizukiMainGuns[0]->transform->position = { -(17 * 3),0 };
 	akizukiMainGuns[1]->transform->position = { -(17 * 1),0 };
@@ -131,7 +132,7 @@ int main()
 
 		if (sfw::getMouseButton(0)) 
 		{
-			Akizuki.shootAllGuns(mousePos.GetGlobalTransform().c[2].xy);
+			Akizuki.shootAllGuns((mousePos.GetGlobalTransform()).c[2].xy);
 		}
 
 		for (int i = 0; i < Akizuki.MAIN_GUNS_COUNT; ++i) {
@@ -143,7 +144,7 @@ int main()
 		Akizuki.draw();
 		DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
 
-		//sfw::drawString(stringBitmap, playerPos.c_str(), 0, SCR_INFO.SCR_HEIGHT - 50, 15.0f, 15.0f);
+		sfw::drawString(stringBitmap, "Test", 0, SCR_INFO.SCR_HEIGHT - 50, 15.0f, 15.0f);
 
 	}
 

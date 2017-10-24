@@ -140,7 +140,7 @@ float dot(vec2 &v1, vec2 &v2)
 
 float distance(vec2 &v1, vec2 &v2)
 {
-	return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v2.y, 2));
+	return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
 }
 
 //vec2 cross(vec2 & v1, vec2 & v2)

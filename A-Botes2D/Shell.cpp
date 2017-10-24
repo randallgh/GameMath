@@ -5,8 +5,10 @@
 #include "drawutils.h"
 #include "Ship.h"
 #include "Camera.h"
+#include "vec2.h"
 
 #include <string>
+#include <iostream>
 
 Shell::Shell()
 {
@@ -98,6 +100,9 @@ void Shell::update()
 	life += sfw::getDeltaTime();
 	if (life >= maxLife || distanceTraveled >= maxDistance) { isEnabled = false; return; }
 	collider->update();
+	//std::cout << distanceTraveled << std::endl;
+	//std::cout << magnitude(collider->velocity) << std::endl;
+	distanceTraveled += magnitude(collider->velocity) * sfw::getDeltaTime();
 }
 
 void Shell::draw()
