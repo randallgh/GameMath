@@ -25,5 +25,4 @@ void Hull::update()
 
 void Hull::draw()
 {
-	DrawMatrix(transform->GetGlobalTransform(), radius);
 }

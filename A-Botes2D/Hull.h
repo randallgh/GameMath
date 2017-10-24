@@ -6,7 +6,6 @@ class Hull : public GameObject
 {
 public:
 	Hull();
-	Hull(Transform t, Collider c);
 	~Hull();
 
 	//Rendering

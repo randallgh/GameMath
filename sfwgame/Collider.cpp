@@ -25,4 +25,5 @@ void Collider::update()
 
 void Collider::draw()
 {
+
 }

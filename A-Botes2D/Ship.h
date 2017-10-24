@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 class Hull;
+class Camera;
 
 class Ship : public GameObject
 {
@@ -9,6 +10,8 @@ public:
 	Ship();
 	Ship(Hull ** h, int hc);
 	~Ship();
+
+	Camera * cam;
 
 	//Hull
 	Hull ** hull;

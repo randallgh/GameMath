@@ -11,3 +11,19 @@ float max(float a, float b)
 {
 	return a > b ? a : b;
 }
+
+float clamp(float &v, float max, float min)
+{
+	if (v > max) {
+		v = max;
+		return v;
+	}
+	else if (v < min) {
+		v = min;
+		return v;
+	}
+	else {
+		return v;
+	}
+
+}
