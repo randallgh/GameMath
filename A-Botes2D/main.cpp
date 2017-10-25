@@ -229,10 +229,10 @@ void pInput()
 {
 	float t = sfw::getDeltaTime();
 	inputTimer += t;
-	up = sfw::getKey(KEY_UP);
-	down = sfw::getKey(KEY_DOWN);
-	left = sfw::getKey(KEY_LEFT);
-	right = sfw::getKey(KEY_RIGHT);
+	up = sfw::getKey(KEY_UP) || sfw::getKey(KEY_W);
+	down = sfw::getKey(KEY_DOWN) || sfw::getKey(KEY_S);
+	left = sfw::getKey(KEY_LEFT) || sfw::getKey(KEY_A);
+	right = sfw::getKey(KEY_RIGHT) || sfw::getKey(KEY_D);
 
 	if (up && (lup != true)) {
 		//printf("Up\n");
