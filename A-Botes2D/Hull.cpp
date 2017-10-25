@@ -2,6 +2,7 @@
 #include "Transform.h"
 #include "Collider.h"
 #include "Physics.h"
+#include "Ship.h"
 
 Hull::Hull(Physics * phys)
 {
@@ -21,9 +22,11 @@ Hull::~Hull()
 
 void Hull::update()
 {
-
+	if (parentShip == nullptr) { return; }
+	isEnabled = parentShip->isEnabled;
 }
 
 void Hull::draw()
 {
+
 }

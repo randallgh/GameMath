@@ -34,7 +34,7 @@ void Shell::setupShell(Physics * phys, std::string t, std::string n, float r, fl
 {
 	tag = t;
 	name = n;
-	radius = r;
+	
 	speed = spe;
 
 	maxLife = lif;
@@ -46,6 +46,7 @@ void Shell::setupShell(Physics * phys, std::string t, std::string n, float r, fl
 	isEnabled = true;
 	transform = new Transform();
 	if (collider == nullptr) { collider = new Collider(this, phys); }
+	collider->radius = r;
 	isEnabled = false;
 }
 
@@ -53,7 +54,6 @@ void Shell::setupShell(const Shell &s, Physics * phys)
 {
 	tag = s.tag;
 	name = s.name;
-	radius = s.radius;
 	speed = s.speed;
 
 	maxLife = s.maxLife;
@@ -65,6 +65,7 @@ void Shell::setupShell(const Shell &s, Physics * phys)
 	isEnabled = true;
 	transform = new Transform();
 	if (collider == nullptr){ collider = new Collider(this, phys); }
+	collider->radius = s.collider->radius;
 	isEnabled = false;
 }
 
@@ -73,7 +74,7 @@ void Shell::setupShell(const Shell * s, Physics * phys)
 	//tag.resize((*s).tag.length());
 	tag = (*s).tag;
 	name = (*s).name;
-	radius = (*s).radius;
+	
 	speed = (*s).speed;
 
 	maxLife = (*s).maxLife;
@@ -85,6 +86,7 @@ void Shell::setupShell(const Shell * s, Physics * phys)
 	isEnabled = true;
 	transform = new Transform();
 	if (collider == nullptr) { collider = new Collider(this, phys); }
+	collider->radius = (*s).collider->radius;
 	isEnabled = false;
 }
 
@@ -109,6 +111,6 @@ void Shell::update()
 void Shell::draw()
 {
 	if (!isEnabled) { return; }
-	drawVecCircle((parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy, radius, 12);
+	drawVecCircle((parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy, collider->radius, 12);
 	//DrawMatrix(parentShip->cam->mat * transform->GetGlobalTransform(), 10);
 }

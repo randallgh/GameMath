@@ -2,6 +2,7 @@
 #include "GameObject.h"
 
 class Physics;
+class Ship;
 
 class Hull : public GameObject
 {
@@ -10,8 +11,10 @@ public:
 	~Hull();
 
 	//Rendering
-	int radius;
+	//int radius;
 	unsigned color;
+
+	Ship * parentShip;
 
 
 	//Game Stats

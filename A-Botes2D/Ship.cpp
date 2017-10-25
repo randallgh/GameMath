@@ -113,9 +113,10 @@ void Ship::draw()
 {
 	for (int i = 0; i < HULL_COUNT; ++i) 
 	{
+		if (!hull[i]->isEnabled) { continue; }
 		vec2 pos = (cam->mat * hull[i]->transform->GetGlobalTransform()).c[2].xy;
 		//DrawMatrix(cam->mat * hull[i]->transform->GetGlobalTransform(), 20);
-		sfw::drawCircle(pos.x, pos.y, hull[i]->radius, 12, WHITE);
+		sfw::drawCircle(pos.x, pos.y, hull[i]->collider->radius, 12, WHITE);
 		hull[i]->draw();
 	}
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i)

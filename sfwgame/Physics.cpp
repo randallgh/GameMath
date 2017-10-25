@@ -70,12 +70,46 @@ void Physics::update()
 					default:
 						break;
 					}
+					switch (isCollide(i, o, "Hatsuzuki Hull"))
+					{
+					case 0:
+						continue;
+					default:
+						break;
+					}
 
 					switch (isCollide(i, o, "Akizuki","Akizuki Hull"))
 					{
 					case 0:
 						continue;
 					case 1:
+						continue;
+					default:
+						break;
+					}
+					switch (isCollide(i, o, "Hatsuzuki", "Hatsuzuki Hull"))
+					{
+					case 0:
+						continue;
+					case 1:
+						continue;
+					default:
+						break;
+					}
+
+					switch (isCollide(i, o, "Shell", "Hatsuzuki Hull"))
+					{
+					case 0:
+						//tag1 == tag2 = 0
+						//Shell Hatsuzuki
+						//i		o
+						colliders[i]->gameObject->isEnabled = false;
+						continue;
+					case 1:
+						//tag2 == tag1 = 1
+						//Hatsuzuki  Shell
+						//i		  o
+						std::cout << "Damaged Hatsuzuki" << std::endl;
 						continue;
 					default:
 						break;
