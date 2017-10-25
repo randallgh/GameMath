@@ -126,7 +126,7 @@ int main()
 		posS = "Hatsuzuki X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y);
 		sfw::drawString(stringBitmap, posS.c_str(), 0, SCR_INFO.SCR_HEIGHT - 120, 15.0f, 15.0f);
 
-		sfw::drawString(stringBitmap, std::to_string(1.0f / sfw::getDeltaTime()).c_str(), SCR_INFO.SCR_WIDTH - 100, SCR_INFO.SCR_HEIGHT, 25.0f, 25.0f);
+		sfw::drawString(stringBitmap, std::to_string(8/7a)).c_str(), SCR_INFO.SCR_WIDTH - 100, SCR_INFO.SCR_HEIGHT, 25.0f, 25.0f);
 
 	}
 
