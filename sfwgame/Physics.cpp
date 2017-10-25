@@ -96,6 +96,43 @@ void Physics::update()
 					default:
 						break;
 					}
+					switch (isCollide(i, o, "Akizuki", "Hatsuzuki"))
+					{
+					case 0:
+						continue;
+					case 1:
+						continue;
+					default:
+						break;
+					}
+					switch (isCollide(i, o, "Akizuki Hull", "Hatsuzuki Hull"))
+					{
+					case 0:
+						continue;
+					case 1:
+						continue;
+					default:
+						break;
+					}
+					switch (isCollide(i, o, "Akizuki", "Hatsuzuki Hull"))
+					{
+					case 0:
+						continue;
+					case 1:
+						continue;
+					default:
+						break;
+					}
+					switch (isCollide(i, o, "Akizuki Hull", "Hatsuzuki"))
+					{
+					case 0:
+						continue;
+					case 1:
+						continue;
+					default:
+						break;
+					}
+
 
 					switch (isCollide(i, o, "Shell", "Hatsuzuki Hull"))
 					{

@@ -17,6 +17,8 @@ NavalBattery::NavalBattery(Physics * phys, vec2 pos, float reload)
 	reloadTime = reload;
 	reloadTimer = 0;
 
+	MAX_SHELLS = 20;
+
 	for (int i = 0; i < MAX_SHELLS; ++i) 
 	{
 		shells[i] = nullptr;

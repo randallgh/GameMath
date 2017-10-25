@@ -21,9 +21,9 @@ public:
 
 	void shoot(vec2 pos);
 
-	Shell ** shells = new Shell*[MAX_SHELLS];
 	int MAX_SHELLS = 20;
 	int numShells = 0;
+	Shell ** shells = new Shell*[MAX_SHELLS];
 
 	Ship * parentShip;
 	Shell * shellType1;
