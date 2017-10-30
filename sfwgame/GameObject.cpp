@@ -23,7 +23,6 @@ void GameObject::update()
 
 	}
 	if (rigidbody != nullptr){
-		rigidbody->update();
 	}
 }
 

@@ -11,15 +11,24 @@ public:
 	~Rigidbody();
 
 	int radius;
-	float mass;
+	float mass, drag;
 
 	vec2 acceleration,
 		velocity,
-		force;
+		force,
+		impulse;
+
+	float angularVelocity,
+		  angularAcceleration,
+		  torque;
+
+	float angularDrag;
+
+
 
 	GameObject * gameObject;
 
-	void update();
+	void update(float dt);
 
 	void integrate(Transform &T, float dt);
 };

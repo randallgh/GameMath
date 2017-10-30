@@ -26,12 +26,13 @@ Physics::~Physics()
 
 void Physics::update()
 {
+	float dt = sfw::getDeltaTime();
 	for (int i = 0; i < MAX_COLLIDERS; ++i)
 	{
 		if (colliders[i] == nullptr) { continue; }
 		if (colliders[i]->gameObject == nullptr) { continue; }
 		if (colliders[i]->gameObject->rigidbody == nullptr) { continue; }
-		colliders[i]->gameObject->rigidbody->update();
+		colliders[i]->gameObject->rigidbody->update(dt);
 	}
 
 	for (int i = 0; i < MAX_COLLIDERS; ++i)
