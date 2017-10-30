@@ -12,28 +12,24 @@ int main()
 	sfw::initContext(800,600,"SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
 
-	Transform myTransform;
-	myTransform.position = vec2{ 300,400 };
-	myTransform.dimension = vec2{ 1,1 };
-	myTransform.angle = 90;
+	vec2 boxPoints[4] = {
+		{1,2},
+		{4,1},
+		{1,4},
+		{4,4} };
 
-	Transform myBaby;
-	myBaby.position = vec2{ 30,30 };
-	myBaby.dimension = vec2{ 1,1 };
-	myBaby.e_parent = &myTransform;
-	myBaby.angle = 0;
+	vec2 trianglePoints[3] = {
+		{ 6,2.5 },
+		{ 8,1 },
+		{ 8,4 } };
+
+	vec2 normVec = normal(vec2{ 1,1 });
+
+	printf("Normal X: %f Y: %f", normVec.x,normVec.y);
 
 	while (sfw::stepContext())
 	{
-		float t = sfw::getDeltaTime();
-		myTransform.angle += sfw::getDeltaTime() * 100;
-		myBaby.angle += sfw::getDeltaTime() * -100;
 
-		/*myTransform.dimension = vec2{ sinf(t/2 + 1), sinf(t/2 + 1) + 2 };
-		myBaby.position = vec2{ 0, sinf(t)*1000};*/
-		
-		DrawMatrix(myTransform.GetGlobalTransform(), 40);
-		DrawMatrix(myBaby.GetGlobalTransform(), 30);
 	}
 
 	sfw::termContext();
@@ -134,4 +130,30 @@ void playerThing()
 		{
 			player.acceleration += d;
 		}
+}
+
+void transformThings()
+{
+	Transform myTransform;
+	myTransform.position = vec2{ 300,400 };
+	myTransform.dimension = vec2{ 1,1 };
+	myTransform.angle = 90;
+
+	Transform myBaby;
+	myBaby.position = vec2{ 30,30 };
+	myBaby.dimension = vec2{ 1,1 };
+	myBaby.e_parent = &myTransform;
+	myBaby.angle = 0;
+
+	//Game Loop
+
+	float t = sfw::getDeltaTime();
+	myTransform.angle += sfw::getDeltaTime() * 100;
+	myBaby.angle += sfw::getDeltaTime() * -100;
+
+	/*myTransform.dimension = vec2{ sinf(t/2 + 1), sinf(t/2 + 1) + 2 };
+	myBaby.position = vec2{ 0, sinf(t)*1000};*/
+
+	DrawMatrix(myTransform.GetGlobalTransform(), 40);
+	DrawMatrix(myBaby.GetGlobalTransform(), 30);
 }
