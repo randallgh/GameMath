@@ -41,9 +41,13 @@ vec2 max(vec2 a, vec2 b);
 float magnitude(const vec2 v);
 vec2 normal(const vec2 v);
 vec2 normalize(vec2 &v);
-float dot(vec2 &v1, vec2 &v2);
+float dot(const vec2 &v1, const vec2 &v2);
 //Use this for two points
 float distance(vec2 &v1, vec2 &v2);
+
+vec2 perpendicular(const vec2 &v, bool clockwise);
+vec2 projection(const vec2 &A, const vec2 &B);
+
 
 //cross product
 //vec3 cross(vec3 &v1, vec3 &v2);

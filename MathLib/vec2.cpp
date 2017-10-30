@@ -133,7 +133,7 @@ vec2 normalize(vec2 &v)
 	return v;
 }
 
-float dot(vec2 &v1, vec2 &v2)
+float dot(const vec2 &v1, const vec2 &v2)
 {
 	return (v1.x * v2.x) + (v1.y * v2.y);
 }
@@ -141,6 +141,34 @@ float dot(vec2 &v1, vec2 &v2)
 float distance(vec2 &v1, vec2 &v2)
 {
 	return sqrt(pow(v2.x - v1.x, 2) + pow(v2.y - v1.y, 2));
+}
+
+vec2 perpendicular(const vec2 & v, bool clockwise)
+{
+	vec2 ret;
+	if (clockwise)
+	{
+		ret.x = v.y;
+		ret.y = -v.x;
+	}
+	else
+	{
+		ret.x = -v.y;
+		ret.y = v.x;
+	}
+	return ret;
+}
+
+//A projected onto B
+vec2 projection(const vec2 & A, const vec2 & B)
+{
+	vec2 retval;
+	float dp = dot(A, B);
+
+	retval.x = (dp / pow(B.x, 2) + pow(B.y, 2)) * B.x;
+	retval.x = (dp / pow(B.x, 2) + pow(B.y, 2)) * B.y;
+
+	return retval;
 }
 
 //vec2 cross(vec2 & v1, vec2 & v2)

@@ -7,25 +7,63 @@
 #include "Transform.h"
 #include "Player.h"
 
+
+void printNormals(const vec2 * points, int count)
+{
+	vec2 normVec;
+	for (int i = 0; i < count; ++i)
+	{
+		if ((i + 1) == count)
+		{
+			normVec = normal(perpendicular(points[i] - points[0], false));
+		} 
+		else 
+		{
+			normVec = normal(perpendicular(points[i] - points[i + 1], false));
+		}
+		printf("Normal X: %f Y: %f \n", normVec.x, normVec.y);
+	}
+}
+
 int main() 
 {
 	sfw::initContext(800,600,"SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
 
 	vec2 boxPoints[4] = {
-		{1,2},
+		{2,1},
 		{4,1},
-		{1,4},
-		{4,4} };
+		{ 4,4 },
+		{2,4}
+		 };
 
 	vec2 trianglePoints[3] = {
 		{ 6,2.5 },
 		{ 8,1 },
 		{ 8,4 } };
 
-	vec2 normVec = normal(vec2{ 1,1 });
+	printNormals(boxPoints, 4);
+	printNormals(trianglePoints, 3);
 
-	printf("Normal X: %f Y: %f", normVec.x,normVec.y);
+	vec2 normVec = normal(perpendicular(boxPoints[0] - boxPoints[1], false));
+
+	float v = dot(normVec, boxPoints[0] - boxPoints[1]);
+	printf("Dot: %f \n", v);
+	v = dot(normVec, boxPoints[3] - boxPoints[2]);
+	printf("Dot: %f \n", v);
+
+	//vec2 normVec = normal(perpendicular(boxPoints[0] - boxPoints[1], false));
+	//printf("Normal X: %f Y: %f \n", normVec.x,normVec.y);
+
+	//normVec = normal(perpendicular(boxPoints[1] - boxPoints[2], false));
+	//printf("Normal X: %f Y: %f \n", normVec.x, normVec.y);
+
+	//normVec = normal(perpendicular(boxPoints[2] - boxPoints[3], false));
+	//printf("Normal X: %f Y: %f \n", normVec.x, normVec.y);
+
+	//normVec = normal(perpendicular(boxPoints[3] - boxPoints[0], false));
+	//printf("Normal X: %f Y: %f \n", normVec.x, normVec.y);
+
 
 	while (sfw::stepContext())
 	{
