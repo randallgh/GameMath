@@ -5,6 +5,7 @@
 #include "sfwdraw.h"
 #include "Shell.h"
 #include "Collider.h"
+#include "Rigidbody.h"
 #include "Physics.h"
 #include <iostream>
 
@@ -12,6 +13,7 @@ NavalBattery::NavalBattery(Physics * phys, vec2 pos, float reload)
 {
 	isEnabled = true;
 	transform = new Transform();
+	//rigidbody = new Rigidbody(this);
 	physics = phys;
 
 	reloadTime = reload;
@@ -71,7 +73,7 @@ void NavalBattery::shoot(vec2 pos)
 			shell->maxDistance = dist;
 			//std::cout << dist << std::endl;
 
-			shell->collider->velocity = norm; //degreeToVector(transform->angle + parentShip->transform->angle,1) * shell->speed;
+			shell->rigidbody->velocity = norm; //degreeToVector(transform->angle + parentShip->transform->angle,1) * shell->speed;
 			reloadTimer = 0;
 		}
 	}

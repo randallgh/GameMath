@@ -7,6 +7,7 @@
 #include "Camera.h"
 #include "vec2.h"
 #include "Physics.h"
+#include "Rigidbody.h"
 
 #include <string>
 #include <iostream>
@@ -46,7 +47,8 @@ void Shell::setupShell(Physics * phys, std::string t, std::string n, float r, fl
 	isEnabled = true;
 	transform = new Transform();
 	if (collider == nullptr) { collider = new Collider(this, phys); }
-	collider->radius = r;
+	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
+	rigidbody->radius = r;
 	isEnabled = false;
 }
 
@@ -65,7 +67,8 @@ void Shell::setupShell(const Shell &s, Physics * phys)
 	isEnabled = true;
 	transform = new Transform();
 	if (collider == nullptr){ collider = new Collider(this, phys); }
-	collider->radius = s.collider->radius;
+	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
+	rigidbody->radius = s.rigidbody->radius;
 	isEnabled = false;
 }
 
@@ -86,7 +89,8 @@ void Shell::setupShell(const Shell * s, Physics * phys)
 	isEnabled = true;
 	transform = new Transform();
 	if (collider == nullptr) { collider = new Collider(this, phys); }
-	collider->radius = (*s).collider->radius;
+	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
+	rigidbody->radius = (*s).rigidbody->radius;
 	isEnabled = false;
 }
 
@@ -102,15 +106,15 @@ void Shell::update()
 	if (!isEnabled) { return; }
 	life += sfw::getDeltaTime();
 	if (life >= maxLife || distanceTraveled >= maxDistance) { isEnabled = false; return; }
-	collider->update();
+	//rigidbody->update();
 	//std::cout << distanceTraveled << std::endl;
 	//std::cout << magnitude(collider->velocity) << std::endl;
-	distanceTraveled += magnitude(collider->velocity) * sfw::getDeltaTime();
+	distanceTraveled += magnitude(rigidbody->velocity) * sfw::getDeltaTime();
 }
 
 void Shell::draw()
 {
 	if (!isEnabled) { return; }
-	drawVecCircle((parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy, collider->radius, 12);
+	drawVecCircle((parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy, rigidbody->radius, 12);
 	//DrawMatrix(parentShip->cam->mat * transform->GetGlobalTransform(), 10);
 }

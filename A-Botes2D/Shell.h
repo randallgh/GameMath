@@ -19,9 +19,7 @@ public:
 	float distanceTraveled;
 	float maxDistance;
 
-	//float radius;
-
-	Collider * collider;
+	//float radius
 	Ship * parentShip;
 
 	/*

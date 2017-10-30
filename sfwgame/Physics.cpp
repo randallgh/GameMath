@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Transform.h"
 #include "Camera.h"
+#include "Rigidbody.h"
 
 #include <iostream>
 
@@ -27,8 +28,10 @@ void Physics::update()
 {
 	for (int i = 0; i < MAX_COLLIDERS; ++i)
 	{
-		//if (!colliders[i].isEnabled) { continue; };
-		colliders[i]->update();
+		if (colliders[i] == nullptr) { continue; }
+		if (colliders[i]->gameObject == nullptr) { continue; }
+		if (colliders[i]->gameObject->rigidbody == nullptr) { continue; }
+		colliders[i]->gameObject->rigidbody->update();
 	}
 
 	for (int i = 0; i < MAX_COLLIDERS; ++i)
@@ -47,7 +50,7 @@ void Physics::update()
 				float dist = 
 					distance((cam->mat * colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy,
 					(cam->mat *  colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy);
-				if (dist <= (colliders[i]->radius + colliders[o]->radius))
+				if (dist <= (colliders[i]->gameObject->rigidbody->radius + colliders[o]->gameObject->rigidbody->radius))
 				{
 					//colliders[i]->collided = colliders[o];
 					//colliders[o]->collided = colliders[i];

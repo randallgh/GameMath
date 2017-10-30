@@ -1,6 +1,7 @@
 #pragma once
 class Transform;
 class Collider;
+class Rigidbody;
 
 #include <string>
 
@@ -12,6 +13,7 @@ public:
 
 	Transform * transform;
 	Collider * collider;
+	Rigidbody * rigidbody;
 
 	bool isEnabled;
 	std::string tag;

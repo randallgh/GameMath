@@ -8,6 +8,7 @@
 #include "Camera.h"
 #include "NavalBattery.h"
 #include "Physics.h"
+#include "Rigidbody.h"
 #include <iostream>
 
 Ship::Ship()
@@ -27,6 +28,7 @@ Ship::Ship(std::string t, std::string n, Physics * phys, Hull ** h, int hc, Nava
 
 	transform = new Transform();
 	collider = new Collider(this, phys);
+	rigidbody = new Rigidbody(this);
 	isEnabled = true;
 
 	for (int i = 0; i < HULL_COUNT; ++i)
@@ -95,8 +97,8 @@ void Ship::setGunAngle(vec2 pos)
 void Ship::update()
 {
 	clamp(enginePower,1,0);
-	collider->velocity = degreeToVector( transform->angle, 1) * ((horsepower / collider->mass) * enginePower) * 10;
-	collider->update();
+	rigidbody->velocity = degreeToVector( transform->angle, 1) * ((horsepower / rigidbody->mass) * enginePower) * 10;
+	//rigidbody->update();
 
 	for (int i = 0; i < HULL_COUNT; ++i)
 	{
@@ -116,7 +118,7 @@ void Ship::draw()
 		if (!hull[i]->isEnabled) { continue; }
 		vec2 pos = (cam->mat * hull[i]->transform->GetGlobalTransform()).c[2].xy;
 		//DrawMatrix(cam->mat * hull[i]->transform->GetGlobalTransform(), 20);
-		sfw::drawCircle(pos.x, pos.y, hull[i]->collider->radius, 12, WHITE);
+		sfw::drawCircle(pos.x, pos.y, hull[i]->rigidbody->radius, 12, WHITE);
 		hull[i]->draw();
 	}
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i)

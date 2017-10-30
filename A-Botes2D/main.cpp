@@ -6,7 +6,7 @@
 
 #include "Transform.h"
 #include "Collider.h"
-
+#include "Rigidbody.h"
 //Ship
 #include "Ship.h"
 #include "Hull.h"
@@ -195,7 +195,7 @@ Ship* setupAkizukiClass(std::string n)
 		shipHull[i] = new Hull(physics);
 		shipHull[i]->name = n + " Hull";
 		shipHull[i]->tag = n + " Hull";
-		shipHull[i]->collider->radius = (length / 4) / 2;
+		shipHull[i]->rigidbody->radius = (length / 4) / 2;
 		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
 	}
 	shipHull[0]->transform->position = { -(17 * 3),0 };
@@ -221,7 +221,7 @@ Ship* setupAkizukiClass(std::string n)
 	ship->transform->dimension = { 1,1 };
 	ship->transform->position = { 0, 0 };
 	ship->horsepower = 50000;
-	ship->collider->mass = 3700;
+	ship->rigidbody->mass = 3700;
 
 
 	ship->cam = mainCam;

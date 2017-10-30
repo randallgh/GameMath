@@ -1,8 +1,8 @@
 #pragma once
-#include "GameObject.h"
 #include "vec2.h"
 
 class Physics;
+class GameObject;
 
 static enum ColliderType
 {
@@ -17,18 +17,12 @@ public:
 	Collider(GameObject * go, Physics * phys);
 	~Collider();
 
-	void update();
-	void draw();
+	//void update();
+	//void draw();
 
 	ColliderType type;
 
 	GameObject * gameObject;
-
-	int radius;
-	float mass;
-
-	vec2 acceleration;
-	vec2 velocity;
 
 private:
 

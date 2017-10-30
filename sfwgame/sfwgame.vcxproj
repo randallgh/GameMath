@@ -25,6 +25,7 @@
     <ClCompile Include="GameObject.cpp" />
     <ClCompile Include="Input.cpp" />
     <ClCompile Include="Physics.cpp" />
+    <ClCompile Include="Rigidbody.cpp" />
     <ClCompile Include="Transform.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -34,6 +35,7 @@
     <ClInclude Include="GameObject.h" />
     <ClInclude Include="Input.h" />
     <ClInclude Include="Physics.h" />
+    <ClInclude Include="Rigidbody.h" />
     <ClInclude Include="Transform.h" />
   </ItemGroup>
   <PropertyGroup Label="Globals">

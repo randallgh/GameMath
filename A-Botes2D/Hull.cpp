@@ -3,6 +3,7 @@
 #include "Collider.h"
 #include "Physics.h"
 #include "Ship.h"
+#include "Rigidbody.h"
 
 Hull::Hull(Physics * phys)
 {
@@ -12,6 +13,7 @@ Hull::Hull(Physics * phys)
 	isEnabled = true;
 	transform = new Transform();
 	collider = new Collider(this, phys);
+	rigidbody = new Rigidbody(this);
 }
 
 
