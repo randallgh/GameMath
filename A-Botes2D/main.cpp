@@ -34,6 +34,9 @@ bool right;
 float inputTimer = 0;
 float inputTimeMax = 0.5;
 
+unsigned int stringBitmap;
+ScreenInfo SCR_INFO;
+
 Transform mousePos;
 
 //Game Controllers
@@ -46,15 +49,15 @@ Ship * Hatsuzuki;
 
 Ship* setupAkizukiClass(std::string n);
 void pInput();
+void drawGUI();
 
 int main()
 {
-	ScreenInfo SCR_INFO;
 	sfw::initContext(SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT, SCR_INFO.SCR_NAME);
 	
 	mainCam->screenWidth = SCR_INFO.SCR_WIDTH; 
 	mainCam->screenHeight = SCR_INFO.SCR_HEIGHT;
-	unsigned int stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
+	stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
 	Akizuki = setupAkizukiClass("Akizuki");
 	Hatsuzuki = setupAkizukiClass("Hatsuzuki");
@@ -69,11 +72,12 @@ int main()
 	while (sfw::stepContext())
 	{
 		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
-
+		float dt = sfw::getDeltaTime();
 		pInput();
 
-		Akizuki->update();
-		Hatsuzuki->update();
+		Akizuki->update(dt);
+		Hatsuzuki->update(dt);
+
 		physics->update();
 		mainCam->SetupMatrix(Akizuki->transform);
 
@@ -100,87 +104,17 @@ int main()
 		Hatsuzuki->draw();
 
 		DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
-		
+		drawGUI();
 
-		//Draw Ui
-		for (int i = 0; i < Akizuki->MAIN_GUNS_COUNT; ++i) 
-		{
-			std::string re = " NULL ";
-			if (Akizuki->mainGuns[i]->reloadTimer >= Akizuki->mainGuns[i]->reloadTime) {
-				re = "Reloaded";
-			} else {
-				re = std::to_string(Akizuki->mainGuns[i]->reloadTimer) + " / " + std::to_string(Akizuki->mainGuns[i]->reloadTime);
-			}
-			sfw::drawString(stringBitmap, re.c_str(), 0, SCR_INFO.SCR_HEIGHT - (20 * i), 15.0f, 15.0f);
-		}
 
-		std::string engine = "Engine Power: " + std::to_string(Akizuki->enginePower * 100);
-		sfw::drawString(stringBitmap, engine.c_str(), 0, SCR_INFO.SCR_HEIGHT - 80, 15.0f, 15.0f);
 
-		//Debug info
-		vec2 pos = (Akizuki->transform->GetGlobalTransform()).c[2].xy;
 
-		vec2 posCam = (mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy;
-		sfw::drawString(stringBitmap, "Player", posCam.x - 50, posCam.y + 50, 15.0f, 15.0f);
-
-		std::string posS = "Akizuki X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y);
-		sfw::drawString(stringBitmap, posS.c_str(), 0, SCR_INFO.SCR_HEIGHT - 100, 15.0f, 15.0f);
-
-		pos = (Hatsuzuki->transform->GetGlobalTransform()).c[2].xy;
-		posS = "Hatsuzuki X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y);
-		sfw::drawString(stringBitmap, posS.c_str(), 0, SCR_INFO.SCR_HEIGHT - 120, 15.0f, 15.0f);
-
-		sfw::drawString(stringBitmap, std::to_string(1/sfw::getDeltaTime()).c_str(), SCR_INFO.SCR_WIDTH - 100, SCR_INFO.SCR_HEIGHT, 25.0f, 25.0f);
 
 	}
 
 	sfw::termContext();
 	return 0;
 }
-
-//void setupAkizuki() 
-//{
-//	float length = 136;
-//	int hullNum = 4;
-//	int mainGunNum = 4;
-//	Hull ** akizukiHull = new Hull*[hullNum];
-//	NavalBattery ** akizukiMainGuns = new NavalBattery*[mainGunNum];
-//	for (int i = 0; i < hullNum; ++i)
-//	{
-//		akizukiHull[i] = new Hull(physics);
-//		akizukiHull[i]->name = "Akizuki Hull";
-//		akizukiHull[i]->tag = "Akizuki Hull";
-//		akizukiHull[i]->collider->radius = (length / 4) / 2;
-//		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
-//	}
-//	akizukiHull[0]->transform->position = { -(17 * 3),0 };
-//	akizukiHull[1]->transform->position = { -(17 * 1),0 };
-//	akizukiHull[2]->transform->position = { (17 * 1),0 };
-//	akizukiHull[3]->transform->position = { (17 * 3),0 };
-//
-//	for (int i = 0; i < mainGunNum; ++i)
-//	{
-//		akizukiMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
-//		akizukiMainGuns[i]->shellType1 = new Shell();
-//		akizukiMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
-//	}
-//	akizukiMainGuns[0]->transform->position = { -(17 * 3),0 };
-//	akizukiMainGuns[1]->transform->position = { -(17 * 1),0 };
-//	akizukiMainGuns[2]->transform->position = { (17 * 1),0 };
-//	akizukiMainGuns[3]->transform->position = { (17 * 3),0 };
-//
-//
-//	Akizuki = new  Ship("Akizuki", "Akizuki", physics, akizukiHull, hullNum, akizukiMainGuns, mainGunNum);
-//
-//
-//	Akizuki->transform->dimension = { 1,1 };
-//	Akizuki->transform->position = { 0, 0 };
-//	Akizuki->horsepower = 50000;
-//	Akizuki->collider->mass = 3700;
-//
-//
-//	Akizuki->cam = mainCam;
-//}
 
 Ship* setupAkizukiClass(std::string n)
 {
@@ -192,7 +126,17 @@ Ship* setupAkizukiClass(std::string n)
 	NavalBattery ** shipMainGuns = new NavalBattery*[mainGunNum];
 	for (int i = 0; i < hullNum; ++i)
 	{
-		shipHull[i] = new Hull(physics);
+		SATGeometry col =
+		{
+			{
+				{ -15,-15 },
+				{ 15, -15 },
+				{ 15,15 },
+				{ -15,15 }
+			},
+			4
+		};
+		shipHull[i] = new Hull(col, physics);
 		shipHull[i]->name = n + " Hull";
 		shipHull[i]->tag = n + " Hull";
 		shipHull[i]->rigidbody->radius = (length / 4) / 2;
@@ -202,6 +146,7 @@ Ship* setupAkizukiClass(std::string n)
 	shipHull[1]->transform->position = { -(17 * 1),0 };
 	shipHull[2]->transform->position = { (17 * 1),0 };
 	shipHull[3]->transform->position = { (17 * 3),0 };
+
 
 	for (int i = 0; i < mainGunNum; ++i)
 	{
@@ -268,4 +213,40 @@ void pInput()
 	{
 		Akizuki->shootAllGuns((mousePos.GetGlobalTransform()).c[2].xy);
 	}
+}
+
+void drawGUI()
+{
+	//Draw Ui
+	for (int i = 0; i < Akizuki->MAIN_GUNS_COUNT; ++i)
+	{
+		std::string re = " NULL ";
+		if (Akizuki->mainGuns[i]->reloadTimer >= Akizuki->mainGuns[i]->reloadTime)
+		{
+			re = "Reloaded";
+		}
+		else
+		{
+			re = std::to_string(Akizuki->mainGuns[i]->reloadTimer) + " / " + std::to_string(Akizuki->mainGuns[i]->reloadTime);
+		}
+		sfw::drawString(stringBitmap, re.c_str(), 0, SCR_INFO.SCR_HEIGHT - (20 * i), 15.0f, 15.0f);
+	}
+
+	std::string engine = "Engine Power: " + std::to_string(Akizuki->enginePower * 100);
+	sfw::drawString(stringBitmap, engine.c_str(), 0, SCR_INFO.SCR_HEIGHT - 80, 15.0f, 15.0f);
+
+	//Debug info
+	vec2 pos = (Akizuki->transform->GetGlobalTransform()).c[2].xy;
+
+	vec2 posCam = (mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy;
+	sfw::drawString(stringBitmap, "Player", posCam.x - 50, posCam.y + 50, 15.0f, 15.0f);
+
+	std::string posS = "Akizuki X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y);
+	sfw::drawString(stringBitmap, posS.c_str(), 0, SCR_INFO.SCR_HEIGHT - 100, 15.0f, 15.0f);
+
+	pos = (Hatsuzuki->transform->GetGlobalTransform()).c[2].xy;
+	posS = "Hatsuzuki X: " + std::to_string(pos.x) + " Y: " + std::to_string(pos.y);
+	sfw::drawString(stringBitmap, posS.c_str(), 0, SCR_INFO.SCR_HEIGHT - 120, 15.0f, 15.0f);
+
+	sfw::drawString(stringBitmap, std::to_string(1 / sfw::getDeltaTime()).c_str(), SCR_INFO.SCR_WIDTH - 100, SCR_INFO.SCR_HEIGHT, 25.0f, 25.0f);
 }

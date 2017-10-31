@@ -16,6 +16,17 @@ Hull::Hull(Physics * phys)
 	rigidbody = new Rigidbody(this);
 }
 
+Hull::Hull(SATGeometry &geo, Physics * phys)
+{
+	tag = "Hull";
+	name = "Hull";
+
+	isEnabled = true;
+	transform = new Transform();
+	collider = new Collider(geo, this, phys);
+	rigidbody = new Rigidbody(this);
+}
+
 
 Hull::~Hull()
 {
@@ -28,7 +39,7 @@ void Hull::update()
 	isEnabled = parentShip->isEnabled;
 }
 
-void Hull::draw()
+void Hull::draw(mat3x3 cam)
 {
-
+	collider->draw(cam * transform->GetGlobalTransform());
 }

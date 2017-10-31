@@ -13,7 +13,6 @@
 
 #include <cmath>
 
-
 void printNormals(const vec2 * points, int count)
 {
 	vec2 normVec;
@@ -29,79 +28,6 @@ void printNormals(const vec2 * points, int count)
 		}
 		printf("Normal X: %f Y: %f \n", normVec.x, normVec.y);
 	}
-}
-
-struct Collision
-{
-	float penetration;
-	vec2 collisionNormal;
-};
-
-struct AxialExtents { float min, max; };
-
-AxialExtents EvalAxialExtents(const vec2 &axis, const vec2 *points, size_t size)
-{
-	AxialExtents res = { INFINITY, -INFINITY };
-
-	for (int i = 0; i < size; ++i)
-	{
-		float proj = dot(axis, points[i]);
-
-		res.min = min(proj, res.min);
-		res.max = max(proj, res.max);
-	}
-
-	return res;
-}
-
-bool DoPolygonsCollide(const Polygon &A, const Polygon &B)
-{
-	vec2 axes[32];
-
-	int naxes = 0;
-	for (int i = 0; i < A.numPoints; ++i)
-	{
-		axes[naxes++] = A.axes[i];
-	}
-	for (int i = 0; i < B.numPoints; ++i)
-	{
-		axes[naxes++] = B.axes[i];
-	}
-
-	float fPD = FLT_MAX;
-	vec2  fCN;
-	bool  res = true;
-
-	for (int i = 0; i < naxes; ++i)
-	{
-		AxialExtents Aex = EvalAxialExtents(axes[i], A.points, A.numPoints);
-		AxialExtents Bex = EvalAxialExtents(axes[i], B.points, B.numPoints);
-
-		float lPD = Aex.max - Bex.min;
-		float rPD = Bex.max - Aex.min;
-
-		float PD = min(lPD, rPD);
-		float H = copysignf(1, rPD - lPD);
-		vec2  CN = axes[i] * H;
-
-		res = res && PD >= 0;
-
-		
-
-		if ((res && PD < fPD) ||
-			(!res && (PD < 0) && (PD > fPD || fPD >= 0)))
-		{
-			fPD = PD;
-			fCN = CN;
-		}
-
-		if(!res)
-		{
-			return false;
-		} 
-	}
-
-	return true;
 }
 
 int main() 
@@ -154,8 +80,8 @@ int main()
 	// For Each Axis
 	for(int i = 0; i < naxes; ++i)
 	{
-		AxialExtents Aex = EvalAxialExtents(axes[i], box.points, 4);
-		AxialExtents Bex = EvalAxialExtents(axes[i], triangle.points, 3);
+		AExtent Aex = EvalAxialExtents(axes[i], box.points, 4);
+		AExtent Bex = EvalAxialExtents(axes[i], triangle.points, 3);
 
 		float lPD = Aex.max - Bex.min;
 		float rPD = Bex.max - Aex.min;
@@ -220,7 +146,7 @@ int main()
 		DrawPolygon(triangle * triangle.transform.GetGlobalTransform());
 
 		if (DoPolygonsCollide(box * box.transform.GetGlobalTransform(),
-			triangle * triangle.transform.GetGlobalTransform()))
+			triangle * triangle.transform.GetGlobalTransform()).penetration > 0)
 		{
 			sfw::setBackgroundColor(BLUE);
 		}
@@ -228,6 +154,15 @@ int main()
 		{
 			sfw::setBackgroundColor(BLACK);
 		}
+
+		//if (box.doesCollide(triangle).penetration > 0)
+		//{
+		//	sfw::setBackgroundColor(BLUE);
+		//}
+		//else
+		//{
+		//	sfw::setBackgroundColor(BLACK);
+		//}
 	}
 
 	sfw::termContext();

@@ -40,18 +40,32 @@ void Physics::update()
 		//|| !colliders[i].gameObject->enabled
 		if (colliders[i] == nullptr) { continue; };
 		if (!colliders[i]->gameObject->isEnabled) { continue; };
+		//if (colliders[i]->type == ColliderType::SAT) { continue; }
 
 		for (int o = 1; o < MAX_COLLIDERS; ++o)
 		{
 			if (colliders[o] == nullptr) { continue; };
 			if (!colliders[o]->gameObject->isEnabled) { continue; };
+			//if (colliders[i]->type == ColliderType::SAT) { continue; }
+
 			if (i != o)
 			{
 				//std::cout << "Checking COLLISION" << std::endl;
 				float dist = 
-					distance((cam->mat * colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy,
-					(cam->mat *  colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy);
-				if (dist <= (colliders[i]->gameObject->rigidbody->radius + colliders[o]->gameObject->rigidbody->radius))
+					distance(
+					(cam->mat * 
+						colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy,
+					(cam->mat *  
+						colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy)
+					;
+
+				if (colliders[i]->doesCollide(colliders[o]).penetration > 0)
+				{
+					std::cout << "Collision" << std::endl;
+				}
+
+				if (dist <= (colliders[i]->gameObject->rigidbody->radius 
+					+ colliders[o]->gameObject->rigidbody->radius))
 				{
 					//colliders[i]->collided = colliders[o];
 					//colliders[o]->collided = colliders[i];
@@ -118,6 +132,7 @@ void Physics::update()
 					default:
 						break;
 					}
+
 					switch (isCollide(i, o, "Akizuki", "Hatsuzuki Hull"))
 					{
 					case 0:
@@ -127,6 +142,7 @@ void Physics::update()
 					default:
 						break;
 					}
+
 					switch (isCollide(i, o, "Akizuki Hull", "Hatsuzuki"))
 					{
 					case 0:
@@ -136,7 +152,6 @@ void Physics::update()
 					default:
 						break;
 					}
-
 
 					switch (isCollide(i, o, "Shell", "Hatsuzuki Hull"))
 					{
@@ -156,8 +171,64 @@ void Physics::update()
 						break;
 					}
 
-					vec2 posI = (cam->mat * colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy;
-					vec2 posO = (cam->mat * colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy;
+					switch (isCollide(i, o, "Shell", "Akizuki Hull"))
+					{
+					case 0:
+						//tag1 == tag2 = 0
+						//Shell Hatsuzuki
+						//i		o
+						//colliders[i]->gameObject->isEnabled = false;
+						continue;
+					case 1:
+						//tag2 == tag1 = 1
+						//Hatsuzuki  Shell
+						//i		  o
+						std::cout << "Damaged Akizuki" << std::endl;
+						continue;
+					default:
+						break;
+					}
+
+					switch (isCollide(i, o, "Shell", "Hatsuzuki"))
+					{
+					case 0:
+						//tag1 == tag2 = 0
+						//Shell Hatsuzuki
+						//i		o
+						colliders[i]->gameObject->isEnabled = false;
+						continue;
+					case 1:
+						//tag2 == tag1 = 1
+						//Hatsuzuki  Shell
+						//i		  o
+						//std::cout << "Damaged Hatsuzuki" << std::endl;
+						continue;
+					default:
+						break;
+					}
+
+					switch (isCollide(i, o, "Shell", "Akizuki"))
+					{
+					case 0:
+						//tag1 == tag2 = 0
+						//Shell Hatsuzuki
+						//i		o
+						//colliders[i]->gameObject->isEnabled = false;
+						continue;
+					case 1:
+						//tag2 == tag1 = 1
+						//Hatsuzuki  Shell
+						//i		  o
+						//std::cout << "Damaged Akizuki" << std::endl;
+						continue;
+					default:
+						break;
+					}
+
+					vec2 posI = (cam->mat * 
+						colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy;
+					vec2 posO = (cam->mat * 
+						colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy;
 
 					std::cout << "[WARNING - PHYSICS] Unhandled Collision: "
 						<< std::endl
@@ -177,10 +248,8 @@ void Physics::update()
 						<< "Distance: "
 						<< dist
 						<< std::endl;
-
-					//getchar();
-
 				}
+				
 			}
 		}
 	}

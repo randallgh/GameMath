@@ -27,7 +27,7 @@ Ship::Ship(std::string t, std::string n, Physics * phys, Hull ** h, int hc, Nava
 	MAIN_GUNS_COUNT = mGC;
 
 	transform = new Transform();
-	collider = new Collider(this, phys);
+	//collider = new Collider(this, phys);
 	rigidbody = new Rigidbody(this);
 	isEnabled = true;
 
@@ -61,7 +61,8 @@ void Ship::setup(std::string t, std::string n, Physics * phys, Hull ** h, int hc
 	MAIN_GUNS_COUNT = mGC;
 
 	transform = new Transform();
-	collider = new Collider(this, phys);
+	rigidbody = new Rigidbody(this);
+	//collider = new Collider(this, phys);
 	isEnabled = true;
 
 	for (int i = 0; i < HULL_COUNT; ++i)
@@ -94,11 +95,11 @@ void Ship::setGunAngle(vec2 pos)
 	}
 }
 
-void Ship::update()
+void Ship::update(float dt)
 {
 	clamp(enginePower,1,0);
 	rigidbody->velocity = degreeToVector( transform->angle, 1) * ((horsepower / rigidbody->mass) * enginePower) * 10;
-	//rigidbody->update();
+	rigidbody->update(dt);
 
 	for (int i = 0; i < HULL_COUNT; ++i)
 	{
@@ -113,19 +114,21 @@ void Ship::update()
 
 void Ship::draw()
 {
+	DrawMatrix(cam->mat * transform->GetGlobalTransform(), 20);
+
 	for (int i = 0; i < HULL_COUNT; ++i) 
 	{
 		if (!hull[i]->isEnabled) { continue; }
-		vec2 pos = (cam->mat * hull[i]->transform->GetGlobalTransform()).c[2].xy;
+		//vec2 pos = (cam->mat * hull[i]->transform->GetGlobalTransform()).c[2].xy;
 		//DrawMatrix(cam->mat * hull[i]->transform->GetGlobalTransform(), 20);
-		sfw::drawCircle(pos.x, pos.y, hull[i]->rigidbody->radius, 12, WHITE);
-		hull[i]->draw();
+		//sfw::drawCircle(pos.x, pos.y, hull[i]->rigidbody->radius, 12, WHITE);
+		hull[i]->draw(cam->mat);
 	}
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i)
 	{
 		vec2 pos = (cam->mat * mainGuns[i]->transform->GetGlobalTransform()).c[2].xy;
 		//DrawMatrix(cam->mat * mainGuns[i]->transform->GetGlobalTransform(), 20);
-		sfw::drawCircle(pos.x, pos.y, 10, 12, YELLOW);
+		//sfw::drawCircle(pos.x, pos.y, 10, 12, YELLOW);
 		mainGuns[i]->draw();
 	}
 	//DrawMatrix(transform->GetGlobalTransform(), 30);

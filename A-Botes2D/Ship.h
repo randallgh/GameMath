@@ -34,7 +34,7 @@ public:
 
 	void shootAllGuns(vec2 pos);
 	void setGunAngle(vec2 pos);
-	void update();
+	void update(float dt);
 	void draw();
 };
 
