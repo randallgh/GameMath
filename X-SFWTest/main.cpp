@@ -6,6 +6,8 @@
 
 #include "Transform.h"
 #include "Player.h"
+#include"drawutils.h"
+
 #include <cmath>
 
 
@@ -13,7 +15,7 @@ struct AxialExtents { float min, max; };
 
 AxialExtents EvalAxialExtents(const vec2 &axis, const vec2 *points, size_t size)
 {
-	AxialExtents res = {FLT_MAX, FLT_MIN};
+	AxialExtents res = {INFINITY, -INFINITY};
 
 	for (int i = 0; i < size; ++i)
 	{
@@ -44,31 +46,148 @@ void printNormals(const vec2 * points, int count)
 	}
 }
 
+struct Polygon
+{
+	vec2 points[16];
+	vec2 axes[16];
+	int numPoints;
+	Transform transform;
+};
+
+void DrawPolygon(const Polygon &poly)
+{
+	for (int i = 0; i < poly.numPoints; i++)
+	{
+		vec2 pos1 = (poly.transform.GetGlobalTransform() 
+			* vec3 { poly.points[i].x, poly.points[i].y, 1 }).xy;
+		vec2 pos2 = (poly.transform.GetGlobalTransform() 
+			* vec3 { poly.points[(i + 1) % poly.numPoints].x, 
+			  poly.points[(i + 1) % poly.numPoints].y, 1 }).xy;
+		drawVecLine(pos1, pos2, WHITE);
+		//drawVecLine(pos1, poly.points[(i + 1) % poly.numPoints]);
+	}
+}
+
+void DrawAxes(const Polygon &poly)
+{
+	for (int i = 0; i < poly.numPoints; i++)
+	{
+		drawVecLine(poly.axes[i], poly.axes[(i + 1) % poly.numPoints]);
+		//sfw::drawLine(
+		//	poly.axes[i].x,
+		//	poly.axes[i].y,
+		//	poly.axes[(i + 1) % poly.numPoints].x,
+		//	poly.axes[(i + 1) % poly.numPoints].y,
+		//	RED);
+	}
+}
+
+void CreateAxes(Polygon &poly)
+{
+	for (int i = 0; i < poly.numPoints; ++i)
+	{
+		poly.axes[i] = normal(perpendicular(poly.points[i] - poly.points[(i + 1) % poly.numPoints], false));
+	}
+}
+
+struct Collision
+{
+	float penetration;
+	vec2 collisionNormal;
+};
+
+bool DoPolygonsCollide(const Polygon &A, const Polygon &B)
+{
+	vec2 axes[32];
+
+	int naxes = 0;
+	for (int i = 0; i < A.numPoints; ++i)
+	{
+		axes[naxes++] = A.axes[i];
+	}
+	for (int i = 0; i < B.numPoints; ++i)
+	{
+		axes[naxes++] = B.axes[i];
+	}
+
+	float fPD = FLT_MAX;
+	vec2  fCN;
+	bool  res = true;
+
+	for (int i = 0; i < naxes; ++i)
+	{
+		AxialExtents Aex = EvalAxialExtents(axes[i], A.points, A.numPoints);
+		AxialExtents Bex = EvalAxialExtents(axes[i], B.points, B.numPoints);
+
+		float lPD = Aex.max - Bex.min;
+		float rPD = Bex.max - Aex.min;
+
+		float PD = min(lPD, rPD);
+		float H = copysignf(1, rPD - lPD);
+		vec2  CN = axes[i] * H;
+
+		res = res && PD >= 0;
+
+		
+
+		if ((res && PD < fPD) ||
+			(!res && (PD < 0) && (PD > fPD || fPD >= 0)))
+		{
+			fPD = PD;
+			fCN = CN;
+		}
+
+		if(!res)
+		{
+			return false;
+		} 
+	}
+
+	return true;
+}
+
 int main() 
 {
 	sfw::initContext(800,600,"SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
 
-	vec2 boxPoints[4] = {
-		{2,1},
-		{4,1},
-		{ 4,4 },
-		{2,4}
-		 };
+	Polygon box = {
+		{
+			{200,100},
+			{400,100},
+			{400,400},
+			{200,400}
+		},
+		{
+			{0,0}
+		},
+		4,
+		Transform()
+	};
 
-	vec2 trianglePoints[3] = {
-		{ 6,2.5 },
-		{ 8,1 },
-		{ 8,4 } };
-	
+	Polygon triangle = {
+		{
+			{ 250,250 },
+			{ 600,100 },
+			{ 600,400 }
+		},
+		{
+			{0,0}
+		},
+		3,
+		Transform()
+	};
+
+	CreateAxes(box);
+	CreateAxes(triangle);
 
 	////// Gather / determine all of the axes.
 	vec2 axes[7];
 	int naxes = 0;
-	for (int i = 0; i < 4; ++i)
-		axes[naxes++] = normal(perpendicular(boxPoints[i] - boxPoints[(i + 1)%4], false));
-	for (int i = 0; i < 3; ++i)
-		axes[naxes++] = normal(perpendicular(trianglePoints[i] - trianglePoints[(i + 1) % 3], false));
+	for (int i = 0; i < box.numPoints; ++i)
+		axes[naxes++] = normal(perpendicular(box.points[i] - box.points[(i + 1)% box.numPoints], false));
+	for (int i = 0; i < triangle.numPoints; ++i)
+		axes[naxes++] = normal(perpendicular(triangle.points[i] - triangle.points[(i + 1) % triangle.numPoints], false));
 
 	float fPD = FLT_MAX;
 	vec2  fCN;
@@ -77,8 +196,8 @@ int main()
 	// For Each Axis
 	for(int i = 0; i < naxes; ++i)
 	{
-		AxialExtents Aex = EvalAxialExtents(axes[i], boxPoints, 4);
-		AxialExtents Bex = EvalAxialExtents(axes[i], trianglePoints, 3);
+		AxialExtents Aex = EvalAxialExtents(axes[i], box.points, 4);
+		AxialExtents Bex = EvalAxialExtents(axes[i], triangle.points, 3);
 
 		float lPD = Aex.max - Bex.min;
 		float rPD = Bex.max - Aex.min;
@@ -95,6 +214,13 @@ int main()
 			fPD = PD;
 			fCN = CN;
 		}
+
+		printf("Aex: max %f min %f \n", Aex.max, Aex.min);
+		printf("lPd: %f , rPd %f \n", lPD, rPD);
+		printf("PD %f, H %f, CN %f , %f \n", PD, H, CN.x, CN.y);
+		printf("fPD %f, fCN %f \n", fPD, fCN);
+		std::cout << res << std::endl << std::endl;
+
 	}
 
 	//~fin
@@ -111,32 +237,37 @@ int main()
 		//// else if return the axis of least separation (axis w/smallest overlap)
 	
 
-	printNormals(boxPoints, 4);
-	printNormals(trianglePoints, 3);
+	printNormals(box.points, 4);
+	printNormals(triangle.points, 3);
 
-	vec2 normVec = normal(perpendicular(boxPoints[1] - boxPoints[2], false));
-	printf("Dot: %f %f \n", normVec.x, normVec.y);
-	vec2 v = projection(boxPoints[0] - boxPoints[1], normVec);
-	printf("Dot: %f %f \n", v.x, v.y);
-	v = projection(boxPoints[3] - boxPoints[2], normVec);
-	printf("Dot: %f %f \n", v.x, v.y);
-
-	//vec2 normVec = normal(perpendicular(boxPoints[0] - boxPoints[1], false));
-	//printf("Normal X: %f Y: %f \n", normVec.x,normVec.y);
-
-	//normVec = normal(perpendicular(boxPoints[1] - boxPoints[2], false));
-	//printf("Normal X: %f Y: %f \n", normVec.x, normVec.y);
-
-	//normVec = normal(perpendicular(boxPoints[2] - boxPoints[3], false));
-	//printf("Normal X: %f Y: %f \n", normVec.x, normVec.y);
-
-	//normVec = normal(perpendicular(boxPoints[3] - boxPoints[0], false));
-	//printf("Normal X: %f Y: %f \n", normVec.x, normVec.y);
-
+	vec2 mousePos = { 0,0 };
 
 	while (sfw::stepContext())
 	{
+		mousePos = vec2{ sfw::getMouseX(), sfw::getMouseY() };
+		triangle.transform.angle += sfw::getDeltaTime();
 
+		//mousePos = {130,12};
+
+		box.points[0] = mousePos;
+		box.points[1] = mousePos + vec2{ 200,0 };
+		box.points[2] = mousePos + vec2{ 200,200 };
+		box.points[3] = mousePos + vec2{ 0,200 };
+
+		DrawPolygon(box);
+		DrawPolygon(triangle);
+
+		//DrawAxes(box);
+		//DrawAxes(triangle);
+
+		if (DoPolygonsCollide(box,triangle))
+		{
+			sfw::setBackgroundColor(BLUE);
+		}
+		else
+		{
+			sfw::setBackgroundColor(BLACK);
+		}
 	}
 
 	sfw::termContext();

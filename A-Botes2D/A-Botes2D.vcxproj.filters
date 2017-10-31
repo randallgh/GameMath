@@ -41,9 +41,6 @@
     <ClInclude Include="Screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="main.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Shell.h">
       <Filter>Header Files</Filter>
     </ClInclude>

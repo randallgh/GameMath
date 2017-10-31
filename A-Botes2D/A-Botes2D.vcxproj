@@ -134,7 +134,6 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hull.h" />
-    <ClInclude Include="main.h" />
     <ClInclude Include="NavalBattery.h" />
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Shell.h" />
