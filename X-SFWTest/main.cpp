@@ -6,6 +6,25 @@
 
 #include "Transform.h"
 #include "Player.h"
+#include <cmath>
+
+
+struct AxialExtents { float min, max; };
+
+AxialExtents EvalAxialExtents(const vec2 &axis, const vec2 *points, size_t size)
+{
+	AxialExtents res = {FLT_MAX, FLT_MIN};
+
+	for (int i = 0; i < size; ++i)
+	{
+		float proj = dot(axis, points[i]);
+
+		res.min = min(proj, res.min);
+		res.max = max(proj, res.max);
+	}
+
+	return res;
+}
 
 
 void printNormals(const vec2 * points, int count)
@@ -41,16 +60,66 @@ int main()
 		{ 6,2.5 },
 		{ 8,1 },
 		{ 8,4 } };
+	
+
+	////// Gather / determine all of the axes.
+	vec2 axes[7];
+	int naxes = 0;
+	for (int i = 0; i < 4; ++i)
+		axes[naxes++] = normal(perpendicular(boxPoints[i] - boxPoints[(i + 1)%4], false));
+	for (int i = 0; i < 3; ++i)
+		axes[naxes++] = normal(perpendicular(trianglePoints[i] - trianglePoints[(i + 1) % 3], false));
+
+	float fPD = FLT_MAX;
+	vec2  fCN;
+	bool  res = true;
+
+	// For Each Axis
+	for(int i = 0; i < naxes; ++i)
+	{
+		AxialExtents Aex = EvalAxialExtents(axes[i], boxPoints, 4);
+		AxialExtents Bex = EvalAxialExtents(axes[i], trianglePoints, 3);
+
+		float lPD = Aex.max - Bex.min;
+		float rPD = Bex.max - Aex.min;
+
+		float PD  = min(lPD, rPD);
+		float H   = copysignf(1, rPD - lPD); 
+		vec2  CN  = axes[i] * H;
+
+		res = res && PD >= 0;
+
+		if((res && PD < fPD)  ||
+		  (!res && (PD < 0) && (PD > fPD || fPD >= 0)))
+		{
+			fPD = PD;
+			fCN = CN;
+		}
+	}
+
+	//~fin
+
+
+
+	////// Test 1D collision across each axis
+		//// project points of each hull onto axis, finding the min/max extents
+		//// find the overlap
+
+	///// Of all axes:
+		//// if any overlap is non-overlapping:
+			//// the result is the smallest non-overlapping axis ( shortest distance)
+		//// else if return the axis of least separation (axis w/smallest overlap)
+	
 
 	printNormals(boxPoints, 4);
 	printNormals(trianglePoints, 3);
 
-	vec2 normVec = normal(perpendicular(boxPoints[0] - boxPoints[1], false));
-
-	float v = dot(normVec, boxPoints[0] - boxPoints[1]);
-	printf("Dot: %f \n", v);
-	v = dot(normVec, boxPoints[3] - boxPoints[2]);
-	printf("Dot: %f \n", v);
+	vec2 normVec = normal(perpendicular(boxPoints[1] - boxPoints[2], false));
+	printf("Dot: %f %f \n", normVec.x, normVec.y);
+	vec2 v = projection(boxPoints[0] - boxPoints[1], normVec);
+	printf("Dot: %f %f \n", v.x, v.y);
+	v = projection(boxPoints[3] - boxPoints[2], normVec);
+	printf("Dot: %f %f \n", v.x, v.y);
 
 	//vec2 normVec = normal(perpendicular(boxPoints[0] - boxPoints[1], false));
 	//printf("Normal X: %f Y: %f \n", normVec.x,normVec.y);
