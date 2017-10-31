@@ -8,25 +8,10 @@
 #include "Player.h"
 #include"drawutils.h"
 
+#include "Polygon.h"
+
+
 #include <cmath>
-
-
-struct AxialExtents { float min, max; };
-
-AxialExtents EvalAxialExtents(const vec2 &axis, const vec2 *points, size_t size)
-{
-	AxialExtents res = {INFINITY, -INFINITY};
-
-	for (int i = 0; i < size; ++i)
-	{
-		float proj = dot(axis, points[i]);
-
-		res.min = min(proj, res.min);
-		res.max = max(proj, res.max);
-	}
-
-	return res;
-}
 
 
 void printNormals(const vec2 * points, int count)
@@ -46,55 +31,28 @@ void printNormals(const vec2 * points, int count)
 	}
 }
 
-struct Polygon
-{
-	vec2 points[16];
-	vec2 axes[16];
-	int numPoints;
-	Transform transform;
-};
-
-void DrawPolygon(const Polygon &poly)
-{
-	for (int i = 0; i < poly.numPoints; i++)
-	{
-		vec2 pos1 = (poly.transform.GetGlobalTransform() 
-			* vec3 { poly.points[i].x, poly.points[i].y, 1 }).xy;
-		vec2 pos2 = (poly.transform.GetGlobalTransform() 
-			* vec3 { poly.points[(i + 1) % poly.numPoints].x, 
-			  poly.points[(i + 1) % poly.numPoints].y, 1 }).xy;
-		drawVecLine(pos1, pos2, WHITE);
-		//drawVecLine(pos1, poly.points[(i + 1) % poly.numPoints]);
-	}
-}
-
-void DrawAxes(const Polygon &poly)
-{
-	for (int i = 0; i < poly.numPoints; i++)
-	{
-		drawVecLine(poly.axes[i], poly.axes[(i + 1) % poly.numPoints]);
-		//sfw::drawLine(
-		//	poly.axes[i].x,
-		//	poly.axes[i].y,
-		//	poly.axes[(i + 1) % poly.numPoints].x,
-		//	poly.axes[(i + 1) % poly.numPoints].y,
-		//	RED);
-	}
-}
-
-void CreateAxes(Polygon &poly)
-{
-	for (int i = 0; i < poly.numPoints; ++i)
-	{
-		poly.axes[i] = normal(perpendicular(poly.points[i] - poly.points[(i + 1) % poly.numPoints], false));
-	}
-}
-
 struct Collision
 {
 	float penetration;
 	vec2 collisionNormal;
 };
+
+struct AxialExtents { float min, max; };
+
+AxialExtents EvalAxialExtents(const vec2 &axis, const vec2 *points, size_t size)
+{
+	AxialExtents res = { INFINITY, -INFINITY };
+
+	for (int i = 0; i < size; ++i)
+	{
+		float proj = dot(axis, points[i]);
+
+		res.min = min(proj, res.min);
+		res.max = max(proj, res.max);
+	}
+
+	return res;
+}
 
 bool DoPolygonsCollide(const Polygon &A, const Polygon &B)
 {
@@ -245,7 +203,7 @@ int main()
 	while (sfw::stepContext())
 	{
 		mousePos = vec2{ sfw::getMouseX(), sfw::getMouseY() };
-		triangle.transform.angle += sfw::getDeltaTime();
+		triangle.transform.angle += sfw::getDeltaTime() * 100;
 
 		//mousePos = {130,12};
 
@@ -254,13 +212,15 @@ int main()
 		box.points[2] = mousePos + vec2{ 200,200 };
 		box.points[3] = mousePos + vec2{ 0,200 };
 
-		DrawPolygon(box);
-		DrawPolygon(triangle);
 
 		//DrawAxes(box);
 		//DrawAxes(triangle);
 
-		if (DoPolygonsCollide(box,triangle))
+		DrawPolygon(box * box.transform.GetGlobalTransform());
+		DrawPolygon(triangle * triangle.transform.GetGlobalTransform());
+
+		if (DoPolygonsCollide(box * box.transform.GetGlobalTransform(),
+			triangle * triangle.transform.GetGlobalTransform()))
 		{
 			sfw::setBackgroundColor(BLUE);
 		}
