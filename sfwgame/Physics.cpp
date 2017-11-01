@@ -60,7 +60,7 @@ void Physics::update(float dt)
 				//std::cout << "Checking COLLISION" << std::endl;
 				Collision collision = colliders[i]->doesCollide(colliders[o]);
 
-				if (collision.penetration > 0)
+				if (collision.penetration > 0 && colliders[o]->gameObject->collider->type == ColliderType::SAT )
 				{
 
 					colliders[i]->gameObject->transform->e_parent->gameObject->transform->position
