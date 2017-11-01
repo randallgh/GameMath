@@ -13,6 +13,8 @@ public:
 	int radius;
 	float mass, drag;
 
+	int elasticity;
+
 	vec2 acceleration,
 		velocity,
 		force,

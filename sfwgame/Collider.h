@@ -52,6 +52,10 @@ public:
 
 private:
 	static Collision DoesCollide_SAT_SAT(const SATGeometry &A, const SATGeometry &B);
-	static Collision DoesCollide_CIRCLE_CIRCLE();
+
+	static Collision DoesCollide_CIRCLE_CIRCLE(const Collider &A, const Collider &B);
+
+	static Collision DoesCollide_SAT_CIRCLE();
+
 	static AxialExtents EvalAxialExtents(const vec2 &axis, const vec2 *points, size_t size);
 };

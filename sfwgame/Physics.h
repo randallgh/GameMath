@@ -2,7 +2,9 @@
 #include <string>
 
 class Collider;
+struct Collision;
 class Camera;
+union vec2;
 
 class Physics
 {
@@ -11,6 +13,8 @@ public:
 	~Physics();
 	void update(float dt);
 	bool addCollider(Collider * collider);
+
+	static void static_resolution(vec2 & pos, vec2 & vel, const Collision & hit, float elasticity);
 
 private:
 	static const int MAX_COLLIDERS = 500;

@@ -61,14 +61,19 @@ void Physics::update(float dt)
 				Collision collision = colliders[i]->doesCollide(colliders[o]);
 
 				if (collision.penetration > 0)
-				{					
-					if (colliders[i]->gameObject->tag.compare("Akizuki Hull") == 0 && colliders[o]->gameObject->tag.compare("Hatsuzuki Hull") == 0)
+				{
+
+					colliders[i]->gameObject->transform->e_parent->gameObject->transform->position
+						+= (collision.collisionNormal * collision.penetration) / 2;
+					colliders[o]->gameObject->transform->e_parent->gameObject->transform->position
+						-= (collision.collisionNormal * collision.penetration) / 2;
+
+					continue;
+
+					/*if (colliders[i]->gameObject->tag.compare("Akizuki Hull") == 0 && colliders[o]->gameObject->tag.compare("Hatsuzuki Hull") == 0)
 					{
-						colliders[i]->gameObject->transform->e_parent->gameObject->transform->position 
-							+= (collision.collisionNormal * collision.penetration)/2;
-						colliders[o]->gameObject->transform->e_parent->gameObject->transform->position 
-							-= (collision.collisionNormal * collision.penetration)/2;
-					}
+				
+					}*/
 
 					vec2 posI = (cam->mat *
 						colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy;
@@ -306,6 +311,13 @@ bool Physics::addCollider(Collider * collider)
 		}
 	}
 	return false;
+}
+
+void Physics::static_resolution(vec2 & pos, vec2 & vel, const Collision & hit, float elasticity)
+{
+	pos += hit.collisionNormal * hit.penetration;
+
+	vel = -reflect(vel, hit.collisionNormal) * elasticity;
 }
 
 int Physics::isCollide(int i, int o, std::string tag1, std::string tag2)

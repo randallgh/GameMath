@@ -171,6 +171,16 @@ vec2 projection(const vec2 & A, const vec2 & B)
 	return retval;
 }
 
+vec2 project(const vec2 & v, const vec2 & axis)
+{
+	return dot(v, axis) * axis;
+}
+
+vec2 reflect(const vec2 & v, const vec2 & axis)
+{
+	return 2 * project(v, axis) - v;
+}
+
 //vec2 cross(vec2 & v1, vec2 & v2)
 //{
 //

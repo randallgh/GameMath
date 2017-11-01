@@ -86,22 +86,45 @@ Collision Collider::DoesCollide_SAT_SAT(const SATGeometry &A, const SATGeometry 
 	return Collision{ fPD, fCN};
 }
 
-Collision Collider::doesCollide(Collider * other)
+Collision Collider::DoesCollide_CIRCLE_CIRCLE(const Collider & A, const Collider & B)
 {
-	if (other->type == ColliderType::SAT && this->type == ColliderType::SAT)
-	{
-		return DoesCollide_SAT_SAT(geometry * gameObject->transform->GetGlobalTransform() , 
-			other->geometry * other->gameObject->transform->GetGlobalTransform());
-	}
-	else if (other->type == ColliderType::Circle && this->type == ColliderType::Circle)
-	{
+	vec2 aPos = A.gameObject->transform->GetGlobalTransform().c[2].xy;
+	vec2 bPos = B.gameObject->transform->GetGlobalTransform().c[2].xy;
 
+	float dist = distance(aPos, bPos);
+
+	float aR = A.gameObject->rigidbody->radius;
+	float bR = B.gameObject->rigidbody->radius;
+
+	if (dist < aR + bR)
+	{
+		return Collision{ (aR + bR) - dist, normal(bPos - aPos) };
 	}
 
 	return Collision{ 0, {0,0} };
 }
 
-AxialExtents Collider::EvalAxialExtents(const vec2 & axis, const vec2 * points, size_t size)
+Collision Collider::doesCollide(Collider * other)
+{
+	if (other->type == ColliderType::SAT 
+		&& this->type == ColliderType::SAT)
+	{
+		return DoesCollide_SAT_SAT(geometry 
+			* gameObject->transform->GetGlobalTransform() , 
+			other->geometry 
+			* other->gameObject->transform->GetGlobalTransform());
+	}
+	else if (other->type == ColliderType::Circle 
+		&& this->type == ColliderType::Circle)
+	{
+		return DoesCollide_CIRCLE_CIRCLE(*this, *other);
+	}
+
+	return Collision{ 0, {0,0} };
+}
+
+AxialExtents Collider::EvalAxialExtents(const vec2 & axis, const vec2 * points, 
+										size_t size)
 {
 	AxialExtents res = { INFINITY, -INFINITY };
 

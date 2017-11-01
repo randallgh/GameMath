@@ -18,7 +18,6 @@
 #include "vec2.h"
 #include "vec3.h"
 #include "mat3x3.h"
-
 #include <iostream>
 #include <string>
 
@@ -46,8 +45,10 @@ Input * input = new Input();
 
 Ship * Akizuki;
 Ship * Hatsuzuki;
+Ship * Suzutsuki;
 
 Ship* setupAkizukiClass(std::string n);
+Ship* setupNewAkizukiClass(std::string n);
 void pInput(float dt);
 void drawGUI();
 
@@ -59,9 +60,15 @@ int main()
 	mainCam->screenHeight = SCR_INFO.SCR_HEIGHT;
 	stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
-	Akizuki = setupAkizukiClass("Akizuki");
-	Hatsuzuki = setupAkizukiClass("Hatsuzuki");
+	//Akizuki = setupAkizukiClass("Akizuki");
+	Akizuki = setupNewAkizukiClass("Akizuki");
+	//Hatsuzuki = setupAkizukiClass("Hatsuzuki");
+	Hatsuzuki = setupNewAkizukiClass("Hatsuzuki");
 	Akizuki->transform->position = vec2{ 0, 100 };
+
+	Suzutsuki = setupNewAkizukiClass("Satsuzuki");
+	Suzutsuki->transform->position = vec2{ 400,400 };
+	Suzutsuki->transform->angle = 45;
 
 	std::cout << Akizuki->name;
 
@@ -77,6 +84,7 @@ int main()
 
 		Akizuki->update(dt);
 		Hatsuzuki->update(dt);
+		Suzutsuki->update(dt);
 
 		physics->update(dt);
 		mainCam->SetupMatrix(Akizuki->transform);
@@ -92,7 +100,7 @@ int main()
 		//}
 		//Draw mouse pos as a circle
 		vec2 mousePosVec = (mousePos.GetGlobalTransform()).c[2].xy;
-		sfw::drawCircle(mousePosVec.x, mousePosVec.y, 5, 12, WHITE);
+		sfw::drawCircle(mousePosVec.x, mousePosVec.y, 5, 12, RED);
 		//drawVecCircle(, 5, 12, WHITE);
 
 		Akizuki->setGunAngle(mousePos.GetGlobalTransform().c[2].xy);
@@ -100,8 +108,11 @@ int main()
 		Hatsuzuki->setGunAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 		Hatsuzuki->shootAllGuns((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 
+		Suzutsuki->setGunAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
+
 		Akizuki->draw();
 		Hatsuzuki->draw();
+		Suzutsuki->draw();
 
 		//DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
 		drawGUI();
@@ -158,6 +169,72 @@ Ship* setupAkizukiClass(std::string n)
 	shipMainGuns[1]->transform->position = { -(17 * 1),0 };
 	shipMainGuns[2]->transform->position = { (17 * 1),0 };
 	shipMainGuns[3]->transform->position = { (17 * 3),0 };
+
+
+	ship = new Ship(n, n, physics, shipHull, hullNum, shipMainGuns, mainGunNum);
+
+
+	ship->transform->dimension = { 1,1 };
+	ship->transform->position = { 0, 0 };
+	ship->horsepower = 50000;
+	ship->rigidbody->mass = 3700;
+
+
+	ship->cam = mainCam;
+	return ship;
+}
+
+Ship* setupNewAkizukiClass(std::string n)
+{
+	Ship * ship;
+	float length = 440;
+	float width = 38;
+	float length2 = length/2;
+	float width2 = width/2;
+	int hullNum = 1;
+	int mainGunNum = 4;
+	Hull ** shipHull = new Hull*[hullNum];
+	NavalBattery ** shipMainGuns = new NavalBattery*[mainGunNum];
+	for (int i = 0; i < hullNum; ++i)
+	{
+		SATGeometry col =
+		{
+			{
+				{ -length2 + 20, width2 },
+				{ -length2, width/4 },
+				{ -length2, -width/4 },
+				{ -length2 + 20, -width2 },
+				{ length/4,-width2 },
+				{ length2,-2 },
+				{ length2,2 },
+				{ length / 4,width2 },
+
+			},
+			8
+		};
+		shipHull[i] = new Hull(col, physics);
+		shipHull[i]->name = n + " Hull";
+		shipHull[i]->tag = n + " Hull";
+		shipHull[i]->rigidbody->radius = (length / 4) / 2;
+		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
+	}
+	shipHull[0]->transform->position = { 0,0 };
+	//shipHull[0]->transform->position = { -(17 * 3),0 };
+	//shipHull[1]->transform->position = { -(17 * 1),0 };
+	//shipHull[2]->transform->position = { (17 * 1),0 };
+	//shipHull[3]->transform->position = { (17 * 3),0 };
+
+
+	for (int i = 0; i < mainGunNum; ++i)
+	{
+		shipMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
+		shipMainGuns[i]->shellType1 = new Shell();
+		shipMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
+	}
+	shipMainGuns[0]->transform->position = { 100 + 30,0 };
+	shipMainGuns[1]->transform->position = { 100 ,0 };
+	shipMainGuns[2]->transform->position = { -100,0 };
+	shipMainGuns[3]->transform->position = { -100 - 30,0 };
 
 
 	ship = new Ship(n, n, physics, shipHull, hullNum, shipMainGuns, mainGunNum);
