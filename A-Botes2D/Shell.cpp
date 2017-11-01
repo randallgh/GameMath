@@ -45,7 +45,7 @@ void Shell::setupShell(Physics * phys, std::string t, std::string n, float r, fl
 	maxDistance = mDis;
 
 	isEnabled = true;
-	transform = new Transform();
+	transform = new Transform(this);
 	if (collider == nullptr) { collider = new Collider(this, phys); }
 	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
 	rigidbody->radius = r;
@@ -65,7 +65,7 @@ void Shell::setupShell(const Shell &s, Physics * phys)
 	maxDistance = s.maxDistance;
 
 	isEnabled = true;
-	transform = new Transform();
+	transform = new Transform(this);
 	if (collider == nullptr){ collider = new Collider(this, phys); }
 	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
 	rigidbody->radius = s.rigidbody->radius;
@@ -87,7 +87,7 @@ void Shell::setupShell(const Shell * s, Physics * phys)
 	maxDistance = (*s).maxDistance;
 
 	isEnabled = true;
-	transform = new Transform();
+	transform = new Transform(this);
 	if (collider == nullptr) { collider = new Collider(this, phys); }
 	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
 	rigidbody->radius = (*s).rigidbody->radius;

@@ -37,7 +37,13 @@ void DrawAxes(const Polygon &poly)
 
 Polygon operator*(const Polygon &P, const mat3x3 &M)
 {
-	Polygon retval;
+	Polygon retval =
+	{
+		{},
+		{},
+		0,
+		Transform(nullptr)
+	};
 	retval.numPoints = P.numPoints;
 	retval.transform = P.transform;
 

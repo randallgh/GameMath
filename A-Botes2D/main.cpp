@@ -37,7 +37,7 @@ float inputTimeMax = 0.5;
 unsigned int stringBitmap;
 ScreenInfo SCR_INFO;
 
-Transform mousePos;
+Transform mousePos(nullptr);
 
 //Game Controllers
 Camera * mainCam = new Camera();
@@ -66,7 +66,7 @@ int main()
 	std::cout << Akizuki->name;
 
 	//point of ref
-	Transform test;
+	//Transform test;
 	
 
 	while (sfw::stepContext())
@@ -81,10 +81,10 @@ int main()
 		physics->update();
 		mainCam->SetupMatrix(Akizuki->transform);
 
-		if (sfw::getMouseButton(1)) {
+		/*if (sfw::getMouseButton(1)) {
 			test.position = Akizuki->transform->GetGlobalTransform().c[2].xy;
 		}
-
+*/
 		//for (int i = 0; i < Akizuki->MAIN_GUNS_COUNT; ++i) {
 		//	drawVecLine(
 		//		(mainCam->mat * Akizuki->mainGuns[i]->transform->GetGlobalTransform()).c[2].xy,
@@ -103,7 +103,7 @@ int main()
 		Akizuki->draw();
 		Hatsuzuki->draw();
 
-		DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
+		//DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
 		drawGUI();
 
 

@@ -83,11 +83,11 @@ Collision Collider::DoesCollide_SAT_SAT(const SATGeometry &A, const SATGeometry 
 
 		if (!res)
 		{
-			return Collision{ PD, CN, H};
+			return Collision{ fPD, fCN, H};
 		}
 	}
 
-	return Collision{ PD, CN, H};
+	return Collision{ fPD, fCN, H};
 }
 
 Collision Collider::doesCollide(Collider * other)

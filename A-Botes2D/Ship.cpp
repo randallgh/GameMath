@@ -26,7 +26,7 @@ Ship::Ship(std::string t, std::string n, Physics * phys, Hull ** h, int hc, Nava
 	HULL_COUNT = hc;
 	MAIN_GUNS_COUNT = mGC;
 
-	transform = new Transform();
+	transform = new Transform(this);
 	//collider = new Collider(this, phys);
 	rigidbody = new Rigidbody(this);
 	isEnabled = true;
@@ -60,7 +60,7 @@ void Ship::setup(std::string t, std::string n, Physics * phys, Hull ** h, int hc
 	HULL_COUNT = hc;
 	MAIN_GUNS_COUNT = mGC;
 
-	transform = new Transform();
+	transform = new Transform(this);
 	rigidbody = new Rigidbody(this);
 	//collider = new Collider(this, phys);
 	isEnabled = true;

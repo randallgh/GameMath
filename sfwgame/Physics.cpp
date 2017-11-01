@@ -50,18 +50,51 @@ void Physics::update()
 
 			if (i != o)
 			{
-				//std::cout << "Checking COLLISION" << std::endl;
-				float dist = 
+				float dist =
 					distance(
-					(cam->mat * 
+					(cam->mat *
 						colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy,
-					(cam->mat *  
-						colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy)
+						(cam->mat *
+							colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy)
 					;
+				
+				//std::cout << "Checking COLLISION" << std::endl;
+				Collision collision = colliders[i]->doesCollide(colliders[o]);
 
-				if (colliders[i]->doesCollide(colliders[o]).penetration > 0)
-				{
-					std::cout << "Collision" << std::endl;
+				if (collision.penetration > 0)
+				{					
+					if (colliders[i]->gameObject->tag.compare("Akizuki Hull") == 0 && colliders[o]->gameObject->tag.compare("Hatsuzuki Hull") == 0)
+					{
+						colliders[i]->gameObject->transform->e_parent->gameObject->transform->position 
+							+= (collision.collisionNormal * collision.handedness * collision.penetration);
+						//colliders[o]->gameObject->transform->e_parent->gameObject->transform->position 
+						//	-= (collision.collisionNormal * collision.handedness * collision.penetration)/2;
+					}
+
+					vec2 posI = (cam->mat *
+						colliders[i]->gameObject->transform->GetGlobalTransform()).c[2].xy;
+					vec2 posO = (cam->mat *
+						colliders[o]->gameObject->transform->GetGlobalTransform()).c[2].xy;
+
+					std::cout << "[WARNING - PHYSICS] Unhandled Collision SAT_SAT: "
+						<< std::endl
+						<< i
+						<< " "
+						<< colliders[i]->gameObject->name
+						<< " X: " << posI.x
+						<< " Y: " << posI.y
+						<< " AND "
+						<< std::endl
+						<< o
+						<< " "
+						<< colliders[o]->gameObject->name
+						<< " X: " << posO.x
+						<< " Y: " << posO.y
+						<< std::endl
+						<< "Distance: "
+						<< dist
+						<< std::endl;
+					continue;
 				}
 
 				if (dist <= (colliders[i]->gameObject->rigidbody->radius 
@@ -165,7 +198,7 @@ void Physics::update()
 						//tag2 == tag1 = 1
 						//Hatsuzuki  Shell
 						//i		  o
-						std::cout << "Damaged Hatsuzuki" << std::endl;
+						//std::cout << "Damaged Hatsuzuki" << std::endl;
 						continue;
 					default:
 						break;
@@ -183,7 +216,7 @@ void Physics::update()
 						//tag2 == tag1 = 1
 						//Hatsuzuki  Shell
 						//i		  o
-						std::cout << "Damaged Akizuki" << std::endl;
+						//std::cout << "Damaged Akizuki" << std::endl;
 						continue;
 					default:
 						break;

@@ -1,11 +1,14 @@
 #include "Transform.h"
+#include "GameObject.h"
 #include "sfwdraw.h"
 
-Transform::Transform()
+Transform::Transform(GameObject * go)
 {
 	position = { 0,0 };
 	dimension = { 1,1 };
 	angle = 0;
+
+	gameObject = go;
 
 	e_parent = nullptr;
 }

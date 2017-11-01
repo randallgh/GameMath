@@ -46,7 +46,7 @@ int main()
 			{0,0}
 		},
 		4,
-		Transform()
+		Transform(nullptr)
 	};
 
 	Polygon triangle = {
@@ -59,7 +59,7 @@ int main()
 			{0,0}
 		},
 		3,
-		Transform()
+		Transform(nullptr)
 	};
 
 	CreateAxes(box);
@@ -145,8 +145,10 @@ int main()
 		DrawPolygon(box * box.transform.GetGlobalTransform());
 		DrawPolygon(triangle * triangle.transform.GetGlobalTransform());
 
-		if (DoPolygonsCollide(box * box.transform.GetGlobalTransform(),
-			triangle * triangle.transform.GetGlobalTransform()).penetration > 0)
+		auto test = DoPolygonsCollide(triangle * triangle.transform.GetGlobalTransform(),
+			box * box.transform.GetGlobalTransform());
+
+		if (test.penetration > 0)
 		{
 			sfw::setBackgroundColor(BLUE);
 		}
@@ -267,12 +269,12 @@ void playerThing()
 
 void transformThings()
 {
-	Transform myTransform;
+	Transform myTransform(nullptr);
 	myTransform.position = vec2{ 300,400 };
 	myTransform.dimension = vec2{ 1,1 };
 	myTransform.angle = 90;
 
-	Transform myBaby;
+	Transform myBaby(nullptr);
 	myBaby.position = vec2{ 30,30 };
 	myBaby.dimension = vec2{ 1,1 };
 	myBaby.e_parent = &myTransform;

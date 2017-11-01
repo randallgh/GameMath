@@ -12,7 +12,7 @@
 NavalBattery::NavalBattery(Physics * phys, vec2 pos, float reload)
 {
 	isEnabled = true;
-	transform = new Transform();
+	transform = new Transform(this);
 	//rigidbody = new Rigidbody(this);
 	physics = phys;
 

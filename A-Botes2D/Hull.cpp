@@ -11,7 +11,7 @@ Hull::Hull(Physics * phys)
 	name = "Hull";
 
 	isEnabled = true;
-	transform = new Transform();
+	transform = new Transform(this);
 	collider = new Collider(this, phys);
 	rigidbody = new Rigidbody(this);
 }
@@ -22,7 +22,7 @@ Hull::Hull(SATGeometry &geo, Physics * phys)
 	name = "Hull";
 
 	isEnabled = true;
-	transform = new Transform();
+	transform = new Transform(this);
 	collider = new Collider(geo, this, phys);
 	rigidbody = new Rigidbody(this);
 }
