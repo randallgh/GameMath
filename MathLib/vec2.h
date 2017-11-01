@@ -24,7 +24,7 @@ vec2 operator/(const vec2 &lhs, const float &rhs);
 
 //Unary negation
 vec2 operator-(const vec2 &rhs);
-
+ 
 // compound assignment operators
 vec2 &operator+=(vec2 &lhs, const vec2 &rhs);
 vec2 &operator-=(vec2 &lhs, const vec2 &rhs);
