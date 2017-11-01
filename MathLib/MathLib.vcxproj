@@ -118,7 +118,6 @@
   <ItemGroup>
     <ClInclude Include="mat3x3.h" />
     <ClInclude Include="mathutils.h" />
-    <ClInclude Include="Shapes.h" />
     <ClInclude Include="vec2.h" />
     <ClInclude Include="vec3.h" />
   </ItemGroup>

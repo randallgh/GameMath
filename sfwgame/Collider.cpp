@@ -54,10 +54,6 @@ Collision Collider::DoesCollide_SAT_SAT(const SATGeometry &A, const SATGeometry 
 	vec2  fCN;
 	bool  res = true;
 
-	float PD = 0;
-	vec2 CN = { 0,0 };
-	float H = 0;
-
 	for (int i = 0; i < naxes; ++i)
 	{
 		AxialExtents Aex = EvalAxialExtents(axes[i], A.points, A.numPoints);
@@ -66,9 +62,9 @@ Collision Collider::DoesCollide_SAT_SAT(const SATGeometry &A, const SATGeometry 
 		float lPD = Aex.max - Bex.min;
 		float rPD = Bex.max - Aex.min;
 
-		PD = min(lPD, rPD);
-		H = copysignf(1, rPD - lPD);
-		CN = axes[i] * H;
+		float PD = min(lPD, rPD);
+		float H = copysignf(1, lPD - rPD);
+		vec2 CN = axes[i] * H;
 
 		res = res && PD >= 0;
 
@@ -83,11 +79,11 @@ Collision Collider::DoesCollide_SAT_SAT(const SATGeometry &A, const SATGeometry 
 
 		if (!res)
 		{
-			return Collision{ fPD, fCN, H};
+			return Collision{ fPD, fCN};
 		}
 	}
 
-	return Collision{ fPD, fCN, H};
+	return Collision{ fPD, fCN};
 }
 
 Collision Collider::doesCollide(Collider * other)
@@ -102,7 +98,7 @@ Collision Collider::doesCollide(Collider * other)
 
 	}
 
-	return Collision{ 0, {0,0}, 0 };
+	return Collision{ 0, {0,0} };
 }
 
 AxialExtents Collider::EvalAxialExtents(const vec2 & axis, const vec2 * points, size_t size)

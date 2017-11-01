@@ -30,7 +30,7 @@ struct Collision
 	//you do not want to collide with.
 	float penetration;
 	vec2 collisionNormal;
-	float handedness;
+	//float handedness;
 };
 
 //Whenever a collider is constructed it must be added to the physics array

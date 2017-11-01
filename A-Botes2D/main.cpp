@@ -48,7 +48,7 @@ Ship * Akizuki;
 Ship * Hatsuzuki;
 
 Ship* setupAkizukiClass(std::string n);
-void pInput();
+void pInput(float dt);
 void drawGUI();
 
 int main()
@@ -73,12 +73,12 @@ int main()
 	{
 		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
 		float dt = sfw::getDeltaTime();
-		pInput();
+		pInput(dt);
 
 		Akizuki->update(dt);
 		Hatsuzuki->update(dt);
 
-		physics->update();
+		physics->update(dt);
 		mainCam->SetupMatrix(Akizuki->transform);
 
 		/*if (sfw::getMouseButton(1)) {
@@ -96,8 +96,8 @@ int main()
 		//drawVecCircle(, 5, 12, WHITE);
 
 		Akizuki->setGunAngle(mousePos.GetGlobalTransform().c[2].xy);
-		Hatsuzuki->setGunAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 
+		Hatsuzuki->setGunAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 		Hatsuzuki->shootAllGuns((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 
 		Akizuki->draw();
@@ -174,10 +174,9 @@ Ship* setupAkizukiClass(std::string n)
 }
 
 
-void pInput()
+void pInput(float dt)
 {
-	float t = sfw::getDeltaTime();
-	inputTimer += t;
+	inputTimer += dt;
 	up = sfw::getKey(KEY_UP) || sfw::getKey(KEY_W);
 	down = sfw::getKey(KEY_DOWN) || sfw::getKey(KEY_S);
 	left = sfw::getKey(KEY_LEFT) || sfw::getKey(KEY_A);

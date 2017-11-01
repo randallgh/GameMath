@@ -24,9 +24,8 @@ Physics::~Physics()
 
 }
 
-void Physics::update()
+void Physics::update(float dt)
 {
-	float dt = sfw::getDeltaTime();
 	for (int i = 0; i < MAX_COLLIDERS; ++i)
 	{
 		if (colliders[i] == nullptr) { continue; }
@@ -66,9 +65,9 @@ void Physics::update()
 					if (colliders[i]->gameObject->tag.compare("Akizuki Hull") == 0 && colliders[o]->gameObject->tag.compare("Hatsuzuki Hull") == 0)
 					{
 						colliders[i]->gameObject->transform->e_parent->gameObject->transform->position 
-							+= (collision.collisionNormal * collision.handedness * collision.penetration);
-						//colliders[o]->gameObject->transform->e_parent->gameObject->transform->position 
-						//	-= (collision.collisionNormal * collision.handedness * collision.penetration)/2;
+							+= (collision.collisionNormal * collision.penetration)/2;
+						colliders[o]->gameObject->transform->e_parent->gameObject->transform->position 
+							-= (collision.collisionNormal * collision.penetration)/2;
 					}
 
 					vec2 posI = (cam->mat *

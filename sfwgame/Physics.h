@@ -9,7 +9,7 @@ class Physics
 public:
 	Physics(Camera * c);
 	~Physics();
-	void update();
+	void update(float dt);
 	bool addCollider(Collider * collider);
 
 private:

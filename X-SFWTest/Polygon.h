@@ -106,9 +106,6 @@ Coll DoPolygonsCollide(const Polygon &A, const Polygon &B)
 	vec2  fCN;
 	bool  res = true;
 
-	float PD = 0;
-	vec2 CN = { 0,0 };
-
 	for (int i = 0; i < naxes; ++i)
 	{
 		AExtent Aex = EvalAxialExtents(axes[i], A.points, A.numPoints);
@@ -117,9 +114,9 @@ Coll DoPolygonsCollide(const Polygon &A, const Polygon &B)
 		float lPD = Aex.max - Bex.min;
 		float rPD = Bex.max - Aex.min;
 
-		PD = min(lPD, rPD);
+		float PD = min(lPD, rPD);
 		float H = copysignf(1, rPD - lPD);
-		CN = axes[i] * H;
+		vec2 CN = axes[i] * H;
 
 		res = res && PD >= 0;
 
@@ -138,5 +135,5 @@ Coll DoPolygonsCollide(const Polygon &A, const Polygon &B)
 		}
 	}
 
-	return Coll{ PD, CN };
+	return Coll{ fPD, fCN };
 }
