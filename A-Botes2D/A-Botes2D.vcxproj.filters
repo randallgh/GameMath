@@ -13,50 +13,56 @@
       <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
       <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
     </Filter>
+    <Filter Include="Header Files\Ship">
+      <UniqueIdentifier>{82a1fb54-e3f5-42cf-a8a6-c2d8a62155b5}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Ship">
+      <UniqueIdentifier>{fd6de01e-4003-41ee-8c31-b27c66cf227d}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Ship.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Hull.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Shell.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Ship</Filter>
     </ClCompile>
     <ClCompile Include="NavalBattery.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="Shell.cpp">
+      <Filter>Source Files\Ship</Filter>
+    </ClCompile>
+    <ClCompile Include="Ship.cpp">
+      <Filter>Source Files\Ship</Filter>
     </ClCompile>
     <ClCompile Include="Torpedo.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Ship</Filter>
     </ClCompile>
     <ClCompile Include="TorpedoMount.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Source Files\Ship</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="Ship.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="TorpedoMount.h">
+      <Filter>Header Files\Ship</Filter>
     </ClInclude>
     <ClInclude Include="Hull.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Screen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Shell.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Ship</Filter>
     </ClInclude>
     <ClInclude Include="NavalBattery.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="Shell.h">
+      <Filter>Header Files\Ship</Filter>
+    </ClInclude>
+    <ClInclude Include="Ship.h">
+      <Filter>Header Files\Ship</Filter>
     </ClInclude>
     <ClInclude Include="Torpedo.h">
-      <Filter>Header Files</Filter>
+      <Filter>Header Files\Ship</Filter>
     </ClInclude>
-    <ClInclude Include="TorpedoMount.h">
+    <ClInclude Include="Screen.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
