@@ -1,12 +1,18 @@
 #include "NavalBattery.h"
-#include "Transform.h"
-#include "Ship.h"
-#include "Camera.h"
+
 #include "sfwdraw.h"
+
+//Game
+#include "Ship.h"
 #include "Shell.h"
+
+//SfwGame
+#include "Transform.h"
+#include "Camera.h"
 #include "Collider.h"
 #include "Rigidbody.h"
 #include "Physics.h"
+
 #include <iostream>
 
 NavalBattery::NavalBattery(Physics * phys, vec2 pos, float reload)

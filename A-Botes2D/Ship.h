@@ -8,25 +8,37 @@ class Hull;
 class Camera;
 class NavalBattery;
 
+class Torpedo;
+class TorpedoMount;
+
 class Ship : public GameObject
 {
 public:
 	Ship();
-	Ship(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC);
+	Ship(std::string t, std::string n, Physics * phys, 
+		Hull ** h, int hc, 
+		NavalBattery ** mG, int mGC, 
+		TorpedoMount ** tM, int tMC);
 	~Ship();
 
 	Camera * cam;
+	
 	//Hull
 	Hull ** hull;
 	int HULL_COUNT;
+	
 	//Main Batteries
 	NavalBattery ** mainGuns;
 	int MAIN_GUNS_COUNT;
+	
 	//Secondaries
 	NavalBattery ** secondaryGuns;
 	int SECONDARY_GUNS_COUNT;
+
 	//Torpedo tubes
+	TorpedoMount ** torpedoMounts;
 	int TORPEDO_MOUNT_COUNT;
+	
 	//Engine
 	float enginePower;
 	float horsepower;
@@ -34,7 +46,7 @@ public:
 	void setup(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC);
 
 	//Debug to see the lines from the ships guns to a point
-	void drawGunLines(vec2 point, mat3x3 cam);
+	//void drawGunLines(vec2 point, mat3x3 cam);
 
 	/*
 	for (int i = 0; i < Akizuki->MAIN_GUNS_COUNT; ++i)
@@ -46,6 +58,10 @@ public:
 	*/
 
 	void shootAllGuns(vec2 pos);
+
+	//To be implemented
+	//void shootOneGun(vec2 pos);
+
 	void setGunAngle(vec2 pos);
 	void update(float dt);
 	void draw();

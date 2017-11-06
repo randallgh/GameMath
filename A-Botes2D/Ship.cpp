@@ -1,30 +1,40 @@
 #include "Ship.h"
-#include "Hull.h"
+
 #include "vec2.h"
+#include "mathutils.h"
+
 #include "Transform.h"
 #include "Collider.h"
-#include "mathutils.h"
 #include "sfwdraw.h"
 #include "Camera.h"
-#include "NavalBattery.h"
 #include "Physics.h"
 #include "Rigidbody.h"
-#include <iostream>
 
+#include "Hull.h"
+#include "NavalBattery.h"
+#include "TorpedoMount.h"
+
+#include <iostream>
 Ship::Ship()
 {
 
 }
 
-Ship::Ship(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC)
+Ship::Ship(std::string t, std::string n, Physics * phys, 
+	Hull ** h, int hc, 
+	NavalBattery ** mG, int mGC, 
+	TorpedoMount ** tM, int tMC)
 {
 	tag = t;
 	name = n;
 
 	hull = h;
 	mainGuns = mG;
+	torpedoMounts = tM;
+
 	HULL_COUNT = hc;
 	MAIN_GUNS_COUNT = mGC;
+	TORPEDO_MOUNT_COUNT = tMC;
 
 	transform = new Transform(this);
 	//collider = new Collider(this, phys);
@@ -34,12 +44,19 @@ Ship::Ship(std::string t, std::string n, Physics * phys, Hull ** h, int hc, Nava
 	for (int i = 0; i < HULL_COUNT; ++i)
 	{
 		hull[i]->transform->e_parent = transform;
+		hull[i]->parentShip = this;
 	}
 
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i)
 	{
 		mainGuns[i]->transform->e_parent = transform;
 		mainGuns[i]->parentShip = this;
+	}
+
+	for (int i = 0; i < TORPEDO_MOUNT_COUNT; ++i)
+	{
+		torpedoMounts[i]->transform->e_parent = transform;
+		torpedoMounts[i]->parentShip = this;
 	}
 }
 
@@ -130,6 +147,12 @@ void Ship::draw()
 		//DrawMatrix(cam->mat * mainGuns[i]->transform->GetGlobalTransform(), 20);
 		//sfw::drawCircle(pos.x, pos.y, 10, 12, YELLOW);
 		mainGuns[i]->draw();
+	}
+
+	for (int i = 0; i < TORPEDO_MOUNT_COUNT; ++i)
+	{
+		//if (!torpedoMounts[i]->isEnabled) { continue; }
+		torpedoMounts[i]->draw(cam->mat);
 	}
 	//DrawMatrix(transform->GetGlobalTransform(), 30);
 }

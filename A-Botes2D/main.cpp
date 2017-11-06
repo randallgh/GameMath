@@ -13,6 +13,10 @@
 #include "NavalBattery.h"
 #include "Shell.h"
 
+#include "Torpedo.h"
+#include "TorpedoMount.h"
+
+
 #include "drawutils.h"
 
 #include "vec2.h"
@@ -47,7 +51,7 @@ Ship * Akizuki;
 Ship * Hatsuzuki;
 Ship * Suzutsuki;
 
-Ship* setupAkizukiClass(std::string n);
+//Ship* setupAkizukiClass(std::string n);
 Ship* setupNewAkizukiClass(std::string n);
 void pInput(float dt);
 void drawGUI();
@@ -109,62 +113,62 @@ int main()
 	return 0;
 }
 
-Ship* setupAkizukiClass(std::string n)
-{
-	Ship * ship;
-	float length = 136;
-	int hullNum = 4;
-	int mainGunNum = 4;
-	Hull ** shipHull = new Hull*[hullNum];
-	NavalBattery ** shipMainGuns = new NavalBattery*[mainGunNum];
-	for (int i = 0; i < hullNum; ++i)
-	{
-		SATGeometry col =
-		{
-			{
-				{ -15,-15 },
-				{ 15, -15 },
-				{ 15,15 },
-				{ -15,15 }
-			},
-			4
-		};
-		shipHull[i] = new Hull(col, physics);
-		shipHull[i]->name = n + " Hull";
-		shipHull[i]->tag = n + " Hull";
-		shipHull[i]->rigidbody->radius = (length / 4) / 2;
-		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
-	}
-	shipHull[0]->transform->position = { -(17 * 3),0 };
-	shipHull[1]->transform->position = { -(17 * 1),0 };
-	shipHull[2]->transform->position = { (17 * 1),0 };
-	shipHull[3]->transform->position = { (17 * 3),0 };
-
-
-	for (int i = 0; i < mainGunNum; ++i)
-	{
-		shipMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
-		shipMainGuns[i]->shellType1 = new Shell();
-		shipMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
-	}
-	shipMainGuns[0]->transform->position = { -(17 * 3),0 };
-	shipMainGuns[1]->transform->position = { -(17 * 1),0 };
-	shipMainGuns[2]->transform->position = { (17 * 1),0 };
-	shipMainGuns[3]->transform->position = { (17 * 3),0 };
-
-
-	ship = new Ship(n, n, physics, shipHull, hullNum, shipMainGuns, mainGunNum);
-
-
-	ship->transform->dimension = { 1,1 };
-	ship->transform->position = { 0, 0 };
-	ship->horsepower = 50000;
-	ship->rigidbody->mass = 3700;
-
-
-	ship->cam = mainCam;
-	return ship;
-}
+//Ship* setupAkizukiClass(std::string n)
+//{
+//	Ship * ship;
+//	float length = 136;
+//	int hullNum = 4;
+//	int mainGunNum = 4;
+//	Hull ** shipHull = new Hull*[hullNum];
+//	NavalBattery ** shipMainGuns = new NavalBattery*[mainGunNum];
+//	for (int i = 0; i < hullNum; ++i)
+//	{
+//		SATGeometry col =
+//		{
+//			{
+//				{ -15,-15 },
+//				{ 15, -15 },
+//				{ 15,15 },
+//				{ -15,15 }
+//			},
+//			4
+//		};
+//		shipHull[i] = new Hull(col, physics);
+//		shipHull[i]->name = n + " Hull";
+//		shipHull[i]->tag = n + " Hull";
+//		shipHull[i]->rigidbody->radius = (length / 4) / 2;
+//		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
+//	}
+//	shipHull[0]->transform->position = { -(17 * 3),0 };
+//	shipHull[1]->transform->position = { -(17 * 1),0 };
+//	shipHull[2]->transform->position = { (17 * 1),0 };
+//	shipHull[3]->transform->position = { (17 * 3),0 };
+//
+//
+//	for (int i = 0; i < mainGunNum; ++i)
+//	{
+//		shipMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
+//		shipMainGuns[i]->shellType1 = new Shell();
+//		shipMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
+//	}
+//	shipMainGuns[0]->transform->position = { -(17 * 3),0 };
+//	shipMainGuns[1]->transform->position = { -(17 * 1),0 };
+//	shipMainGuns[2]->transform->position = { (17 * 1),0 };
+//	shipMainGuns[3]->transform->position = { (17 * 3),0 };
+//
+//
+//	ship = new Ship(n, n, physics, shipHull, hullNum, shipMainGuns, mainGunNum);
+//
+//
+//	ship->transform->dimension = { 1,1 };
+//	ship->transform->position = { 0, 0 };
+//	ship->horsepower = 50000;
+//	ship->rigidbody->mass = 3700;
+//
+//
+//	ship->cam = mainCam;
+//	return ship;
+//}
 
 Ship* setupNewAkizukiClass(std::string n)
 {
@@ -175,8 +179,12 @@ Ship* setupNewAkizukiClass(std::string n)
 	float width2 = width/2;
 	int hullNum = 1;
 	int mainGunNum = 4;
+	int torpedoMountsNum = 1;
+
 	Hull ** shipHull = new Hull*[hullNum];
 	NavalBattery ** shipMainGuns = new NavalBattery*[mainGunNum];
+	TorpedoMount ** shipTorpedoMounts = new TorpedoMount*[torpedoMountsNum];
+
 	for (int i = 0; i < hullNum; ++i)
 	{
 		SATGeometry col =
@@ -218,9 +226,16 @@ Ship* setupNewAkizukiClass(std::string n)
 	shipMainGuns[2]->transform->position = { -100,0 };
 	shipMainGuns[3]->transform->position = { -100 - 30,0 };
 
+	for (int i = 0; i < torpedoMountsNum; ++i)
+	{
+		shipTorpedoMounts[i] = new TorpedoMount(physics, vec2{ 0,0 });
+	}
+	shipTorpedoMounts[0]->transform->position = { -50,0 };
 
-	ship = new Ship(n, n, physics, shipHull, hullNum, shipMainGuns, mainGunNum);
-
+	ship = new Ship(n, n, physics, 
+		shipHull, hullNum, 
+		shipMainGuns, mainGunNum,
+		shipTorpedoMounts,torpedoMountsNum);
 
 	ship->transform->dimension = { 1,1 };
 	ship->transform->position = { 0, 0 };

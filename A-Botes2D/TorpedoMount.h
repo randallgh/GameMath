@@ -10,7 +10,7 @@ class Physics;
 class TorpedoMount : public GameObject
 {
 public:
-	TorpedoMount();
+	TorpedoMount(Physics * phys, const vec2 & pos);
 	~TorpedoMount();
 
 	Ship * parentShip;
