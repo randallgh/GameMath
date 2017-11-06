@@ -56,11 +56,18 @@ public:
 			(mousePos.GetGlobalTransform()).c[2].xy, RED);
 	}
 	*/
-
+	
+	//Fires all guns at vec2 pos
 	void shootAllGuns(vec2 pos);
 
 	//To be implemented
 	//void shootOneGun(vec2 pos);
+
+	//Fire all torpedo mounts at vec2 Pos
+	void launchAllTorpedoes(vec2 pos);
+
+	//Fire a single torpedo mount at vec2 Pos
+	//void launchOneTorpedoMount(vec2 pos);
 
 	void setGunAngle(vec2 pos);
 	void update(float dt);

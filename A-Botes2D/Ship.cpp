@@ -65,8 +65,6 @@ Ship::~Ship()
 
 }
 
-
-
 void Ship::setup(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC)
 {
 	tag = t;
