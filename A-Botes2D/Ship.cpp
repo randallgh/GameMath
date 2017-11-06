@@ -124,7 +124,10 @@ void Ship::update(float dt)
 	{
 		mainGuns[i]->update();
 	}
-
+	for (int i = 0; i < TORPEDO_MOUNT_COUNT; ++i)
+	{
+		torpedoMounts[i]->update(dt);
+	}
 }
 
 void Ship::draw()
@@ -146,10 +149,9 @@ void Ship::draw()
 		//sfw::drawCircle(pos.x, pos.y, 10, 12, YELLOW);
 		mainGuns[i]->draw();
 	}
-
 	for (int i = 0; i < TORPEDO_MOUNT_COUNT; ++i)
 	{
-		//if (!torpedoMounts[i]->isEnabled) { continue; }
+		if (!torpedoMounts[i]->isEnabled) { continue; }
 		torpedoMounts[i]->draw(cam->mat);
 	}
 	//DrawMatrix(transform->GetGlobalTransform(), 30);

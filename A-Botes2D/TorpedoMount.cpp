@@ -6,6 +6,9 @@
 #include "Rigidbody.h"
 #include "drawutils.h"
 
+
+#include "Torpedo.h"
+
 #include <iostream>
 
 TorpedoMount::TorpedoMount(Physics * phys, const vec2 & pos)
@@ -28,8 +31,24 @@ TorpedoMount::~TorpedoMount()
 
 }
 
+void TorpedoMount::update(float dt)
+{
+
+	for (int i = 0; i < MAX_TORPEDOES; ++i)
+	{
+		if (torpedos[i] == nullptr) { continue; }
+		torpedos[i]->update(dt);
+	}
+}
+
 void TorpedoMount::draw(mat3x3 cam)
 {
 	DrawMatrix(cam * transform->GetGlobalTransform(), 20);
 	drawVecCircle((cam * transform->GetGlobalTransform()).c[2].xy, 10, 12, RED);
+
+	for (int i = 0; i < MAX_TORPEDOES; ++i)
+	{
+		if (torpedos[i] == nullptr) { continue; }
+		torpedos[i]->draw(cam);
+	}
 }
