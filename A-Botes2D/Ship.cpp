@@ -100,13 +100,20 @@ void Ship::shootAllGuns(vec2 pos)
 	}
 }
 
-void Ship::setGunAngle(vec2 pos)
+void Ship::setWeaponsAngle(vec2 pos)
 {
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i) 
 	{
-		vec2 normalVec = normal(pos - (cam->mat * mainGuns[i]->transform->GetGlobalTransform()).c[2].xy);
+		vec2 normalVec = 
+			normal(pos - (cam->mat * mainGuns[i]->transform->GetGlobalTransform()).c[2].xy);
 		mainGuns[i]->transform->angle = VectorToDegree(normalVec) - transform->angle;
 		//std::cout << mainGuns[i]->transform->angle - transform->angle << std::endl;
+	}
+	for (int i = 0; i < TORPEDO_MOUNT_COUNT; ++i)
+	{
+		vec2 normalVec = 
+			normal(pos - (cam->mat * torpedoMounts[i]->transform->GetGlobalTransform()).c[2].xy);
+		torpedoMounts[i]->transform->angle = VectorToDegree(normalVec) - transform->angle;
 	}
 }
 

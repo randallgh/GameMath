@@ -106,11 +106,11 @@ void Shell::update()
 {
 	if (!isEnabled) { return; }
 	life += sfw::getDeltaTime();
+	distanceTraveled += magnitude(rigidbody->velocity) * sfw::getDeltaTime();
 	if (life >= maxLife || distanceTraveled >= maxDistance) { isEnabled = false; return; }
 	//rigidbody->update();
 	//std::cout << distanceTraveled << std::endl;
 	//std::cout << magnitude(collider->velocity) << std::endl;
-	distanceTraveled += magnitude(rigidbody->velocity) * sfw::getDeltaTime();
 }
 
 void Shell::draw()

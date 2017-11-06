@@ -28,12 +28,12 @@ TorpedoMount::TorpedoMount(Physics * phys, const vec2 & pos)
 
 TorpedoMount::~TorpedoMount()
 {
-
+	//delete transform;
+	//delete rigidbody;
 }
 
 void TorpedoMount::update(float dt)
 {
-
 	for (int i = 0; i < MAX_TORPEDOES; ++i)
 	{
 		if (torpedos[i] == nullptr) { continue; }

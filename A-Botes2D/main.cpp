@@ -93,12 +93,12 @@ int main()
 		sfw::drawCircle(mousePosVec.x, mousePosVec.y, 5, 12, RED);
 		//drawVecCircle(, 5, 12, WHITE);
 
-		Akizuki->setGunAngle(mousePos.GetGlobalTransform().c[2].xy);
+		Akizuki->setWeaponsAngle(mousePos.GetGlobalTransform().c[2].xy);
 
-		Hatsuzuki->setGunAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
+		Hatsuzuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 		Hatsuzuki->shootAllGuns((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 
-		Suzutsuki->setGunAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
+		Suzutsuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 
 		Akizuki->draw();
 		Hatsuzuki->draw();

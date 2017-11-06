@@ -24,6 +24,7 @@ public:
 	float distanceTraveled;
 	float maxDistance;
 
+	float damage;
 	//Feet / Second 
 	float speed;
 	//Feet
@@ -41,10 +42,10 @@ public:
 	dam  | damage
 	mDis | maxDistance
 	*/
-	void setup(Physics * phys, std::string n, float w, float h, float s,
+	void setup(Physics * phys, std::string n, float w, float length, float s,
 		float l, float dam, float mDis);
 
-	void setup(Physics * phys, const Torpedo &torp);
+	//void setup(Physics * phys, const Torpedo &torp);
 	void setup(Physics * phys, const Torpedo *torp);
 
 	void reset();

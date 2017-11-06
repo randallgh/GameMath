@@ -69,7 +69,9 @@ public:
 	//Fire a single torpedo mount at vec2 Pos
 	//void launchOneTorpedoMount(vec2 pos);
 
-	void setGunAngle(vec2 pos);
+	void setWeaponsAngle(vec2 pos);
+
+
 	void update(float dt);
 	void draw();
 };
