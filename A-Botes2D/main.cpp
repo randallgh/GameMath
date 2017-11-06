@@ -60,9 +60,7 @@ int main()
 	mainCam->screenHeight = SCR_INFO.SCR_HEIGHT;
 	stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
-	//Akizuki = setupAkizukiClass("Akizuki");
 	Akizuki = setupNewAkizukiClass("Akizuki");
-	//Hatsuzuki = setupAkizukiClass("Hatsuzuki");
 	Hatsuzuki = setupNewAkizukiClass("Hatsuzuki");
 	Akizuki->transform->position = vec2{ 0, 100 };
 
@@ -71,9 +69,6 @@ int main()
 	Suzutsuki->transform->angle = 45;
 
 	std::cout << Akizuki->name;
-
-	//point of ref
-	//Transform test;
 	
 
 	while (sfw::stepContext())
@@ -89,15 +84,6 @@ int main()
 		physics->update(dt);
 		mainCam->SetupMatrix(Akizuki->transform);
 
-		/*if (sfw::getMouseButton(1)) {
-			test.position = Akizuki->transform->GetGlobalTransform().c[2].xy;
-		}
-*/
-		//for (int i = 0; i < Akizuki->MAIN_GUNS_COUNT; ++i) {
-		//	drawVecLine(
-		//		(mainCam->mat * Akizuki->mainGuns[i]->transform->GetGlobalTransform()).c[2].xy,
-		//		(mousePos.GetGlobalTransform()).c[2].xy, RED);
-		//}
 		//Draw mouse pos as a circle
 		vec2 mousePosVec = (mousePos.GetGlobalTransform()).c[2].xy;
 		sfw::drawCircle(mousePosVec.x, mousePosVec.y, 5, 12, RED);
@@ -116,10 +102,6 @@ int main()
 
 		//DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
 		drawGUI();
-
-
-
-
 
 	}
 
