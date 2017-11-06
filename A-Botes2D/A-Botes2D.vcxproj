@@ -131,6 +131,8 @@
     <ClCompile Include="NavalBattery.cpp" />
     <ClCompile Include="Shell.cpp" />
     <ClCompile Include="Ship.cpp" />
+    <ClCompile Include="Torpedo.cpp" />
+    <ClCompile Include="TorpedoMount.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Hull.h" />
@@ -138,6 +140,8 @@
     <ClInclude Include="Screen.h" />
     <ClInclude Include="Shell.h" />
     <ClInclude Include="Ship.h" />
+    <ClInclude Include="Torpedo.h" />
+    <ClInclude Include="TorpedoMount.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

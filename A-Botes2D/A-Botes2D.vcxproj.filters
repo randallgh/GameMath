@@ -30,6 +30,12 @@
     <ClCompile Include="NavalBattery.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Torpedo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="TorpedoMount.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Ship.h">
@@ -45,6 +51,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NavalBattery.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Torpedo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="TorpedoMount.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
