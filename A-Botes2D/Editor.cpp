@@ -26,16 +26,16 @@ void Editor::update(float dt)
 
 	if (sfw::getKey(KEY_H))
 	{
-		editorState = EDITOR_MODES::HULL;
+		editorState = EDITOR_MODES::HULLDRAW;
 	}
 
-	//Hull drawing mode
+	//Hull drawing mode X
 	//Left click to start placing X
 	//Another click to place another point X
-	//Right click to cancel last point and deselect hull drawing
-	//Select Hull drawing again to be able to place more points
-	//After drawing at least three points you can reconnet to the first point
-	//Snapping to points placed (ajustable)
+	//Right click to cancel last point and deselect hull drawing X
+	//Select Hull drawing again to be able to place more points X
+	//After drawing at least three points you can reconnet to the first point x
+	//Snapping to points placed (ajustable) X
 	//Snapping mode to a grid (ajustable)
 	//Hold shift to snap to 45degree
 	//Another mode to display the cords of the points and click to edit
@@ -52,10 +52,28 @@ void Editor::update(float dt)
 		}
 
 		break;
-	case HULL:
+	case HULLDRAW:
+
 		placeingPos = input->getMousePos();
 		snapIndex = getClosestPoint(placeingPos);
 
+		//Holding shift
+		if (sfw::getKey(KEY_LEFT_SHIFT) && (numPoints > 0))
+		{
+			float x = points[numPoints - 1].x - placeingPos.x;
+			float y = points[numPoints - 1].y - placeingPos.y;
+			vec2 vec = {x,y};
+
+			float deg = (int)VectorToDegree(vec2{ abs(vec.x),abs(vec.y) }) % 360;
+
+			if (deg > 45 && deg < 135 || deg > 225 && deg < 270) 
+			{ 
+				placeingPos = points[numPoints - 1] - vec2{ 0,vec.y }; 
+			}
+			else { placeingPos = points[numPoints - 1] - vec2{ vec.x,0 }; }
+		}
+
+		//Snapping
 		if (snapIndex >= 0 && numPoints > 2)
 		{
 			placeingPos = points[snapIndex];
@@ -117,4 +135,10 @@ int Editor::getClosestPoint(vec2 pos)
 	}
 
 	return -1;
+}
+
+bool Editor::saveShip()
+{
+
+	return false;
 }

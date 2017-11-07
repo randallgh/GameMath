@@ -11,7 +11,12 @@ public:
 	Editor(Input * i, Camera * mC, unsigned * sBitmap);
 	~Editor();
 
+	ScreenInfo SCR_INFO;
+
+	void update(float dt);
+	
 	Button * editorExitButton;
+private:
 	Input * input;
 	Camera * mainCam;
 	unsigned * stringBitmap;
@@ -25,17 +30,17 @@ public:
 
 	vec2 placeingPos;
 
-	ScreenInfo SCR_INFO;
 	enum EDITOR_MODES
 	{
 		IDLE,
-		HULL
+		HULLDRAW,
+		EDIT
 	};
 
 	EDITOR_MODES editorState = EDITOR_MODES::IDLE;
 
-	void update(float dt);
-
 	int getClosestPoint(vec2 pos);
+
+	bool saveShip();
 };
 

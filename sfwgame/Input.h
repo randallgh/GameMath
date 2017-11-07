@@ -32,6 +32,9 @@ class GameObject;
 #define 	KEY_Y   89
 #define 	KEY_Z   90
 
+#define 	KEY_LEFT_SHIFT   340
+#define 	KEY_RIGHT_SHIFT   344
+
 class Input
 {
 public:
