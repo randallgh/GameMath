@@ -4,6 +4,8 @@
 #include "Transform.h"
 #include "Rigidbody.h"
 
+#include "sfwdraw.h"
+
 Torpedo::Torpedo()
 {
 	tag = "Torpedo";
@@ -12,6 +14,7 @@ Torpedo::Torpedo()
 	life = 0;
 	maxLife = 0;
 	isEnabled = false;
+	color = WHITE;
 }
 
 Torpedo::~Torpedo()
@@ -56,6 +59,7 @@ void Torpedo::setup(Physics * phys, std::string n, float w, float length, float 
 
 	collider->geometry = geo;
 	isEnabled = false;
+	color = WHITE;
 }
 
 void Torpedo::setup(Physics * phys, const Torpedo * torp)

@@ -18,7 +18,7 @@ public:
 	bool isEnabled;
 	std::string tag;
 	std::string name;
-	unsigned color;
+	unsigned int color;
 
 	void update();
 

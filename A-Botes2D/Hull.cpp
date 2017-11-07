@@ -5,10 +5,14 @@
 #include "Ship.h"
 #include "Rigidbody.h"
 
+#include "sfwdraw.h"
+
 Hull::Hull(Physics * phys)
 {
 	tag = "Hull";
 	name = "Hull";
+
+	color = WHITE;
 
 	isEnabled = true;
 	transform = new Transform(this);
@@ -20,6 +24,8 @@ Hull::Hull(SATGeometry &geo, Physics * phys)
 {
 	tag = "Hull";
 	name = "Hull";
+
+	color = WHITE;
 
 	isEnabled = true;
 	transform = new Transform(this);

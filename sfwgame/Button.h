@@ -10,6 +10,7 @@ class Button : public GameObject
 {
 public:
 	Button(Input * i, float w, float h, vec2 pos);
+	Button(Input * i, float w, float h, vec2 pos, std::string n);
 	~Button();
 
 	float isClicked;
@@ -17,6 +18,7 @@ public:
 
 	void update(float dt);
 	void draw(mat3x3 cam);
+	void draw(mat3x3 cam, unsigned stringBitmap);
 
 private:
 	float width;

@@ -152,8 +152,7 @@ void Collider::draw(mat3x3 cam)
 {
 	if (this == nullptr) { return; }
 
-	if (gameObject == nullptr) { }
-	else if (!gameObject->isEnabled) { return; }
+	if (!gameObject->isEnabled) { return; }
 
 	switch (type)
 	{
@@ -164,6 +163,10 @@ void Collider::draw(mat3x3 cam)
 		SATGeometry geo = (geometry * cam );
 		for (int i = 0; i < geo.numPoints; i++)
 		{
+			if (gameObject->color == 0) 
+			{ 
+				gameObject->color = WHITE; 
+			}
 			drawVecLine(geo.points[i], geo.points[(i + 1) % geo.numPoints], gameObject->color);
 		}
 		break;

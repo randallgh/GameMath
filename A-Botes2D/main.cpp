@@ -36,6 +36,8 @@ bool ldown;
 bool left;
 bool right;
 
+bool isMouseVisible = false;
+
 float inputTimer = 0;
 float inputTimeMax = 0.5;
 
@@ -114,6 +116,12 @@ int main()
 
 void game()
 {
+	if (isMouseVisible)
+	{
+		sfw::setCursorVisible(false);
+		isMouseVisible = false;
+	}
+
 	mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
 	float dt = sfw::getDeltaTime();
 	gameInput(dt);
@@ -181,6 +189,7 @@ Ship* gameSetupNewAkizukiClass(std::string n)
 		shipHull[i] = new Hull(col, physics);
 		shipHull[i]->name = n + " Hull";
 		shipHull[i]->rigidbody->radius = (length / 4) / 2;
+		shipHull[i]->color = WHITE;
 		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
 	}
 	shipHull[0]->transform->position = { 0,0 };
@@ -311,15 +320,39 @@ void editor()
 
 }
 
-Button test(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, (float)SCR_INFO.SCR_HEIGHT / 2 });
+Button * gameButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, (float)SCR_INFO.SCR_HEIGHT / 2 });
+Button * editorButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, ((float)SCR_INFO.SCR_HEIGHT / 2) - 50 });
 
 void mainMenu()
 {
+	if (!isMouseVisible)
+	{
+		sfw::setCursorVisible(true);
+		isMouseVisible = true;
+	}
+
 	float dt = sfw::getDeltaTime();
+	mainCam->mat = mat3x3::identity();
 
-	sfw::setCursorVisible(true);
+	gameButton->draw(mainCam->mat,stringBitmap);
+	gameButton->update(dt);
+	gameButton->name = "Game";
 
-	mainCam->SetupMatrix(&Transform{ nullptr });
-	test.draw(mainCam->mat);
-	test.update(dt);
+	editorButton->draw(mainCam->mat,stringBitmap);
+	editorButton->update(dt);
+	editorButton->name = "Editor";
+
+	input->drawMouse();
+
+	sfw::drawString(stringBitmap, "Main Menu", 0, SCR_INFO.SCR_HEIGHT - 30, 30, 30);
+
+	if (gameButton->isClicked)
+	{
+		pState = PROGRAM_STATE::_GAME_;
+	}
+
+	if (editorButton->isClicked)
+	{
+		pState = PROGRAM_STATE::_EDITOR_;
+	}
 }
