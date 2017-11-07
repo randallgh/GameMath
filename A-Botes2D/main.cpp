@@ -27,6 +27,8 @@
 #include <iostream>
 #include <string>
 
+#include "Editor.h"
+
 bool up;
 bool lup;
 
@@ -64,6 +66,8 @@ Camera * mainCam = new Camera();
 Physics * physics = new Physics(mainCam);
 Input * input = new Input();
 
+Editor * editor = new Editor(input, mainCam, &stringBitmap);
+
 Ship * Akizuki;
 Ship * Hatsuzuki;
 Ship * Suzutsuki;
@@ -72,7 +76,6 @@ Ship* gameSetupNewAkizukiClass(std::string n);
 void gameInput(float dt);
 void gameDrawGUI();
 void game();
-void editor();
 void mainMenu();
 
 
@@ -102,12 +105,28 @@ int main()
 		switch (pState)
 		{
 		case _GAME_:
+			if (isMouseVisible)
+			{
+				sfw::setCursorVisible(false);
+				isMouseVisible = false;
+			}
 			game();
 			break;
 		case _EDITOR_:
-			editor();
+			if (!isMouseVisible)
+			{
+				sfw::setCursorVisible(true);
+				isMouseVisible = true;
+			}
+			editor->update(dt);
+			if (editor->editorExitButton->isClicked) { pState = PROGRAM_STATE::_MAINMENU_; }
 			break;
 		case _MAINMENU_:
+			if (!isMouseVisible)
+			{
+				sfw::setCursorVisible(true);
+				isMouseVisible = true;
+			}
 			mainMenu();
 			break;
 		default:
@@ -121,11 +140,6 @@ int main()
 
 void game()
 {
-	if (isMouseVisible)
-	{
-		sfw::setCursorVisible(false);
-		isMouseVisible = false;
-	}
 
 	mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
 	gameInput(dt);
@@ -321,94 +335,11 @@ void gameDrawGUI()
 	sfw::drawString(stringBitmap, std::to_string(1 / sfw::getDeltaTime()).c_str(), SCR_INFO.SCR_WIDTH - 100, SCR_INFO.SCR_HEIGHT, 25.0f, 25.0f);
 }
 
-Button * editorExitButton = new Button(input, 50, 50, vec2{ 25, (float)SCR_INFO.SCR_HEIGHT - 25 },"Exit");
-vec2 points[16] = {};
-int numPoints = 0;
-
-float hullDrawSnapRadius = 50;
-
-vec2 placeingPos;
-
-int getClosestPoint(vec2 pos);
-
-void editor()
-{
-	if (!isMouseVisible)
-	{
-		sfw::setCursorVisible(true);
-		isMouseVisible = true;
-	}
-	mainCam->mat = mat3x3::identity();
-
-	
-	//Hull drawing mode
-	//Left click to start placing
-	//Another click to place another point
-	//Right click to cancel last point and deselect hull drawing
-	//Select Hull drawing again to be able to place more points
-	//After drawing at least three points you can reconnet to the first point
-	//Snapping to points placed (ajustable)
-
-	//Snapping mode to a grid (ajustable)
-
-	//getclosestpoint
-
-	placeingPos = input->getMousePos();
-	int num = getClosestPoint(placeingPos);
-
-	if ( num >= 0)
-	{
-		placeingPos = points[num];
-	}
-
-
-	if (input->getMouseButtonDown(0) && (numPoints <= 15))
-	{
-		points[numPoints] = placeingPos;
-		numPoints++;
-	}
-	
-	for (int i = 0; i < numPoints && numPoints >= 1; ++i)
-	{
-		if (i == (numPoints - 1))
-		{
-			drawVecLine(points[i], placeingPos, RED);
-		}
-		else
-		{
-			drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
-		}
-	}
-
-	editorExitButton->draw(mainCam->mat, stringBitmap);
-	editorExitButton->update(dt);
-
-	if (editorExitButton->isClicked) { pState = PROGRAM_STATE::_MAINMENU_; }
-}
-
-int getClosestPoint(vec2 pos)
-{
-	for (int i = 0; i < numPoints; ++i)
-	{
-		if (distance(points[i], pos) < hullDrawSnapRadius)
-		{
-			return i;
-		}
-	}
-
-	return -1;
-}
-
 Button * mmGameButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, (float)SCR_INFO.SCR_HEIGHT / 2 },"Game");
 Button * mmEditorButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, ((float)SCR_INFO.SCR_HEIGHT / 2) - 50 },"Editor");
 
 void mainMenu()
 {
-	if (!isMouseVisible)
-	{
-		sfw::setCursorVisible(true);
-		isMouseVisible = true;
-	}
 
 	mainCam->mat = mat3x3::identity();
 

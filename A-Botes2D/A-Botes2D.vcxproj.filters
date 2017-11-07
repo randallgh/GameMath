@@ -42,6 +42,9 @@
     <ClCompile Include="TorpedoMount.cpp">
       <Filter>Source Files\Ship</Filter>
     </ClCompile>
+    <ClCompile Include="Editor.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="TorpedoMount.h">
@@ -63,6 +66,9 @@
       <Filter>Header Files\Ship</Filter>
     </ClInclude>
     <ClInclude Include="Screen.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Editor.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

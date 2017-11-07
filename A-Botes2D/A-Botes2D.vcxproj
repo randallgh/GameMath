@@ -126,6 +126,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Editor.cpp" />
     <ClCompile Include="Hull.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NavalBattery.cpp" />
@@ -135,6 +136,7 @@
     <ClCompile Include="TorpedoMount.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Editor.h" />
     <ClInclude Include="Hull.h" />
     <ClInclude Include="NavalBattery.h" />
     <ClInclude Include="Screen.h" />
