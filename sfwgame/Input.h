@@ -43,7 +43,13 @@ public:
 	Collider getMouseCollider();
 	void drawMouse();
 
+	//0 - Left / 1 - Right
+	bool getMouseDown(int button);
+
 private:
 	GameObject * mouse;
+
+	bool isMouseLeftPressed = false;
+	bool isMouseRightPressed = false; 
 };
 

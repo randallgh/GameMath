@@ -52,7 +52,7 @@ enum PROGRAM_STATE
 	_MAINMENU_
 };
 
-PROGRAM_STATE pState = PROGRAM_STATE::_MAINMENU_;
+PROGRAM_STATE pState = PROGRAM_STATE::_EDITOR_;
 
 unsigned int stringBitmap;
 ScreenInfo SCR_INFO;
@@ -322,6 +322,9 @@ void gameDrawGUI()
 }
 
 Button * editorExitButton = new Button(input, 50, 50, vec2{ 25, (float)SCR_INFO.SCR_HEIGHT - 25 },"Exit");
+vec2 points[16] = {};
+int numPoints = 0;
+
 
 void editor()
 {
@@ -330,8 +333,21 @@ void editor()
 		sfw::setCursorVisible(true);
 		isMouseVisible = true;
 	}
-
 	mainCam->mat = mat3x3::identity();
+	//Hull drawing mode
+	//Left click to start placing
+	//Another click to place another point
+	//Right click to cancel last point and deselect hull drawing
+	//Select Hull drawing again to be able to place more points
+	//After drawing at least three points you can reconnet to the first point
+	//Snapping to points placed (ajustable)
+
+	//Snapping mode to a grid (ajustable)
+
+	for (int i = 0; i < numPoints && numPoints >= 2; ++i)
+	{
+		drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
+	}
 
 	editorExitButton->draw(mainCam->mat, stringBitmap);
 	editorExitButton->update(dt);
