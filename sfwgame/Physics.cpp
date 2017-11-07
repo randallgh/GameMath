@@ -71,6 +71,7 @@ void Physics::update(float dt)
 							+= (collision.collisionNormal * collision.penetration) / 2;
 						colliders[o]->gameObject->transform->e_parent->gameObject->transform->position
 							-= (collision.collisionNormal * collision.penetration) / 2;
+						continue;
 					}
 
 					switch (isCollide(i, o, "Torpedo", "Hull"))

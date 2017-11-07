@@ -51,10 +51,9 @@ Ship * Akizuki;
 Ship * Hatsuzuki;
 Ship * Suzutsuki;
 
-//Ship* setupAkizukiClass(std::string n);
-Ship* setupNewAkizukiClass(std::string n);
-void pInput(float dt);
-void drawGUI();
+Ship* gameSetupNewAkizukiClass(std::string n);
+void gameInput(float dt);
+void gameDrawGUI();
 
 int main()
 {
@@ -64,11 +63,11 @@ int main()
 	mainCam->screenHeight = SCR_INFO.SCR_HEIGHT;
 	stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
-	Akizuki = setupNewAkizukiClass("Akizuki");
-	Hatsuzuki = setupNewAkizukiClass("Hatsuzuki");
+	Akizuki = gameSetupNewAkizukiClass("Akizuki");
+	Hatsuzuki = gameSetupNewAkizukiClass("Hatsuzuki");
 	Akizuki->transform->position = vec2{ 0, 100 };
 
-	Suzutsuki = setupNewAkizukiClass("Satsuzuki");
+	Suzutsuki = gameSetupNewAkizukiClass("Satsuzuki");
 	Suzutsuki->transform->position = vec2{ 400,400 };
 	Suzutsuki->transform->angle = 45;
 
@@ -79,7 +78,7 @@ int main()
 	{
 		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
 		float dt = sfw::getDeltaTime();
-		pInput(dt);
+		gameInput(dt);
 
 		Akizuki->update(dt);
 		Hatsuzuki->update(dt);
@@ -106,7 +105,7 @@ int main()
 
 
 		//DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
-		drawGUI();
+		gameDrawGUI();
 
 	}
 
@@ -114,64 +113,7 @@ int main()
 	return 0;
 }
 
-//Ship* setupAkizukiClass(std::string n)
-//{
-//	Ship * ship;
-//	float length = 136;
-//	int hullNum = 4;
-//	int mainGunNum = 4;
-//	Hull ** shipHull = new Hull*[hullNum];
-//	NavalBattery ** shipMainGuns = new NavalBattery*[mainGunNum];
-//	for (int i = 0; i < hullNum; ++i)
-//	{
-//		SATGeometry col =
-//		{
-//			{
-//				{ -15,-15 },
-//				{ 15, -15 },
-//				{ 15,15 },
-//				{ -15,15 }
-//			},
-//			4
-//		};
-//		shipHull[i] = new Hull(col, physics);
-//		shipHull[i]->name = n + " Hull";
-//		shipHull[i]->tag = n + " Hull";
-//		shipHull[i]->rigidbody->radius = (length / 4) / 2;
-//		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
-//	}
-//	shipHull[0]->transform->position = { -(17 * 3),0 };
-//	shipHull[1]->transform->position = { -(17 * 1),0 };
-//	shipHull[2]->transform->position = { (17 * 1),0 };
-//	shipHull[3]->transform->position = { (17 * 3),0 };
-//
-//
-//	for (int i = 0; i < mainGunNum; ++i)
-//	{
-//		shipMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
-//		shipMainGuns[i]->shellType1 = new Shell();
-//		shipMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
-//	}
-//	shipMainGuns[0]->transform->position = { -(17 * 3),0 };
-//	shipMainGuns[1]->transform->position = { -(17 * 1),0 };
-//	shipMainGuns[2]->transform->position = { (17 * 1),0 };
-//	shipMainGuns[3]->transform->position = { (17 * 3),0 };
-//
-//
-//	ship = new Ship(n, n, physics, shipHull, hullNum, shipMainGuns, mainGunNum);
-//
-//
-//	ship->transform->dimension = { 1,1 };
-//	ship->transform->position = { 0, 0 };
-//	ship->horsepower = 50000;
-//	ship->rigidbody->mass = 3700;
-//
-//
-//	ship->cam = mainCam;
-//	return ship;
-//}
-
-Ship* setupNewAkizukiClass(std::string n)
+Ship* gameSetupNewAkizukiClass(std::string n)
 {
 	Ship * ship;
 	float length = 440;
@@ -250,8 +192,7 @@ Ship* setupNewAkizukiClass(std::string n)
 	return ship;
 }
 
-
-void pInput(float dt)
+void gameInput(float dt)
 {
 	inputTimer += dt;
 	up = sfw::getKey(KEY_UP) || sfw::getKey(KEY_W);
@@ -296,7 +237,7 @@ void pInput(float dt)
 	}
 }
 
-void drawGUI()
+void gameDrawGUI()
 {
 	//Draw Ui
 	for (int i = 0; i < Akizuki->MAIN_GUNS_COUNT; ++i)
