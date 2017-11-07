@@ -325,6 +325,11 @@ Button * editorExitButton = new Button(input, 50, 50, vec2{ 25, (float)SCR_INFO.
 vec2 points[16] = {};
 int numPoints = 0;
 
+float hullDrawSnapRadius = 50;
+
+vec2 placeingPos;
+
+int getClosestPoint(vec2 pos);
 
 void editor()
 {
@@ -346,18 +351,28 @@ void editor()
 
 	//Snapping mode to a grid (ajustable)
 
-	if (input->getMouseButtonDown(0))
+	//getclosestpoint
+
+	placeingPos = input->getMousePos();
+	int num = getClosestPoint(placeingPos);
+
+	if ( num >= 0)
 	{
-		points[numPoints] = input->getMousePos();
-		numPoints++;
+		placeingPos = points[num];
 	}
 
+
+	if (input->getMouseButtonDown(0) && (numPoints <= 15))
+	{
+		points[numPoints] = placeingPos;
+		numPoints++;
+	}
 	
 	for (int i = 0; i < numPoints && numPoints >= 1; ++i)
 	{
 		if (i == (numPoints - 1))
 		{
-			drawVecLine(points[i], input->getMousePos(), RED);
+			drawVecLine(points[i], placeingPos, RED);
 		}
 		else
 		{
@@ -369,6 +384,19 @@ void editor()
 	editorExitButton->update(dt);
 
 	if (editorExitButton->isClicked) { pState = PROGRAM_STATE::_MAINMENU_; }
+}
+
+int getClosestPoint(vec2 pos)
+{
+	for (int i = 0; i < numPoints; ++i)
+	{
+		if (distance(points[i], pos) < hullDrawSnapRadius)
+		{
+			return i;
+		}
+	}
+
+	return -1;
 }
 
 Button * mmGameButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, (float)SCR_INFO.SCR_HEIGHT / 2 },"Game");
