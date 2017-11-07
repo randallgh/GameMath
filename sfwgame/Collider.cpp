@@ -16,7 +16,7 @@ Collider::Collider(GameObject * go, Physics * phys)
 	phys->addCollider(this);
 }
 
-Collider::Collider(const SATGeometry & G, GameObject * go, Physics * phys)
+Collider::Collider(SATGeometry G, GameObject * go, Physics * phys)
 {
 	type = ColliderType::SAT;
 	gameObject = go;

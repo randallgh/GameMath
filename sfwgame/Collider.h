@@ -38,7 +38,7 @@ class Collider
 {
 public:
 	Collider(GameObject * go, Physics * phys);
-	Collider(const SATGeometry &G, GameObject * go, Physics * phys);
+	Collider(SATGeometry G, GameObject * go, Physics * phys);
 	~Collider();
 
 	//void update();

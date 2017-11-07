@@ -22,12 +22,15 @@ public:
 
 	int MAX_TORPEDOES = 20;
 	int numTorpedoes = 0;
+	int numTorpTubes = 1;
 	Torpedo ** torpedos = new Torpedo*[MAX_TORPEDOES];
 
 	void update(float dt);
 	void draw(mat3x3 cam);
 
-	void launchNext(vec2 pos);
+	//void launchNext(vec2 pos);
 	void launchAll(vec2 pos);
+
+	Torpedo*findNextTorp();
 };
 

@@ -24,7 +24,7 @@ void Torpedo::setup(Physics * phys, std::string n, float w, float length, float 
 	tag = "Torpedo";
 	name = n;
 
-	speed = s;
+	speed = s * 1.68781;
 
 	maxLife = l;
 	life = 0;
@@ -37,25 +37,24 @@ void Torpedo::setup(Physics * phys, std::string n, float w, float length, float 
 	this->length = length;
 	width = w;
 
-	if (transform == nullptr) { transform = new Transform(this); }
-	if (collider == nullptr) { collider = new Collider(this, phys); }
-	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
-
 	float l2 = this->length / 2;
 	float w2 = width / 2;
-
-	SATGeometry geo = 
+	SATGeometry geo =
 	{
 		{
-			{-l2,-w2},
+			{ -l2,-w2 },
 			{ l2,-w2 },
 			{ l2,w2 },
-			{-l2,w2 }
-		}
+			{ -l2,w2 }
+		},
+		4
 	};
 
-	collider->geometry = geo;
+	if (transform == nullptr) { transform = new Transform(this); }
+	if (collider == nullptr) { collider = new Collider(geo, this, phys); }
+	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
 
+	collider->geometry = geo;
 	isEnabled = false;
 }
 
@@ -77,10 +76,6 @@ void Torpedo::setup(Physics * phys, const Torpedo * torp)
 	length = torp->length;
 	width = torp->width;
 
-	if (transform == nullptr) { transform = new Transform(this); }
-	if (collider == nullptr) { collider = new Collider(this, phys); }
-	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
-
 	float l2 = length / 2;
 	float w2 = width / 2;
 
@@ -91,11 +86,15 @@ void Torpedo::setup(Physics * phys, const Torpedo * torp)
 			{ l2,-w2 },
 			{ l2,w2 },
 			{ -l2,w2 }
-		}
+		},
+		4
 	};
 
-	collider->geometry = geo;
+	if (transform == nullptr) { transform = new Transform(this); }
+	if (collider == nullptr) { collider = new Collider(geo,this,phys); }
+	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
 
+	collider->geometry = geo;
 	isEnabled = false;
 }
 
@@ -111,7 +110,7 @@ void Torpedo::update(float dt)
 	if (!isEnabled) { return; }
 	life += dt;
 	distanceTraveled += magnitude(rigidbody->velocity) * dt;
-	if (life >= maxLife || distanceTraveled >= maxDistance) { isEnabled = false; return; }
+	if (distanceTraveled >= maxDistance) { isEnabled = false; return; }
 }
 
 void Torpedo::draw(mat3x3 cam)

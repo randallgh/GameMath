@@ -104,6 +104,7 @@ int main()
 		Hatsuzuki->draw();
 		Suzutsuki->draw();
 
+
 		//DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
 		drawGUI();
 
@@ -204,7 +205,6 @@ Ship* setupNewAkizukiClass(std::string n)
 		};
 		shipHull[i] = new Hull(col, physics);
 		shipHull[i]->name = n + " Hull";
-		shipHull[i]->tag = n + " Hull";
 		shipHull[i]->rigidbody->radius = (length / 4) / 2;
 		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
 	}
@@ -229,6 +229,9 @@ Ship* setupNewAkizukiClass(std::string n)
 	for (int i = 0; i < torpedoMountsNum; ++i)
 	{
 		shipTorpedoMounts[i] = new TorpedoMount(physics, vec2{ 0,0 });
+		shipTorpedoMounts[i]->reloadTime = 1;
+		shipTorpedoMounts[i]->torpedo = new Torpedo();
+		shipTorpedoMounts[i]->torpedo->setup(physics, n + " Torpedo",2,30,54,0,20000,10000);
 	}
 	shipTorpedoMounts[0]->transform->position = { -50,0 };
 
@@ -285,6 +288,11 @@ void pInput(float dt)
 	if (sfw::getMouseButton(0))
 	{
 		Akizuki->shootAllGuns((mousePos.GetGlobalTransform()).c[2].xy);
+	}
+
+	if (sfw::getMouseButton(1))
+	{
+		Akizuki->launchAllTorpedoes((mousePos.GetGlobalTransform()).c[2].xy);
 	}
 }
 

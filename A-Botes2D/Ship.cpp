@@ -25,7 +25,7 @@ Ship::Ship(std::string t, std::string n, Physics * phys,
 	NavalBattery ** mG, int mGC, 
 	TorpedoMount ** tM, int tMC)
 {
-	tag = t;
+	tag = "Ship";
 	name = n;
 
 	hull = h;
@@ -67,7 +67,7 @@ Ship::~Ship()
 
 void Ship::setup(std::string t, std::string n, Physics * phys, Hull ** h, int hc, NavalBattery ** mG, int mGC)
 {
-	tag = t;
+	tag = "Ship";
 	name = n;
 
 	hull = h;
@@ -97,6 +97,14 @@ void Ship::shootAllGuns(vec2 pos)
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i) 
 	{
 		mainGuns[i]->shoot(pos);
+	}
+}
+
+void Ship::launchAllTorpedoes(vec2 pos)
+{
+	for (int i = 0; i < TORPEDO_MOUNT_COUNT; ++i)
+	{
+		torpedoMounts[i]->launchAll(pos);
 	}
 }
 

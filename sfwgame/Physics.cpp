@@ -30,6 +30,7 @@ void Physics::update(float dt)
 	{
 		if (colliders[i] == nullptr) { continue; }
 		if (colliders[i]->gameObject == nullptr) { continue; }
+		if (!colliders[i]->gameObject->isEnabled) { continue; };
 		if (colliders[i]->gameObject->rigidbody == nullptr) { continue; }
 		colliders[i]->gameObject->rigidbody->update(dt);
 	}
@@ -60,15 +61,38 @@ void Physics::update(float dt)
 				//std::cout << "Checking COLLISION" << std::endl;
 				Collision collision = colliders[i]->doesCollide(colliders[o]);
 
-				if (collision.penetration > 0 && colliders[o]->gameObject->collider->type == ColliderType::SAT )
+				if (collision.penetration > 0 
+					&& colliders[i]->gameObject->collider->type == ColliderType::SAT
+					&& colliders[o]->gameObject->collider->type == ColliderType::SAT)
 				{
+					if (colliders[i]->gameObject->tag == "Hull" && colliders[o]->gameObject->tag == "Hull")
+					{
+						colliders[i]->gameObject->transform->e_parent->gameObject->transform->position
+							+= (collision.collisionNormal * collision.penetration) / 2;
+						colliders[o]->gameObject->transform->e_parent->gameObject->transform->position
+							-= (collision.collisionNormal * collision.penetration) / 2;
+					}
 
-					colliders[i]->gameObject->transform->e_parent->gameObject->transform->position
-						+= (collision.collisionNormal * collision.penetration) / 2;
-					colliders[o]->gameObject->transform->e_parent->gameObject->transform->position
-						-= (collision.collisionNormal * collision.penetration) / 2;
+					switch (isCollide(i, o, "Torpedo", "Hull"))
+					{
+					case 0:
+						//tag1 == tag2 = 0
+						//Shell Hatsuzuki
+						//i		o
+						colliders[i]->gameObject->isEnabled = false;
+						continue;
+					case 1:
+						//tag2 == tag1 = 1
+						//Hatsuzuki  Shell
+						//i		  o
+						colliders[o]->gameObject->isEnabled = false;
+						//std::cout << "Damaged Hatsuzuki" << std::endl;
+						continue;
+					default:
+						break;
+					}
 
-					continue;
+					//continue;
 
 					/*if (colliders[i]->gameObject->tag.compare("Akizuki Hull") == 0 && colliders[o]->gameObject->tag.compare("Hatsuzuki Hull") == 0)
 					{
@@ -100,7 +124,7 @@ void Physics::update(float dt)
 						<< std::endl;
 					continue;
 				}
-
+				continue;
 				if (dist <= (colliders[i]->gameObject->rigidbody->radius 
 					+ colliders[o]->gameObject->rigidbody->radius))
 				{

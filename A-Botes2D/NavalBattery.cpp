@@ -72,14 +72,14 @@ void NavalBattery::shoot(vec2 pos)
 			shell->reset();
 			shell->transform->position = transform->GetGlobalTransform().c[2].xy;
 
-			vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy) * shell->speed;
+			vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
 			//std::cout << "Norm X: " << norm.x << "Y: " << norm.y << std::endl;
 
 			float dist = distance(pos, (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
 			shell->maxDistance = dist;
 			//std::cout << dist << std::endl;
 
-			shell->rigidbody->velocity = norm; //degreeToVector(transform->angle + parentShip->transform->angle,1) * shell->speed;
+			shell->rigidbody->velocity = norm * shell->speed; //degreeToVector(transform->angle + parentShip->transform->angle,1) * shell->speed;
 			reloadTimer = 0;
 		}
 	}
