@@ -44,7 +44,7 @@ public:
 	void drawMouse();
 
 	//0 - Left / 1 - Right
-	bool getMouseDown(int button);
+	bool getMouseButtonDown(int button);
 
 private:
 	GameObject * mouse;

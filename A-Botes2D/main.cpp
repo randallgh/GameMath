@@ -334,6 +334,8 @@ void editor()
 		isMouseVisible = true;
 	}
 	mainCam->mat = mat3x3::identity();
+
+	
 	//Hull drawing mode
 	//Left click to start placing
 	//Another click to place another point
@@ -344,9 +346,23 @@ void editor()
 
 	//Snapping mode to a grid (ajustable)
 
-	for (int i = 0; i < numPoints && numPoints >= 2; ++i)
+	if (input->getMouseButtonDown(0))
 	{
-		drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
+		points[numPoints] = input->getMousePos();
+		numPoints++;
+	}
+
+	
+	for (int i = 0; i < numPoints && numPoints >= 1; ++i)
+	{
+		if (i == (numPoints - 1))
+		{
+			drawVecLine(points[i], input->getMousePos(), RED);
+		}
+		else
+		{
+			drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
+		}
 	}
 
 	editorExitButton->draw(mainCam->mat, stringBitmap);

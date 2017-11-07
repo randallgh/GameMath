@@ -50,19 +50,46 @@ void Input::drawMouse()
 	getMouseCollider().draw(mat3x3::identity());
 }
 
-bool Input::getMouseDown(int button)
+bool Input::getMouseButtonDown(int button)
 {
 	if (sfw::getMouseButton(button))
 	{
 		switch (button)
 		{
 		case 0:
-			break;
+			if (isMouseLeftPressed)
+			{
+				return false;
+			} 
+			else 
+			{
+				isMouseLeftPressed = true;
+				return true;
+			}
 		case 1:
-			break;
+			if (isMouseRightPressed)
+			{
+
+			}
+			else
+			{
+				isMouseRightPressed = true;
+			}
+			return true;
 		default:
 			break;
 		}
+	}
+	switch (button)
+	{
+	case 0:
+		isMouseLeftPressed = false;
+		break;
+	case 1:
+		isMouseRightPressed = false;
+		break;
+	default:
+		break;
 	}
 	return false;
 }
