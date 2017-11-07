@@ -77,6 +77,7 @@ void Button::update(float dt)
 
 	if (input->getMouseCollider().doesCollide(this->collider).penetration > 0)
 	{
+		if (isClicked) { isClicked = false; }
 		if (sfw::getMouseButton(0))
 		{
 			isClicked = true;

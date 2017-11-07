@@ -37,10 +37,12 @@ bool left;
 bool right;
 
 bool isMouseVisible = false;
+bool isRunning = true;
 
 float inputTimer = 0;
 float inputTimeMax = 0.5;
 
+float dt = 0;
 //State
 
 enum PROGRAM_STATE
@@ -94,6 +96,9 @@ int main()
 
 	while (sfw::stepContext())
 	{
+		if (isRunning == false) { break; }
+		dt = sfw::getDeltaTime();
+
 		switch (pState)
 		{
 		case _GAME_:
@@ -123,7 +128,6 @@ void game()
 	}
 
 	mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
-	float dt = sfw::getDeltaTime();
 	gameInput(dt);
 
 	Akizuki->update(dt);
@@ -277,6 +281,8 @@ void gameInput(float dt)
 	{
 		Akizuki->launchAllTorpedoes((mousePos.GetGlobalTransform()).c[2].xy);
 	}
+
+	if (sfw::getKey(KEY_ESCAPE)) { pState = PROGRAM_STATE::_MAINMENU_; }
 }
 
 void gameDrawGUI()
@@ -315,13 +321,26 @@ void gameDrawGUI()
 	sfw::drawString(stringBitmap, std::to_string(1 / sfw::getDeltaTime()).c_str(), SCR_INFO.SCR_WIDTH - 100, SCR_INFO.SCR_HEIGHT, 25.0f, 25.0f);
 }
 
+Button * editorExitButton = new Button(input, 50, 50, vec2{ 25, (float)SCR_INFO.SCR_HEIGHT - 25 },"Exit");
+
 void editor()
 {
+	if (!isMouseVisible)
+	{
+		sfw::setCursorVisible(true);
+		isMouseVisible = true;
+	}
 
+	mainCam->mat = mat3x3::identity();
+
+	editorExitButton->draw(mainCam->mat, stringBitmap);
+	editorExitButton->update(dt);
+
+	if (editorExitButton->isClicked) { pState = PROGRAM_STATE::_MAINMENU_; }
 }
 
-Button * gameButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, (float)SCR_INFO.SCR_HEIGHT / 2 });
-Button * editorButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, ((float)SCR_INFO.SCR_HEIGHT / 2) - 50 });
+Button * mmGameButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, (float)SCR_INFO.SCR_HEIGHT / 2 },"Game");
+Button * mmEditorButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, ((float)SCR_INFO.SCR_HEIGHT / 2) - 50 },"Editor");
 
 void mainMenu()
 {
@@ -331,28 +350,27 @@ void mainMenu()
 		isMouseVisible = true;
 	}
 
-	float dt = sfw::getDeltaTime();
 	mainCam->mat = mat3x3::identity();
 
-	gameButton->draw(mainCam->mat,stringBitmap);
-	gameButton->update(dt);
-	gameButton->name = "Game";
+	mmGameButton->draw(mainCam->mat,stringBitmap);
+	mmGameButton->update(dt);
 
-	editorButton->draw(mainCam->mat,stringBitmap);
-	editorButton->update(dt);
-	editorButton->name = "Editor";
+	mmEditorButton->draw(mainCam->mat,stringBitmap);
+	mmEditorButton->update(dt);
 
 	input->drawMouse();
 
 	sfw::drawString(stringBitmap, "Main Menu", 0, SCR_INFO.SCR_HEIGHT - 30, 30, 30);
 
-	if (gameButton->isClicked)
+	if (mmGameButton->isClicked)
 	{
 		pState = PROGRAM_STATE::_GAME_;
 	}
 
-	if (editorButton->isClicked)
+	if (mmEditorButton->isClicked)
 	{
 		pState = PROGRAM_STATE::_EDITOR_;
 	}
+
+	if (sfw::getKey(KEY_TAB)) { isRunning = false; }
 }
