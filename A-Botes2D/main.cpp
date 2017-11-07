@@ -37,6 +37,16 @@ bool right;
 float inputTimer = 0;
 float inputTimeMax = 0.5;
 
+//State
+
+enum PROGRAM_STATE
+{
+	_GAME_,
+	_EDITOR_
+};
+
+PROGRAM_STATE pState = PROGRAM_STATE::_EDITOR_;
+
 unsigned int stringBitmap;
 ScreenInfo SCR_INFO;
 
@@ -54,6 +64,9 @@ Ship * Suzutsuki;
 Ship* gameSetupNewAkizukiClass(std::string n);
 void gameInput(float dt);
 void gameDrawGUI();
+void game();
+void editor();
+
 
 int main()
 {
@@ -64,53 +77,66 @@ int main()
 	stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
 	Akizuki = gameSetupNewAkizukiClass("Akizuki");
-	Hatsuzuki = gameSetupNewAkizukiClass("Hatsuzuki");
 	Akizuki->transform->position = vec2{ 0, 100 };
 
+	Hatsuzuki = gameSetupNewAkizukiClass("Hatsuzuki");
+	
 	Suzutsuki = gameSetupNewAkizukiClass("Satsuzuki");
 	Suzutsuki->transform->position = vec2{ 400,400 };
 	Suzutsuki->transform->angle = 45;
 
-	std::cout << Akizuki->name;
-	
 
 	while (sfw::stepContext())
 	{
-		mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
-		float dt = sfw::getDeltaTime();
-		gameInput(dt);
-
-		Akizuki->update(dt);
-		Hatsuzuki->update(dt);
-		Suzutsuki->update(dt);
-
-		physics->update(dt);
-		mainCam->SetupMatrix(Akizuki->transform);
-
-		//Draw mouse pos as a circle
-		vec2 mousePosVec = (mousePos.GetGlobalTransform()).c[2].xy;
-		sfw::drawCircle(mousePosVec.x, mousePosVec.y, 5, 12, RED);
-		//drawVecCircle(, 5, 12, WHITE);
-
-		Akizuki->setWeaponsAngle(mousePos.GetGlobalTransform().c[2].xy);
-
-		Hatsuzuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
-		Hatsuzuki->shootAllGuns((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
-
-		Suzutsuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
-
-		Akizuki->draw();
-		Hatsuzuki->draw();
-		Suzutsuki->draw();
-
-
-		//DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
-		gameDrawGUI();
-
+		switch (pState)
+		{
+		case _GAME_:
+			game();
+			break;
+		case _EDITOR_:
+			editor();
+			break;
+		default:
+			break;
+		}
 	}
 
 	sfw::termContext();
 	return 0;
+}
+
+void game()
+{
+	mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
+	float dt = sfw::getDeltaTime();
+	gameInput(dt);
+
+	Akizuki->update(dt);
+	Hatsuzuki->update(dt);
+	Suzutsuki->update(dt);
+
+	physics->update(dt);
+	mainCam->SetupMatrix(Akizuki->transform);
+
+	//Draw mouse pos as a circle
+	vec2 mousePosVec = (mousePos.GetGlobalTransform()).c[2].xy;
+	sfw::drawCircle(mousePosVec.x, mousePosVec.y, 5, 12, RED);
+	//drawVecCircle(, 5, 12, WHITE);
+
+	Akizuki->setWeaponsAngle(mousePos.GetGlobalTransform().c[2].xy);
+
+	Hatsuzuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
+	Hatsuzuki->shootAllGuns((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
+
+	Suzutsuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
+
+	Akizuki->draw();
+	Hatsuzuki->draw();
+	Suzutsuki->draw();
+
+
+	//DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
+	gameDrawGUI();
 }
 
 Ship* gameSetupNewAkizukiClass(std::string n)
@@ -271,4 +297,9 @@ void gameDrawGUI()
 	sfw::drawString(stringBitmap, posS.c_str(), 0, SCR_INFO.SCR_HEIGHT - 120, 15.0f, 15.0f);
 
 	sfw::drawString(stringBitmap, std::to_string(1 / sfw::getDeltaTime()).c_str(), SCR_INFO.SCR_WIDTH - 100, SCR_INFO.SCR_HEIGHT, 25.0f, 25.0f);
+}
+
+void editor()
+{
+
 }
