@@ -13,14 +13,15 @@ Collider::Collider(GameObject * go, Physics * phys)
 
 	gameObject = go;
 
-	phys->addCollider(this);
+	if (phys != nullptr) { phys->addCollider(this); };
 }
 
 Collider::Collider(SATGeometry G, GameObject * go, Physics * phys)
 {
 	type = ColliderType::SAT;
 	gameObject = go;
-	phys->addCollider(this);
+
+	if (phys != nullptr) { phys->addCollider(this); };
 
 	geometry.numPoints = G.numPoints;
 	for (int i = 0; i < geometry.numPoints; ++i)
@@ -150,7 +151,9 @@ AxialExtents Collider::EvalAxialExtents(const vec2 & axis, const vec2 * points,
 void Collider::draw(mat3x3 cam)
 {
 	if (this == nullptr) { return; }
-	if (!gameObject->isEnabled) { return; }
+
+	if (gameObject == nullptr) { }
+	else if (!gameObject->isEnabled) { return; }
 
 	switch (type)
 	{
@@ -161,7 +164,7 @@ void Collider::draw(mat3x3 cam)
 		SATGeometry geo = (geometry * cam );
 		for (int i = 0; i < geo.numPoints; i++)
 		{
-			drawVecLine(geo.points[i], geo.points[(i + 1) % geo.numPoints], WHITE);
+			drawVecLine(geo.points[i], geo.points[(i + 1) % geo.numPoints], gameObject->color);
 		}
 		break;
 	default:

@@ -1,6 +1,9 @@
 #pragma once
 #include "vec2.h"
 
+class Collider;
+class GameObject;
+
 //Define all keys here
 #define 	KEY_A   65
 #define 	KEY_B   66
@@ -36,5 +39,11 @@ public:
 	~Input();
 
 	vec2 getMousePos();
+
+	Collider getMouseCollider();
+	void drawMouse();
+
+private:
+	GameObject * mouse;
 };
 

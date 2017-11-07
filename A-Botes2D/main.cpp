@@ -4,6 +4,8 @@
 #include "Input.h"
 #include "Physics.h"
 
+#include "Button.h"
+
 #include "Transform.h"
 #include "Collider.h"
 #include "Rigidbody.h"
@@ -42,10 +44,11 @@ float inputTimeMax = 0.5;
 enum PROGRAM_STATE
 {
 	_GAME_,
-	_EDITOR_
+	_EDITOR_,
+	_MAINMENU_
 };
 
-PROGRAM_STATE pState = PROGRAM_STATE::_EDITOR_;
+PROGRAM_STATE pState = PROGRAM_STATE::_MAINMENU_;
 
 unsigned int stringBitmap;
 ScreenInfo SCR_INFO;
@@ -66,6 +69,7 @@ void gameInput(float dt);
 void gameDrawGUI();
 void game();
 void editor();
+void mainMenu();
 
 
 int main()
@@ -95,6 +99,9 @@ int main()
 			break;
 		case _EDITOR_:
 			editor();
+			break;
+		case _MAINMENU_:
+			mainMenu();
 			break;
 		default:
 			break;
@@ -302,4 +309,17 @@ void gameDrawGUI()
 void editor()
 {
 
+}
+
+Button test(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WIDTH / 2, (float)SCR_INFO.SCR_HEIGHT / 2 });
+
+void mainMenu()
+{
+	float dt = sfw::getDeltaTime();
+
+	sfw::setCursorVisible(true);
+
+	mainCam->SetupMatrix(&Transform{ nullptr });
+	test.draw(mainCam->mat);
+	test.update(dt);
 }
