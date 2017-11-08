@@ -127,6 +127,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Editor.cpp" />
+    <ClCompile Include="GameManager.cpp" />
     <ClCompile Include="Hull.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="NavalBattery.cpp" />
@@ -137,6 +138,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Editor.h" />
+    <ClInclude Include="GameManager.h" />
     <ClInclude Include="Hull.h" />
     <ClInclude Include="NavalBattery.h" />
     <ClInclude Include="Screen.h" />

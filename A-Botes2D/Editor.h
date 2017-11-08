@@ -7,11 +7,12 @@
 class Button;
 class Input;
 class Camera;
+class GameManager;
 
 class Editor
 {
 public:
-	Editor(Input * i, Camera * mC, unsigned * sBitmap);
+	Editor(Input * i, Camera * mC, unsigned * sBitmap, GameManager * gM);
 	~Editor();
 
 	ScreenInfo SCR_INFO;
@@ -22,6 +23,8 @@ public:
 	Button * hullEditButton;
 	Button * mainBatteryEditButton;
 	Button * torpedoTubeEditButton;
+
+	GameManager * gameManager;
 
 private:
 
@@ -38,7 +41,7 @@ private:
 	vec2 mainBatteryPoints[MAX_MAIN_BATTRIES] = {};
 	vec2 torpedoTubePoints[MAX_TORPEDO_TUBES] = {};
 
-	int numPoints = 0;
+	int numHullPoints = 0;
 	int numMainGuns = 0;
 	int numTorpedoTubes = 0;
 

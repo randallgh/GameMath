@@ -18,6 +18,8 @@
 #include "Torpedo.h"
 #include "TorpedoMount.h"
 
+#include "GameManager.h"
+
 
 #include "drawutils.h"
 
@@ -47,26 +49,18 @@ float inputTimeMax = 0.5;
 float dt = 0;
 //State
 
-enum PROGRAM_STATE
-{
-	_GAME_,
-	_EDITOR_,
-	_MAINMENU_
-};
-
-PROGRAM_STATE pState = PROGRAM_STATE::_EDITOR_;
-
 unsigned int stringBitmap;
 ScreenInfo SCR_INFO;
 
 Transform mousePos(nullptr);
 
 //Game Controllers
+GameManager * gameManager = new GameManager();
 Camera * mainCam = new Camera();
 Physics * physics = new Physics(mainCam);
 Input * input = new Input();
 
-Editor * editor = new Editor(input, mainCam, &stringBitmap);
+Editor * editor = new Editor(input, mainCam, &stringBitmap,gameManager);
 
 Ship * Akizuki;
 Ship * Hatsuzuki;
@@ -104,7 +98,7 @@ int main()
 		input->poll();
 
 
-		switch (pState)
+		switch (gameManager->pState)
 		{
 		case _GAME_:
 			if (isMouseVisible)
@@ -121,7 +115,6 @@ int main()
 				isMouseVisible = true;
 			}
 			editor->update(dt);
-			if (editor->exitButton->isClicked) { pState = PROGRAM_STATE::_MAINMENU_; }
 			break;
 		case _MAINMENU_:
 			if (!isMouseVisible)
@@ -244,8 +237,8 @@ Ship* gameSetupNewAkizukiClass(std::string n)
 		shipMainGuns, mainGunNum,
 		shipTorpedoMounts,torpedoMountsNum);
 
-	ship->transform->dimension = { 1,1 };
-	ship->transform->position = { 0, 0 };
+	//ship->transform->dimension = { 1,1 };
+	//ship->transform->position = { 0, 0 };
 	ship->horsepower = 50000;
 	ship->rigidbody->mass = 3700;
 
@@ -298,7 +291,7 @@ void gameInput(float dt)
 		Akizuki->launchAllTorpedoes((mousePos.GetGlobalTransform()).c[2].xy);
 	}
 
-	if (sfw::getKey(KEY_ESCAPE)) { pState = PROGRAM_STATE::_MAINMENU_; }
+	if (sfw::getKey(KEY_ESCAPE)) { gameManager->pState = PROGRAM_STATE::_MAINMENU_; }
 }
 
 void gameDrawGUI()
@@ -356,12 +349,12 @@ void mainMenu()
 
 	if (mmGameButton->isClicked)
 	{
-		pState = PROGRAM_STATE::_GAME_;
+		gameManager->pState = PROGRAM_STATE::_GAME_;
 	}
 
 	if (mmEditorButton->isClicked)
 	{
-		pState = PROGRAM_STATE::_EDITOR_;
+		gameManager->pState = PROGRAM_STATE::_EDITOR_;
 	}
 
 	if (sfw::getKey(KEY_TAB)) { isRunning = false; }

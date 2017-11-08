@@ -1,5 +1,5 @@
 @Ship
-test
+Akizuki
 @Hull
 8
 -200
@@ -18,3 +18,17 @@ test
 2
 110
 19
+@MainGuns
+4
+130
+0
+100
+0
+-100
+0
+-130
+0
+@TorpedoTubes
+1
+-50
+0
