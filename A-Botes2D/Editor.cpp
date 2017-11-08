@@ -15,7 +15,10 @@ Editor::Editor(Input * i, Camera * mC, unsigned * sBitmap)
 	mainCam = mC;
 	stringBitmap = sBitmap;
 
-	editorExitButton = new Button(i, 50, 50, vec2{ 25, (float)SCR_INFO.SCR_HEIGHT - 25 }, "Exit");
+	exitButton = new Button(i, 50, 50, vec2{ 25, (float)SCR_INFO.SCR_HEIGHT - 25 }, "Exit");
+	hullEditButton = new Button(i, 50, 50, vec2{ (float)SCR_INFO.SCR_WIDTH - 25, (float)SCR_INFO.SCR_HEIGHT - 25 }, "H");
+	mainBatteryEditButton = new Button(i, 50, 50, vec2{ (float)SCR_INFO.SCR_WIDTH - 25, (float)SCR_INFO.SCR_HEIGHT - 75 }, "G");
+	torpedoTubeEditButton = new Button(i, 50, 50, vec2{ (float)SCR_INFO.SCR_WIDTH - 25, (float)SCR_INFO.SCR_HEIGHT - 125 }, "T");
 }
 
 
@@ -40,6 +43,34 @@ void Editor::update(float dt)
 		
 	}
 
+	//On G press
+	if (input->getKeyDown('G'))
+	{
+		isGridActive = !isGridActive;
+	}
+
+	//Render Grid
+	if (isGridActive)
+	{
+		for (int i = 1; i < gridCols; ++i)
+		{
+			if ((((float)SCR_INFO.SCR_WIDTH / gridCols) * i) == ((float)SCR_INFO.SCR_WIDTH / 2)) { continue; }
+			drawVecLine(vec2{ ((float)SCR_INFO.SCR_WIDTH / gridCols) * i, 0 },
+				vec2{ ((float)SCR_INFO.SCR_WIDTH / gridCols) * i, (float)SCR_INFO.SCR_HEIGHT }, WHITE);
+		}
+		for (int i = 0; i < gridRows; ++i)
+		{
+			if ((((float)SCR_INFO.SCR_HEIGHT / gridRows) * i) == ((float)SCR_INFO.SCR_HEIGHT / 2)) { continue; }
+			drawVecLine(vec2{ 0,						 ((float)SCR_INFO.SCR_HEIGHT / gridRows) * i },
+				vec2{ (float)SCR_INFO.SCR_WIDTH, ((float)SCR_INFO.SCR_HEIGHT / gridRows) * i }, WHITE);
+		}
+		sfw::drawLine(0, SCR_INFO.SCR_HEIGHT / 2, SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT / 2, RED);
+		sfw::drawLine(SCR_INFO.SCR_WIDTH / 2, SCR_INFO.SCR_HEIGHT, SCR_INFO.SCR_WIDTH / 2, 0, GREEN);
+	}
+
+	sfw::drawString(*stringBitmap, editorStatus.c_str(), 25, 25, 25, 25, 0, '\000', WHITE);
+
+
 	//Hull drawing mode X
 	//Left click to start placing X
 	//Another click to place another point X
@@ -50,18 +81,12 @@ void Editor::update(float dt)
 	//Snapping mode to a grid (ajustable)
 	//Hold shift to snap to 45degree
 	//Another mode to display the cords of the points and click to edit
-
 	//getclosestpoint
 
 	switch (editorState)
 	{
 	case IDLE:
-
-		for (int i = 0; i < numPoints && numPoints >= 1; ++i)
-		{
-			drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
-		}
-
+		displayShip();
 		if (sfw::getKey(KEY_ENTER) && numPoints > 2)
 		{
 			saveShip("test");
@@ -72,23 +97,53 @@ void Editor::update(float dt)
 		{
 			loadShip("test");
 		}
-
+		editorStatus = "Idle";
 		break;
 	case HULLDRAW:
 		hullDraw();
+		editorStatus = "Hull Draw";
+		break;
+	case MAINBATTERY:
+		displayShip();
+		mainGuns();
+		editorStatus = "Main Battery placement";
+		break;
+	case TORPEDOTUBES:
+		displayShip();
+		torpedoTubes();
+		editorStatus = "Torpedo Tube placement";
 		break;
 	default:
 		break;
 	}
 
-	editorExitButton->draw(mainCam->mat, *stringBitmap);
-	editorExitButton->update(dt);
+	exitButton->draw(mainCam->mat, *stringBitmap);
+	exitButton->update(dt);
+	hullEditButton->draw(mainCam->mat, *stringBitmap);
+	hullEditButton->update(dt);
+	mainBatteryEditButton->draw(mainCam->mat, *stringBitmap);
+	mainBatteryEditButton->update(dt);
+	torpedoTubeEditButton->draw(mainCam->mat, *stringBitmap);
+	torpedoTubeEditButton->update(dt);
+
+	if(hullEditButton->isClicked)
+	{
+		editorState = EDITOR_MODES::HULLDRAW;
+	}
+
+	if (mainBatteryEditButton->isClicked)
+	{
+		editorState = EDITOR_MODES::MAINBATTERY;
+	}
+
+	if (torpedoTubeEditButton->isClicked)
+	{
+		editorState = EDITOR_MODES::TORPEDOTUBES;
+	}
 }
 
 void Editor::hullDraw()
 {
-	sfw::drawLine(0, SCR_INFO.SCR_HEIGHT / 2, SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT / 2, RED);
-	sfw::drawLine(SCR_INFO.SCR_WIDTH / 2, SCR_INFO.SCR_HEIGHT, SCR_INFO.SCR_WIDTH / 2, 0, GREEN);
 
 	placeingPos = input->getMousePos();
 	snapIndex = getClosestPoint(placeingPos);
@@ -96,23 +151,23 @@ void Editor::hullDraw()
 	//Holding shift
 	if (sfw::getKey(KEY_LEFT_SHIFT) && (numPoints > 0))
 	{
-		float x = points[numPoints - 1].x - placeingPos.x;
-		float y = points[numPoints - 1].y - placeingPos.y;
+		float x = hullPoints[numPoints - 1].x - placeingPos.x;
+		float y = hullPoints[numPoints - 1].y - placeingPos.y;
 		vec2 vec = { x,y };
 
 		float deg = (int)VectorToDegree(vec2{ abs(vec.x),abs(vec.y) }) % 360;
 
 		if (deg > 45 && deg < 135 || deg > 225 && deg < 270)
 		{
-			placeingPos = points[numPoints - 1] - vec2{ 0,vec.y };
+			placeingPos = hullPoints[numPoints - 1] - vec2{ 0,vec.y };
 		}
-		else { placeingPos = points[numPoints - 1] - vec2{ vec.x,0 }; }
+		else { placeingPos = hullPoints[numPoints - 1] - vec2{ vec.x,0 }; }
 	}
 
 	//Snapping
 	if (snapIndex >= 0 && numPoints > 2 && canSnap)
 	{
-		placeingPos = points[snapIndex];
+		placeingPos = hullPoints[snapIndex];
 		isSnapping = true;
 	}
 	else
@@ -131,7 +186,7 @@ void Editor::hullDraw()
 			return;
 		}
 
-		points[numPoints] = placeingPos;
+		hullPoints[numPoints] = placeingPos;
 		numPoints++;
 	}
 
@@ -141,33 +196,10 @@ void Editor::hullDraw()
 		if (numPoints > 0) { numPoints--; }
 	}
 
-	//On G press
-	if (input->getKeyDown('G'))
-	{
-		isGridActive = !isGridActive;
-	}
-
 	//On S press
 	if (input->getKeyDown('S'))
 	{
 		canSnap = !canSnap;
-	}
-
-	//Render Grid
-	if (isGridActive)
-	{
-		for (int i = 1; i < gridCols; ++i)
-		{
-			if ((((float)SCR_INFO.SCR_WIDTH / gridCols) * i) == ((float)SCR_INFO.SCR_WIDTH/2)){continue; }
-			drawVecLine(vec2{ ((float)SCR_INFO.SCR_WIDTH / gridCols) * i, 0 },
-				vec2{ ((float)SCR_INFO.SCR_WIDTH / gridCols) * i, (float)SCR_INFO.SCR_HEIGHT }, WHITE);
-		}
-		for (int i = 0; i < gridRows; ++i)
-		{
-			if ((((float)SCR_INFO.SCR_HEIGHT / gridRows) * i) == ((float)SCR_INFO.SCR_HEIGHT / 2)) { continue; }
-			drawVecLine(vec2{ 0,						 ((float)SCR_INFO.SCR_HEIGHT / gridRows) * i },
-				vec2{ (float)SCR_INFO.SCR_WIDTH, ((float)SCR_INFO.SCR_HEIGHT / gridRows) * i }, WHITE);
-		}
 	}
 
 	//Render Hull
@@ -175,12 +207,28 @@ void Editor::hullDraw()
 	{
 		if (i == (numPoints - 1))
 		{
-			drawVecLine(points[i], placeingPos, RED);
+			drawVecLine(hullPoints[i], placeingPos, RED);
 		}
 		else
 		{
-			drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
+			drawVecLine(hullPoints[i], hullPoints[(i + 1) % numPoints], WHITE);
 		}
+	}
+}
+
+void Editor::mainGuns()
+{
+}
+
+void Editor::torpedoTubes()
+{
+}
+
+void Editor::displayShip()
+{
+	for (int i = 0; i < numPoints && numPoints >= 1; ++i)
+	{
+		drawVecLine(hullPoints[i], hullPoints[(i + 1) % numPoints], WHITE);
 	}
 }
 
@@ -188,7 +236,7 @@ int Editor::getClosestPoint(vec2 pos)
 {
 	for (int i = 0; i < numPoints; ++i)
 	{
-		if (distance(points[i], pos) < hullDrawSnapRadius && i != numPoints - 1)
+		if (distance(hullPoints[i], pos) < hullDrawSnapRadius && i != numPoints - 1)
 		{
 			return i;
 		}
@@ -211,8 +259,8 @@ bool Editor::saveShip(std::string shipN)
 
 	for (int i = 0; i < numPoints; ++i)
 	{
-		file << points[i].x - (SCR_INFO.SCR_WIDTH / 2) << "\n";
-		file << points[i].y - (SCR_INFO.SCR_HEIGHT / 2)<< "\n";
+		file << hullPoints[i].x - (SCR_INFO.SCR_WIDTH / 2) << "\n";
+		file << hullPoints[i].y - (SCR_INFO.SCR_HEIGHT / 2)<< "\n";
 	}
 
 	file.flush();
@@ -246,9 +294,9 @@ bool Editor::loadShip(std::string shipN)
 			for (int i = 0; i < numPoints; ++i)
 			{
 				std::getline(file, buffer);
-				points[i].x = std::stof(buffer) + (SCR_INFO.SCR_WIDTH / 2);
+				hullPoints[i].x = std::stof(buffer) + (SCR_INFO.SCR_WIDTH / 2);
 				std::getline(file, buffer);
-				points[i].y = std::stof(buffer) + (SCR_INFO.SCR_HEIGHT / 2);
+				hullPoints[i].y = std::stof(buffer) + (SCR_INFO.SCR_HEIGHT / 2);
 			}
 		}
 		else { return false; }

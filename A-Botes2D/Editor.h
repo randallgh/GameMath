@@ -18,14 +18,29 @@ public:
 
 	void update(float dt);
 	
-	Button * editorExitButton;
+	Button * exitButton;
+	Button * hullEditButton;
+	Button * mainBatteryEditButton;
+	Button * torpedoTubeEditButton;
+
 private:
+
+	std::string editorStatus = "Idle";
+
 	Input * input;
 	Camera * mainCam;
 	unsigned * stringBitmap;
 
-	vec2 points[SATGeometry::MAX_POINTS] = {};
+	static const size_t MAX_TORPEDO_TUBES = 16;
+	static const size_t MAX_MAIN_BATTRIES = 16;
+
+	vec2 hullPoints[SATGeometry::MAX_POINTS] = {};
+	vec2 mainBatteryPoints[MAX_MAIN_BATTRIES] = {};
+	vec2 torpedoTubePoints[MAX_TORPEDO_TUBES] = {};
+
 	int numPoints = 0;
+	int numMainGuns = 0;
+	int numTorpedoTubes = 0;
 
 	std::string shipName;
 
@@ -44,12 +59,19 @@ private:
 	{
 		IDLE,
 		HULLDRAW,
+		MAINBATTERY,
+		TORPEDOTUBES,
 		EDIT
 	};
 
 	EDITOR_MODES editorState = EDITOR_MODES::IDLE;
 
 	void hullDraw();
+	void mainGuns();
+	void torpedoTubes();
+
+
+	void displayShip();
 
 	int getClosestPoint(vec2 pos);
 

@@ -121,7 +121,7 @@ int main()
 				isMouseVisible = true;
 			}
 			editor->update(dt);
-			if (editor->editorExitButton->isClicked) { pState = PROGRAM_STATE::_MAINMENU_; }
+			if (editor->exitButton->isClicked) { pState = PROGRAM_STATE::_MAINMENU_; }
 			break;
 		case _MAINMENU_:
 			if (!isMouseVisible)
