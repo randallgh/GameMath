@@ -38,6 +38,7 @@ private:
 	int gridCols = 10;
 	int gridRows = 10;
 	bool isGridActive = false;
+	bool canSnap = false;
 
 	enum EDITOR_MODES
 	{

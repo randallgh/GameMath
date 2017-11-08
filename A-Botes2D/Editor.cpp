@@ -27,9 +27,17 @@ void Editor::update(float dt)
 {
 	mainCam->mat = mat3x3::identity();
 
-	if (sfw::getKey(KEY_H))
+	if (input->getKeyDown(KEY_H))
 	{
-		editorState = EDITOR_MODES::HULLDRAW;
+		if (editorState == EDITOR_MODES::HULLDRAW)
+		{
+			editorState = EDITOR_MODES::IDLE;
+		}
+		else
+		{
+			editorState = EDITOR_MODES::HULLDRAW;
+		}
+		
 	}
 
 	//Hull drawing mode X
@@ -102,7 +110,7 @@ void Editor::hullDraw()
 	}
 
 	//Snapping
-	if (snapIndex >= 0 && numPoints > 2)
+	if (snapIndex >= 0 && numPoints > 2 && canSnap)
 	{
 		placeingPos = points[snapIndex];
 		isSnapping = true;
@@ -137,6 +145,12 @@ void Editor::hullDraw()
 	if (input->getKeyDown('G'))
 	{
 		isGridActive = !isGridActive;
+	}
+
+	//On S press
+	if (input->getKeyDown('S'))
+	{
+		canSnap = !canSnap;
 	}
 
 	//Render Grid
