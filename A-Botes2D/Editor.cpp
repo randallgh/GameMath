@@ -6,6 +6,9 @@
 #include "Camera.h"
 #include "drawutils.h"
 
+#include <iostream>
+#include <fstream>
+
 Editor::Editor(Input * i, Camera * mC, unsigned * sBitmap)
 {
 	input = i;
@@ -51,70 +54,19 @@ void Editor::update(float dt)
 			drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
 		}
 
+		if (sfw::getKey(KEY_ENTER) && numPoints > 2)
+		{
+			saveShip("test");
+		}
+
+		if (sfw::getKey(KEY_L))
+		{
+			loadShip("test");
+		}
+
 		break;
 	case HULLDRAW:
-
-		placeingPos = input->getMousePos();
-		snapIndex = getClosestPoint(placeingPos);
-
-		//Holding shift
-		if (sfw::getKey(KEY_LEFT_SHIFT) && (numPoints > 0))
-		{
-			float x = points[numPoints - 1].x - placeingPos.x;
-			float y = points[numPoints - 1].y - placeingPos.y;
-			vec2 vec = {x,y};
-
-			float deg = (int)VectorToDegree(vec2{ abs(vec.x),abs(vec.y) }) % 360;
-
-			if (deg > 45 && deg < 135 || deg > 225 && deg < 270) 
-			{ 
-				placeingPos = points[numPoints - 1] - vec2{ 0,vec.y }; 
-			}
-			else { placeingPos = points[numPoints - 1] - vec2{ vec.x,0 }; }
-		}
-
-		//Snapping
-		if (snapIndex >= 0 && numPoints > 2)
-		{
-			placeingPos = points[snapIndex];
-			isSnapping = true;
-		}
-		else
-		{
-			isSnapping = false;
-		}
-
-		//On left click
-		if (input->getMouseButtonDown(0) && (numPoints <= 15))
-		{
-			points[numPoints] = placeingPos;
-			numPoints++;
-
-			if (isSnapping)
-			{
-				//End placing points
-				editorState = EDITOR_MODES::IDLE;
-			}
-		}
-
-		//On right click
-		if (input->getMouseButtonDown(1))
-		{
-			editorState = EDITOR_MODES::IDLE;
-		}
-
-		//Render Hull
-		for (int i = 0; i < numPoints && numPoints >= 1; ++i)
-		{
-			if (i == (numPoints - 1))
-			{
-				drawVecLine(points[i], placeingPos, RED);
-			}
-			else
-			{
-				drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
-			}
-		}
+		hullDraw();
 		break;
 	default:
 		break;
@@ -122,6 +74,75 @@ void Editor::update(float dt)
 
 	editorExitButton->draw(mainCam->mat, *stringBitmap);
 	editorExitButton->update(dt);
+}
+
+void Editor::hullDraw()
+{
+	sfw::drawLine(0, SCR_INFO.SCR_HEIGHT / 2, SCR_INFO.SCR_WIDTH, SCR_INFO.SCR_HEIGHT / 2, RED);
+	sfw::drawLine(SCR_INFO.SCR_WIDTH / 2, SCR_INFO.SCR_HEIGHT, SCR_INFO.SCR_WIDTH / 2, 0, GREEN);
+
+	placeingPos = input->getMousePos();
+	snapIndex = getClosestPoint(placeingPos);
+
+	//Holding shift
+	if (sfw::getKey(KEY_LEFT_SHIFT) && (numPoints > 0))
+	{
+		float x = points[numPoints - 1].x - placeingPos.x;
+		float y = points[numPoints - 1].y - placeingPos.y;
+		vec2 vec = { x,y };
+
+		float deg = (int)VectorToDegree(vec2{ abs(vec.x),abs(vec.y) }) % 360;
+
+		if (deg > 45 && deg < 135 || deg > 225 && deg < 270)
+		{
+			placeingPos = points[numPoints - 1] - vec2{ 0,vec.y };
+		}
+		else { placeingPos = points[numPoints - 1] - vec2{ vec.x,0 }; }
+	}
+
+	//Snapping
+	if (snapIndex >= 0 && numPoints > 2)
+	{
+		placeingPos = points[snapIndex];
+		isSnapping = true;
+	}
+	else
+	{
+		isSnapping = false;
+	}
+
+	//On left click
+	if (input->getMouseButtonDown(0) && (numPoints <= 15))
+	{
+		if (isSnapping)
+		{
+			//End placing points
+			editorState = EDITOR_MODES::IDLE;
+			return;
+		}
+
+		points[numPoints] = placeingPos;
+		numPoints++;
+	}
+
+	//On right click
+	if (input->getMouseButtonDown(1))
+	{
+		if (numPoints > 0) { numPoints--; }
+	}
+
+	//Render Hull
+	for (int i = 0; i < numPoints && numPoints >= 1; ++i)
+	{
+		if (i == (numPoints - 1))
+		{
+			drawVecLine(points[i], placeingPos, RED);
+		}
+		else
+		{
+			drawVecLine(points[i], points[(i + 1) % numPoints], WHITE);
+		}
+	}
 }
 
 int Editor::getClosestPoint(vec2 pos)
@@ -137,8 +158,67 @@ int Editor::getClosestPoint(vec2 pos)
 	return -1;
 }
 
-bool Editor::saveShip()
+bool Editor::saveShip(std::string shipN)
 {
+	std::ofstream file;
+	std::string destinationName = "data/ships/" + shipN + ".txt";
+	file.open(destinationName);
+
+	file << "@Ship" << "\n";
+	file << shipN << "\n";
+
+	file << "@Hull" << "\n";
+	file << numPoints << "\n";
+
+	for (int i = 0; i < numPoints; ++i)
+	{
+		file << points[i].x - (SCR_INFO.SCR_WIDTH / 2) << "\n";
+		file << points[i].y - (SCR_INFO.SCR_HEIGHT / 2)<< "\n";
+	}
+
+	file.flush();
+	file.close();
+	return true;
+}
+
+bool Editor::loadShip(std::string shipN)
+{
+	std::ifstream file;
+	std::string destinationName = "data/ships/" + shipN + ".txt";
+	std::string buffer;
+	file.open(destinationName);
+
+	if (!file.fail())
+	{
+		std::getline(file, buffer);
+		if (buffer.compare("@Ship") == 0)
+		{
+			std::getline(file, buffer);
+			shipName = buffer;
+		}
+		else { return false; }
+
+		std::getline(file, buffer);
+		if (buffer.compare("@Hull") == 0)
+		{
+			std::getline(file, buffer);
+			numPoints = std::stoi(buffer);
+
+			for (int i = 0; i < numPoints; ++i)
+			{
+				std::getline(file, buffer);
+				points[i].x = std::stof(buffer) + (SCR_INFO.SCR_WIDTH / 2);
+				std::getline(file, buffer);
+				points[i].y = std::stof(buffer) + (SCR_INFO.SCR_HEIGHT / 2);
+			}
+		}
+		else { return false; }
+
+		file.close();
+		return true;
+	}
 
 	return false;
 }
+
+

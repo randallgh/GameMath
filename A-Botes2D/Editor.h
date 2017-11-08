@@ -1,6 +1,8 @@
 #pragma once
 #include "vec2.h"
 #include "Screen.h"
+#include <string>
+
 class Button;
 class Input;
 class Camera;
@@ -24,6 +26,8 @@ private:
 	vec2 points[16] = {};
 	int numPoints = 0;
 
+	std::string shipName;
+
 	int snapIndex;
 	float hullDrawSnapRadius = 25;
 	bool isSnapping = false;
@@ -39,8 +43,11 @@ private:
 
 	EDITOR_MODES editorState = EDITOR_MODES::IDLE;
 
+	void hullDraw();
+
 	int getClosestPoint(vec2 pos);
 
-	bool saveShip();
+	bool saveShip(std::string shipN);
+	bool loadShip(std::string shipN);
 };
 

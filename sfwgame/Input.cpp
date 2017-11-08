@@ -69,13 +69,13 @@ bool Input::getMouseButtonDown(int button)
 		case 1:
 			if (isMouseRightPressed)
 			{
-
+				return false;
 			}
 			else
 			{
 				isMouseRightPressed = true;
+				return true;
 			}
-			return true;
 		default:
 			break;
 		}
