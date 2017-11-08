@@ -13,9 +13,10 @@ static enum ColliderType
 
 struct SATGeometry
 {
-	vec2 points[16];
+	static const int MAX_POINTS = 16;
+	vec2 points[MAX_POINTS];
 	int numPoints;
-	vec2 axes[16];
+	vec2 axes[MAX_POINTS];
 };
 
 SATGeometry operator*(const SATGeometry &P, const mat3x3 &M);

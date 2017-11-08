@@ -39,7 +39,7 @@ Collider::~Collider()
 //Does collide with other SATGeometry
 Collision Collider::DoesCollide_SAT_SAT(const SATGeometry &A, const SATGeometry &B)
 {
-	vec2 axes[32];
+	vec2 axes[SATGeometry::MAX_POINTS * 2];
 
 	int naxes = 0;
 	for (int i = 0; i < A.numPoints; ++i)

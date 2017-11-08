@@ -2,6 +2,7 @@
 #include "vec2.h"
 #include "Screen.h"
 #include <string>
+#include "Collider.h"::SATGeometry
 
 class Button;
 class Input;
@@ -23,7 +24,7 @@ private:
 	Camera * mainCam;
 	unsigned * stringBitmap;
 
-	vec2 points[16] = {};
+	vec2 points[SATGeometry::MAX_POINTS] = {};
 	int numPoints = 0;
 
 	std::string shipName;

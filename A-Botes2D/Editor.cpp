@@ -112,7 +112,8 @@ void Editor::hullDraw()
 	}
 
 	//On left click
-	if (input->getMouseButtonDown(0) && (numPoints <= 15))
+	if (input->getMouseButtonDown(0) && (numPoints < SATGeometry::MAX_POINTS) 
+		|| input->getMouseButtonDown(0) && isSnapping)
 	{
 		if (isSnapping)
 		{
