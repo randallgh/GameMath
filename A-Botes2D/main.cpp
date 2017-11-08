@@ -26,8 +26,11 @@
 #include "vec2.h"
 #include "vec3.h"
 #include "mat3x3.h"
+
 #include <iostream>
 #include <string>
+#include <fstream>
+
 
 #include "Editor.h"
 
@@ -66,7 +69,11 @@ Ship * Akizuki;
 Ship * Hatsuzuki;
 Ship * Suzutsuki;
 
-Ship* gameSetupNewAkizukiClass(std::string n);
+Ship * test;
+
+//Ship* gameSetupNewAkizukiClass(std::string n);
+Ship * loadShip(std::string ship);
+
 void gameInput(float dt);
 void gameDrawGUI();
 void game();
@@ -81,12 +88,13 @@ int main()
 	mainCam->screenHeight = SCR_INFO.SCR_HEIGHT;
 	stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
-	Akizuki = gameSetupNewAkizukiClass("Akizuki");
+	//Akizuki = gameSetupNewAkizukiClass("Akizuki");
+	Akizuki = loadShip("Akizuki");
 	Akizuki->transform->position = vec2{ 0, 100 };
+	Hatsuzuki = loadShip("Hatsuzuki");
+	Suzutsuki = loadShip("Suzutsuki");
+	test = loadShip("test");
 
-	Hatsuzuki = gameSetupNewAkizukiClass("Hatsuzuki");
-	
-	Suzutsuki = gameSetupNewAkizukiClass("Satsuzuki");
 	Suzutsuki->transform->position = vec2{ 400,400 };
 	Suzutsuki->transform->angle = 45;
 
@@ -142,6 +150,7 @@ void game()
 	Akizuki->update(dt);
 	Hatsuzuki->update(dt);
 	Suzutsuki->update(dt);
+	test->update(dt);
 
 	physics->update(dt);
 	mainCam->SetupMatrix(Akizuki->transform);
@@ -161,91 +170,91 @@ void game()
 	Akizuki->draw();
 	Hatsuzuki->draw();
 	Suzutsuki->draw();
+	test->draw();
 
 
 	//DrawMatrix(mainCam->mat * test.GetGlobalTransform(),30);
 	gameDrawGUI();
 }
 
-Ship* gameSetupNewAkizukiClass(std::string n)
-{
-	Ship * ship;
-	float length = 440;
-	float width = 38;
-	float length2 = length/2;
-	float width2 = width/2;
-	int hullNum = 1;
-	int mainGunNum = 4;
-	int torpedoMountsNum = 1;
-
-	Hull ** shipHull = new Hull*[hullNum];
-	NavalBattery ** shipMainGuns = new NavalBattery*[mainGunNum];
-	TorpedoMount ** shipTorpedoMounts = new TorpedoMount*[torpedoMountsNum];
-
-	for (int i = 0; i < hullNum; ++i)
-	{
-		SATGeometry col =
-		{
-			{
-				{ -length2 + 20, width2 },
-				{ -length2, width/4 },
-				{ -length2, -width/4 },
-				{ -length2 + 20, -width2 },
-				{ length/4,-width2 },
-				{ length2,-2 },
-				{ length2,2 },
-				{ length / 4,width2 },
-
-			},
-			8
-		};
-		shipHull[i] = new Hull(col, physics);
-		shipHull[i]->name = n + " Hull";
-		shipHull[i]->rigidbody->radius = (length / 4) / 2;
-		shipHull[i]->color = WHITE;
-		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
-	}
-	shipHull[0]->transform->position = { 0,0 };
-	//shipHull[0]->transform->position = { -(17 * 3),0 };
-	//shipHull[1]->transform->position = { -(17 * 1),0 };
-	//shipHull[2]->transform->position = { (17 * 1),0 };
-	//shipHull[3]->transform->position = { (17 * 3),0 };
-
-
-	for (int i = 0; i < mainGunNum; ++i)
-	{
-		shipMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
-		shipMainGuns[i]->shellType1 = new Shell();
-		shipMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
-	}
-	shipMainGuns[0]->transform->position = { 100 + 30,0 };
-	shipMainGuns[1]->transform->position = { 100 ,0 };
-	shipMainGuns[2]->transform->position = { -100,0 };
-	shipMainGuns[3]->transform->position = { -100 - 30,0 };
-
-	for (int i = 0; i < torpedoMountsNum; ++i)
-	{
-		shipTorpedoMounts[i] = new TorpedoMount(physics, vec2{ 0,0 });
-		shipTorpedoMounts[i]->reloadTime = 1;
-		shipTorpedoMounts[i]->torpedo = new Torpedo();
-		shipTorpedoMounts[i]->torpedo->setup(physics, n + " Torpedo",2,30,54,0,20000,10000);
-	}
-	shipTorpedoMounts[0]->transform->position = { -50,0 };
-
-	ship = new Ship(n, n, physics, 
-		shipHull, hullNum, 
-		shipMainGuns, mainGunNum,
-		shipTorpedoMounts,torpedoMountsNum);
-
-	//ship->transform->dimension = { 1,1 };
-	//ship->transform->position = { 0, 0 };
-	ship->horsepower = 50000;
-	ship->rigidbody->mass = 3700;
-
-
-	ship->cam = mainCam;
-	return ship;
-}
+//Ship* gameSetupNewAkizukiClass(std::string n)
+//{
+//	Ship * ship;
+//	float length = 440;
+//	float width = 38;
+//	float length2 = length/2;
+//	float width2 = width/2;
+//	int hullNum = 1;
+//	int mainGunNum = 4;
+//	int torpedoMountsNum = 1;
+//
+//	Hull ** shipHull = new Hull*[hullNum];
+//	NavalBattery ** shipMainGuns = new NavalBattery*[mainGunNum];
+//	TorpedoMount ** shipTorpedoMounts = new TorpedoMount*[torpedoMountsNum];
+//
+//	for (int i = 0; i < hullNum; ++i)
+//	{
+//		SATGeometry col =
+//		{
+//			{
+//				{ -length2 + 20, width2 },
+//				{ -length2, width/4 },
+//				{ -length2, -width/4 },
+//				{ -length2 + 20, -width2 },
+//				{ length/4,-width2 },
+//				{ length2,-2 },
+//				{ length2,2 },
+//				{ length / 4,width2 },
+//
+//			},
+//			8
+//		};
+//		shipHull[i] = new Hull(col, physics);
+//		shipHull[i]->name = n + " Hull";
+//		shipHull[i]->rigidbody->radius = (length / 4) / 2;
+//		shipHull[i]->color = WHITE;
+//		//akizukiHull[i]->transform->position = { (float)((-length/2) + (i * length / 4)), 0 };
+//	}
+//	//shipHull[0]->transform->position = { 0,0 };
+//	//shipHull[0]->transform->position = { -(17 * 3),0 };
+//	//shipHull[1]->transform->position = { -(17 * 1),0 };
+//	//shipHull[2]->transform->position = { (17 * 1),0 };
+//	//shipHull[3]->transform->position = { (17 * 3),0 };
+//
+//
+//	for (int i = 0; i < mainGunNum; ++i)
+//	{
+//		shipMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
+//		shipMainGuns[i]->shellType1 = new Shell();
+//		shipMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
+//	}
+//	shipMainGuns[0]->transform->position = { 100 + 30,0 };
+//	shipMainGuns[1]->transform->position = { 100 ,0 };
+//	shipMainGuns[2]->transform->position = { -100,0 };
+//	shipMainGuns[3]->transform->position = { -100 - 30,0 };
+//
+//	for (int i = 0; i < torpedoMountsNum; ++i)
+//	{
+//		shipTorpedoMounts[i] = new TorpedoMount(physics, vec2{ 0,0 });
+//		shipTorpedoMounts[i]->reloadTime = 1;
+//		shipTorpedoMounts[i]->torpedo = new Torpedo();
+//		shipTorpedoMounts[i]->torpedo->setup(physics, n + " Torpedo",2,30,54,0,20000,10000);
+//	}
+//	shipTorpedoMounts[0]->transform->position = { -50,0 };
+//
+//	ship = new Ship(n, n, physics, 
+//		shipHull, hullNum, 
+//		shipMainGuns, mainGunNum,
+//		shipTorpedoMounts,torpedoMountsNum);
+//
+//	//ship->transform->dimension = { 1,1 };
+//	//ship->transform->position = { 0, 0 };
+//	ship->horsepower = 50000;
+//	ship->rigidbody->mass = 3700;
+//	ship->cam = mainCam;
+//
+//	return ship;
+//}
 
 void gameInput(float dt)
 {
@@ -358,4 +367,116 @@ void mainMenu()
 	}
 
 	if (sfw::getKey(KEY_TAB)) { isRunning = false; }
+}
+
+Ship * loadShip(std::string ship)
+{
+	Ship * retval;
+	std::ifstream file;
+	std::string destinationName = "data/ships/" + ship + ".txt";
+	std::string buffer;
+	file.open(destinationName);
+
+	std::string name;
+
+	Hull ** shipHull = new Hull*[1];
+	NavalBattery ** shipMainGuns;
+	TorpedoMount ** shipTorpedoMounts;
+
+	int numHullPoints= 0;
+	int numMainGuns = 0;
+	int numTorpedoTubes = 0;
+
+	SATGeometry geo =
+	{
+		{
+			{0,0}
+		},
+		0
+	};
+
+	if (!file.fail())
+	{
+		std::getline(file, buffer);
+		if (buffer.compare("@Ship") == 0)
+		{
+			std::getline(file, buffer);
+			name = buffer;
+		}
+		else { return false; }
+
+		std::getline(file, buffer);
+		if (buffer.compare("@Hull") == 0)
+		{
+			std::getline(file, buffer);
+			numHullPoints = std::stoi(buffer);
+			geo.numPoints = numHullPoints;
+
+			for (int i = 0; i < numHullPoints; ++i)
+			{
+				std::getline(file, buffer);
+				geo.points[i].x = std::stof(buffer);
+				std::getline(file, buffer);
+				geo.points[i].y = std::stof(buffer);
+			}
+
+			shipHull[0] = new Hull(geo, physics);
+		}
+		else { return false; }
+
+		std::getline(file, buffer);
+		if (buffer.compare("@MainGuns") == 0)
+		{
+			std::getline(file, buffer);
+			numMainGuns = std::stoi(buffer);
+			shipMainGuns = new NavalBattery*[numMainGuns];
+
+			for (int i = 0; i < numMainGuns; ++i)
+			{
+				shipMainGuns[i] = new NavalBattery(physics, vec2{ 0,0 }, 3.0f);
+				shipMainGuns[i]->shellType1 = new Shell();
+				shipMainGuns[i]->shellType1->setupShell(physics, "Shell", "Shell", 1, 1000, 10, 1000, 19000);
+				std::getline(file, buffer);
+				shipMainGuns[i]->transform->position.x = std::stof(buffer);
+				std::getline(file, buffer);
+				shipMainGuns[i]->transform->position.y = std::stof(buffer);
+			}
+		}
+		else { return false; }
+
+		std::getline(file, buffer);
+		if (buffer.compare("@TorpedoTubes") == 0)
+		{
+			std::getline(file, buffer);
+			numTorpedoTubes = std::stoi(buffer);
+			shipTorpedoMounts = new TorpedoMount*[numTorpedoTubes];
+
+			for (int i = 0; i < numTorpedoTubes; ++i)
+			{
+				shipTorpedoMounts[i] = new TorpedoMount(physics, vec2{ 0,0 });
+				shipTorpedoMounts[i]->reloadTime = 1;
+				shipTorpedoMounts[i]->torpedo = new Torpedo();
+				shipTorpedoMounts[i]->torpedo->setup(physics, ship + " Torpedo", 2, 30, 54, 0, 20000, 10000);
+				std::getline(file, buffer);
+				shipTorpedoMounts[i]->transform->position.x = std::stof(buffer);
+				std::getline(file, buffer);
+				shipTorpedoMounts[i]->transform->position.y = std::stof(buffer);
+			}
+		}
+		else { return false; }
+
+		file.close();
+
+		retval = new Ship(name, name, physics, 
+			shipHull, 1, 
+			shipMainGuns, numMainGuns, 
+			shipTorpedoMounts, numTorpedoTubes);
+		retval->horsepower = 50000;
+		retval->rigidbody->mass = 3700;
+		retval->cam = mainCam;
+
+		return retval;
+	}
+
+	return nullptr;
 }
