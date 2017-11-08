@@ -101,6 +101,8 @@ int main()
 	{
 		if (isRunning == false) { break; }
 		dt = sfw::getDeltaTime();
+		input->poll();
+
 
 		switch (pState)
 		{
@@ -340,7 +342,6 @@ Button * mmEditorButton = new Button(input, 50, 20, vec2{ (float)SCR_INFO.SCR_WI
 
 void mainMenu()
 {
-
 	mainCam->mat = mat3x3::identity();
 
 	mmGameButton->draw(mainCam->mat,stringBitmap);

@@ -50,5 +50,7 @@ private:
 
 	bool saveShip(std::string shipN);
 	bool loadShip(std::string shipN);
+
+	void saveAkizuki();
 };
 

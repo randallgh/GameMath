@@ -57,6 +57,7 @@ void Editor::update(float dt)
 		if (sfw::getKey(KEY_ENTER) && numPoints > 2)
 		{
 			saveShip("test");
+			saveAkizuki();
 		}
 
 		if (sfw::getKey(KEY_L))
@@ -220,6 +221,49 @@ bool Editor::loadShip(std::string shipN)
 	}
 
 	return false;
+}
+
+void Editor::saveAkizuki()
+{
+	float length = 440;
+	float width = 38;
+	float length2 = length / 2;
+	float width2 = width / 2;
+	SATGeometry col =
+	{
+		{
+			{ -length2 + 20, width2 },
+			{ -length2, width / 4 },
+			{ -length2, -width / 4 },
+			{ -length2 + 20, -width2 },
+			{ length / 4,-width2 },
+			{ length2,-2 },
+			{ length2,2 },
+			{ length / 4,width2 },
+
+		},
+		8
+	};
+
+	std::ofstream file;
+	std::string destinationName = "data/ships/Akizuki.txt";
+	file.open(destinationName);
+
+	file << "@Ship" << "\n";
+	file << "Akizuki" << "\n";
+
+	file << "@Hull" << "\n";
+	file << col.numPoints << "\n";
+
+	for (int i = 0; i < col.numPoints; ++i)
+	{
+		file << col.points[i].x << "\n";
+		file << col.points[i].y << "\n";
+	}
+
+	file.flush();
+	file.close();
+	return;
 }
 
 

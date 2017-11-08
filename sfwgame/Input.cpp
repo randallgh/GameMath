@@ -26,6 +26,12 @@ Input::Input()
 	m->transform = new Transform(m);
 
 	mouse = m;
+
+	for (int i = 0; i < 350; ++i)
+	{
+		prev_state[i] = 0;
+		next_state[i] = 0;
+	}
 }
 
 
