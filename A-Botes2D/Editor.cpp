@@ -133,6 +133,29 @@ void Editor::hullDraw()
 		if (numPoints > 0) { numPoints--; }
 	}
 
+	//On G press
+	if (input->getKeyDown('G'))
+	{
+		isGridActive = !isGridActive;
+	}
+
+	//Render Grid
+	if (isGridActive)
+	{
+		for (int i = 1; i < gridCols; ++i)
+		{
+			if ((((float)SCR_INFO.SCR_WIDTH / gridCols) * i) == ((float)SCR_INFO.SCR_WIDTH/2)){continue; }
+			drawVecLine(vec2{ ((float)SCR_INFO.SCR_WIDTH / gridCols) * i, 0 },
+				vec2{ ((float)SCR_INFO.SCR_WIDTH / gridCols) * i, (float)SCR_INFO.SCR_HEIGHT }, WHITE);
+		}
+		for (int i = 0; i < gridRows; ++i)
+		{
+			if ((((float)SCR_INFO.SCR_HEIGHT / gridRows) * i) == ((float)SCR_INFO.SCR_HEIGHT / 2)) { continue; }
+			drawVecLine(vec2{ 0,						 ((float)SCR_INFO.SCR_HEIGHT / gridRows) * i },
+				vec2{ (float)SCR_INFO.SCR_WIDTH, ((float)SCR_INFO.SCR_HEIGHT / gridRows) * i }, WHITE);
+		}
+	}
+
 	//Render Hull
 	for (int i = 0; i < numPoints && numPoints >= 1; ++i)
 	{

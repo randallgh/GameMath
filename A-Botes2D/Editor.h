@@ -35,6 +35,10 @@ private:
 
 	vec2 placeingPos;
 
+	int gridCols = 10;
+	int gridRows = 10;
+	bool isGridActive = false;
+
 	enum EDITOR_MODES
 	{
 		IDLE,
