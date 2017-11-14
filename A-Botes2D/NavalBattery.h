@@ -16,7 +16,7 @@ public:
 	float reloadTime;
 	float reloadTimer;
 
-	void update();
+	void update(float dt);
 	void draw();
 
 	void shoot(vec2 pos);
@@ -24,6 +24,8 @@ public:
 	int MAX_SHELLS = 20;
 	int numShells = 0;
 	Shell ** shells = new Shell*[MAX_SHELLS];
+
+	int numBarrels = 1;
 
 	Ship * parentShip;
 	Shell * shellType1;

@@ -137,7 +137,7 @@ void Ship::update(float dt)
 	}
 	for (int i = 0; i < MAIN_GUNS_COUNT; ++i) 
 	{
-		mainGuns[i]->update();
+		mainGuns[i]->update(dt);
 	}
 	for (int i = 0; i < TORPEDO_MOUNT_COUNT; ++i)
 	{

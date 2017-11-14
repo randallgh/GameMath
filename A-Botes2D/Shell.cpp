@@ -102,11 +102,11 @@ void Shell::reset()
 	isEnabled = true;
 }
 
-void Shell::update()
+void Shell::update(float dt)
 {
 	if (!isEnabled) { return; }
-	life += sfw::getDeltaTime();
-	distanceTraveled += magnitude(rigidbody->velocity) * sfw::getDeltaTime();
+	life += dt;
+	distanceTraveled += magnitude(rigidbody->velocity) * dt;
 	if (life >= maxLife || distanceTraveled >= maxDistance) { isEnabled = false; return; }
 	//rigidbody->update();
 	//std::cout << distanceTraveled << std::endl;

@@ -37,14 +37,14 @@ NavalBattery::~NavalBattery()
 {
 }
 
-void NavalBattery::update()
+void NavalBattery::update(float dt)
 {
 	if (!isEnabled) { return; }
-	reloadTimer += sfw::getDeltaTime();
+	reloadTimer += dt;
 	for (int i = 0; i < MAX_SHELLS; ++i)
 	{
 		if (shells[i] == nullptr || !shells[i]->isEnabled) { continue; }
-		shells[i]->update();
+		shells[i]->update(dt);
 	}
 }
 
@@ -63,24 +63,35 @@ void NavalBattery::shoot(vec2 pos)
 {
 	if (reloadTimer >= reloadTime) 
 	{
-		Shell * shell = findNextShell();
-		if (shell != nullptr)
+		for (int i = 0; i < numBarrels; ++i)
 		{
-			//std::cout << "Pos X: " << pos.x << "Y: " << pos.y << std::endl;
-			shell->setupShell(shellType1, physics);
-			shell->parentShip = parentShip;
-			shell->reset();
-			shell->transform->position = transform->GetGlobalTransform().c[2].xy;
+			Shell * shell = findNextShell();
+			if (shell != nullptr)
+			{
+				//std::cout << "Pos X: " << pos.x << "Y: " << pos.y << std::endl;
+				shell->setupShell(shellType1, physics);
+				shell->parentShip = parentShip;
+				shell->reset();
+				shell->transform->position = transform->GetGlobalTransform().c[2].xy;
 
-			vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
-			//std::cout << "Norm X: " << norm.x << "Y: " << norm.y << std::endl;
+				vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
+				//std::cout << "Norm X: " << norm.x << "Y: " << norm.y << std::endl;
+				shell->transform->angle = VectorToDegree(norm);
 
-			float dist = distance(pos, (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
-			shell->maxDistance = dist;
-			//std::cout << dist << std::endl;
+				if (numBarrels > 1)
+				{
+					float distanceBetweenGuns = 4;
+					shell->transform->position -= vec2{ (-distanceBetweenGuns/2 * (float)numBarrels-1),0 } + i * vec2{ distanceBetweenGuns ,0 };
+				}
 
-			shell->rigidbody->velocity = norm * shell->speed; //degreeToVector(transform->angle + parentShip->transform->angle,1) * shell->speed;
-			reloadTimer = 0;
+
+				float dist = distance(pos, (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
+				shell->maxDistance = dist;
+				//std::cout << dist << std::endl;
+
+				shell->rigidbody->velocity = norm * shell->speed; //degreeToVector(transform->angle + parentShip->transform->angle,1) * shell->speed;
+				reloadTimer = 0;
+			}
 		}
 	}
 }

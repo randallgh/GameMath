@@ -31,7 +31,6 @@
 #include <string>
 #include <fstream>
 
-
 #include "Editor.h"
 
 bool up;
@@ -103,6 +102,11 @@ int main()
 	{
 		if (isRunning == false) { break; }
 		dt = sfw::getDeltaTime();
+
+		if (sfw::getKey(KEY_SPACE))
+		{
+			dt = 0;
+		}
 		input->poll();
 
 
@@ -145,6 +149,7 @@ void game()
 {
 
 	mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
+
 	gameInput(dt);
 
 	Akizuki->update(dt);
@@ -277,10 +282,10 @@ void gameInput(float dt)
 		ldown = true;
 	}
 	else if (left) {
-		Akizuki->transform->angle += 1;
+		Akizuki->transform->angle += 0.01 * magnitude(Akizuki->rigidbody->velocity);
 	}
 	else if (right) {
-		Akizuki->transform->angle -= 1;
+		Akizuki->transform->angle -= 0.01 * magnitude(Akizuki->rigidbody->velocity);
 	}
 
 	if (inputTimer >= inputTimeMax)
@@ -440,6 +445,7 @@ Ship * gameLoadShip(std::string ship)
 				shipMainGuns[i]->transform->position.x = std::stof(buffer);
 				std::getline(file, buffer);
 				shipMainGuns[i]->transform->position.y = std::stof(buffer);
+				shipMainGuns[i]->numBarrels = 2;
 			}
 		}
 		else { return false; }

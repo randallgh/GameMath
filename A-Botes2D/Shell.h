@@ -41,7 +41,7 @@ public:
 	void setupShell(const Shell *s, Physics * phys);
 	void reset();
 
-	void update();
+	void update(float dt);
 	void draw();
 };
 
