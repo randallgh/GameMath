@@ -41,7 +41,10 @@ int main()
 
 	Sprite testSprite("test.png");
 	Spritesheet * testSheet = new Spritesheet("exp2_0.png", 4, 4);
-	SpriteAnimation testAnimation(testSheet,10.0f);
+	Spritesheet * testSheetRedCell = new Spritesheet("canvas.png", 6, 10);
+
+	SpriteAnimation testAnimation(testSheet,0.1f);
+	SpriteAnimation testRedAnimation(testSheetRedCell, 2.0f);
 
 	unsigned testTex = sfw::loadTextureMap("test.png");
 	Transform testTrans(nullptr);
@@ -155,7 +158,10 @@ int main()
 		testSprite.draw(translate(vec2{ 300,300 }) * testTrans.GetGlobalTransform(), tan(sfw::getTime()) * sfw::getTime(), RED, 1);
 
 		testAnimation.update(sfw::getDeltaTime());
-		testAnimation.draw(testTrans.GetGlobalTransform(), 1, WHITE, 0);
+		//testAnimation.draw(testTrans.GetGlobalTransform(), 1, WHITE, 0);
+
+		testRedAnimation.update(sfw::getDeltaTime());
+		testRedAnimation.draw(testTrans.GetGlobalTransform(), 1, WHITE, 0);
 
 		//DrawAxes(box);
 		//DrawAxes(triangle);
