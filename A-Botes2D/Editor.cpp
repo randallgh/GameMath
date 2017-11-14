@@ -462,5 +462,3 @@ void Editor::saveAkizuki()
 	file.close();
 	return;
 }
-
-
