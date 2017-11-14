@@ -8,6 +8,8 @@ public:
 	~Spritesheet();
 
 	void draw(mat3x3 transform, int index, float s = 1.0f, unsigned tint = 0xfffffff, float z = 0.0f);
+
+	int GetNumSprites();
 private:
 	int cols;
 	int rows;

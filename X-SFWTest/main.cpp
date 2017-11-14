@@ -40,7 +40,8 @@ int main()
 	sfw::setBackgroundColor(BLACK);
 
 	Sprite testSprite("test.png");
-	Spritesheet testSheet("exp2_0.png", 4, 4);
+	Spritesheet * testSheet = new Spritesheet("exp2_0.png", 4, 4);
+	SpriteAnimation testAnimation(testSheet,10.0f);
 
 	unsigned testTex = sfw::loadTextureMap("test.png");
 	Transform testTrans(nullptr);
@@ -150,8 +151,11 @@ int main()
 		box.points[2] = mousePos + vec2{ 200,200 };
 		box.points[3] = mousePos + vec2{ 0,200 };
 
-		testSheet.draw(testTrans.GetGlobalTransform(), (int)(sfw::getTime() * 20) % 16,2.0f,WHITE,0);
+		//testSheet->draw(testTrans.GetGlobalTransform(), (int)(sfw::getTime() * 20) % 16,2.0f,WHITE,0);
 		testSprite.draw(translate(vec2{ 300,300 }) * testTrans.GetGlobalTransform(), tan(sfw::getTime()) * sfw::getTime(), RED, 1);
+
+		testAnimation.update(sfw::getDeltaTime());
+		testAnimation.draw(testTrans.GetGlobalTransform(), 1, WHITE, 0);
 
 		//DrawAxes(box);
 		//DrawAxes(triangle);

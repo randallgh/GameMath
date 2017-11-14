@@ -28,3 +28,8 @@ void Spritesheet::draw(mat3x3 transform, int index, float s, unsigned tint, floa
 	mat3x3 t = transform * scale(vec2{ s * widthSprite,s*heightSprite });
 	sfw::drawTextureMatrix3(handle, index, tint, t.m, z);
 }
+
+int Spritesheet::GetNumSprites()
+{
+	return numSprites;
+}
