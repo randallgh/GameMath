@@ -135,9 +135,9 @@ void Shell::reset()
 void Shell::update(float dt)
 {
 	if (!isEnabled) { return; }
-	life += dt;
+	//life += dt;
 	distanceTraveled += magnitude(rigidbody->velocity) * dt;
-	if (life >= maxLife || distanceTraveled >= maxDistance) { isEnabled = false; return; }
+	if (distanceTraveled >= maxDistance) { isEnabled = false; return; }
 	//rigidbody->update();
 	//std::cout << distanceTraveled << std::endl;
 	//std::cout << magnitude(collider->velocity) << std::endl;

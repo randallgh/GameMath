@@ -168,6 +168,15 @@ void game()
 	sfw::drawCircle(mousePosVec.x, mousePosVec.y, 5, 12, RED);
 	//drawVecCircle(, 5, 12, WHITE);
 
+	if (sfw::getKey(KEY_MINUS))
+	{
+		mainCam->setZoom(mainCam->getZoom() - 0.1);
+	}
+	else if (sfw::getKey(KEY_EQUAL))
+	{
+		mainCam->setZoom(mainCam->getZoom() + 0.1);
+	}
+
 	Akizuki->setWeaponsAngle(mousePos.GetGlobalTransform().c[2].xy);
 
 	Hatsuzuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
