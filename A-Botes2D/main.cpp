@@ -72,7 +72,7 @@ Ship * Suzutsuki;
 Ship * test;
 
 //Ship* gameSetupNewAkizukiClass(std::string n);
-Ship * loadShip(std::string ship);
+Ship * gameLoadShip(std::string ship);
 
 void gameInput(float dt);
 void gameDrawGUI();
@@ -89,11 +89,11 @@ int main()
 	stringBitmap = sfw::loadTextureMap("data/textures/fontmap.png", 16, 16);
 
 	//Akizuki = gameSetupNewAkizukiClass("Akizuki");
-	Akizuki = loadShip("Akizuki");
+	Akizuki = gameLoadShip("Akizuki");
 	Akizuki->transform->position = vec2{ 0, 100 };
-	Hatsuzuki = loadShip("Hatsuzuki");
-	Suzutsuki = loadShip("Suzutsuki");
-	test = loadShip("test");
+	Hatsuzuki = gameLoadShip("Hatsuzuki");
+	Suzutsuki = gameLoadShip("Suzutsuki");
+	test = gameLoadShip("test");
 
 	Suzutsuki->transform->position = vec2{ 400,400 };
 	Suzutsuki->transform->angle = 45;
@@ -369,7 +369,7 @@ void mainMenu()
 	if (sfw::getKey(KEY_TAB)) { isRunning = false; }
 }
 
-Ship * loadShip(std::string ship)
+Ship * gameLoadShip(std::string ship)
 {
 	Ship * retval;
 	std::ifstream file;

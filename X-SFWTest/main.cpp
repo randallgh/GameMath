@@ -7,6 +7,7 @@
 #include "Transform.h"
 #include "Player.h"
 #include"drawutils.h"
+#include "Sprite.h"
 
 #include "Polygon.h"
 
@@ -34,6 +35,13 @@ int main()
 {
 	sfw::initContext(800,600,"SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
+
+	Sprite testSprite("test.png");
+
+	unsigned testTex = sfw::loadTextureMap("test.png");
+	Transform testTrans(nullptr);
+	testTrans.position = vec2{ 400,300 };
+	//testTrans.dimension = vec2{ (float)sfw::getTextureWidth(testTex), (float)sfw::getTextureHeight(testTex)};
 
 	Polygon box = {
 		{
@@ -132,12 +140,14 @@ int main()
 		triangle.transform.angle += sfw::getDeltaTime() * 100;
 
 		//mousePos = {130,12};
-
+		//sfw::drawTextureMatrix3(testTex, 0, WHITE,testTrans.GetGlobalTransform().m);
 		box.points[0] = mousePos;
 		box.points[1] = mousePos + vec2{ 200,0 };
 		box.points[2] = mousePos + vec2{ 200,200 };
 		box.points[3] = mousePos + vec2{ 0,200 };
 
+
+		testSprite.draw(testTrans.GetGlobalTransform(), tan(sfw::getTime()) * sfw::getTime(),RED,0);
 
 		//DrawAxes(box);
 		//DrawAxes(triangle);
