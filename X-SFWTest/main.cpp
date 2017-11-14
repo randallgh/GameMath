@@ -7,7 +7,10 @@
 #include "Transform.h"
 #include "Player.h"
 #include"drawutils.h"
+
 #include "Sprite.h"
+#include "SpriteAnimation.h"
+#include "Spritesheet.h"
 
 #include "Polygon.h"
 
@@ -37,6 +40,7 @@ int main()
 	sfw::setBackgroundColor(BLACK);
 
 	Sprite testSprite("test.png");
+	Spritesheet testSheet("exp2_0.png", 4, 4);
 
 	unsigned testTex = sfw::loadTextureMap("test.png");
 	Transform testTrans(nullptr);
@@ -146,8 +150,8 @@ int main()
 		box.points[2] = mousePos + vec2{ 200,200 };
 		box.points[3] = mousePos + vec2{ 0,200 };
 
-
-		testSprite.draw(testTrans.GetGlobalTransform(), tan(sfw::getTime()) * sfw::getTime(),RED,0);
+		testSheet.draw(testTrans.GetGlobalTransform(), (int)(sfw::getTime() * 20) % 16,2.0f,WHITE,0);
+		testSprite.draw(translate(vec2{ 300,300 }) * testTrans.GetGlobalTransform(), tan(sfw::getTime()) * sfw::getTime(), RED, 1);
 
 		//DrawAxes(box);
 		//DrawAxes(triangle);
