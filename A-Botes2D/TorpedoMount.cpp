@@ -62,19 +62,35 @@ void TorpedoMount::launchAll(vec2 pos)
 {
 	if (reloadTimer >= reloadTime)
 	{
-		Torpedo * torp = findNextTorp();
-		if (torp != nullptr)
+		for (int i = 0; i < numTorpTubes; ++i)
 		{
-			torp->setup(physics, torpedo);
-			torp->parentMount = this;
-			torp->reset();
-			torp->transform->position = transform->GetGlobalTransform().c[2].xy;
+			Torpedo * torp = findNextTorp();
+			if (torp != nullptr)
+			{
+				vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
 
-			vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
-			torp->transform->position += norm * 50;
-			torp->rigidbody->velocity = norm * torpedo->speed;
-			torp->transform->angle = VectorToDegree(norm);
-			reloadTimer = 0;
+				torp->setup(physics, torpedo);
+				torp->parentMount = this;
+				torp->reset();
+
+				torp->transform->position = vec2{ 0,0 };
+				torp->transform->e_parent = this->transform;
+				
+				if (numTorpTubes > 1)
+				{
+					float distanceBetweenMounts = 8;
+					torp->transform->position -= vec2{ 0,(-distanceBetweenMounts / 2 * (float)numTorpTubes - 1) } +i * vec2{ 0 ,distanceBetweenMounts };
+				}
+				
+				torp->transform->position = torp->transform->GetGlobalTransform().c[2].xy;
+				torp->transform->e_parent = nullptr;
+
+				torp->transform->angle = VectorToDegree(norm);
+
+				torp->transform->position += norm * 50;
+				torp->rigidbody->velocity = norm * torpedo->speed;
+				reloadTimer = 0;
+			}
 		}
 	}
 }

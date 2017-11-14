@@ -22,7 +22,7 @@ public:
 
 	int MAX_TORPEDOES = 20;
 	int numTorpedoes = 0;
-	int numTorpTubes = 1;
+	int numTorpTubes;
 	Torpedo ** torpedos = new Torpedo*[MAX_TORPEDOES];
 
 	void update(float dt);

@@ -1,6 +1,7 @@
 #pragma once
 #include "GameObject.h"
 
+union mat3x3;
 class Ship;
 class Physics;
 
@@ -42,6 +43,6 @@ public:
 	void reset();
 
 	void update(float dt);
-	void draw();
+	void draw(mat3x3 cam);
 };
 

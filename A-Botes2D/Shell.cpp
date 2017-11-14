@@ -21,6 +21,7 @@ Shell::Shell()
 	maxLife = 0;
 	damage = 0;
 	isEnabled = false;
+	color = WHITE;
 }
 
 
@@ -44,10 +45,19 @@ void Shell::setupShell(Physics * phys, std::string t, std::string n, float r, fl
 	damage = dam;
 	maxDistance = mDis;
 
+	SATGeometry shell =
+	{
+		{
+			{ -r,-r },
+			{ 0,r },
+			{ -r,r }
+		},
+		3
+	};
+	color = WHITE;
 	isEnabled = true;
-
 	if (transform == nullptr){ transform = new Transform(this); }
-	if (collider == nullptr) { collider = new Collider(this, phys); }
+	if (collider == nullptr) { collider = new Collider(shell, this, phys); }
 	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
 	rigidbody->radius = r;
 	isEnabled = false;
@@ -65,9 +75,19 @@ void Shell::setupShell(const Shell &s, Physics * phys)
 	damage = s.damage;
 	maxDistance = s.maxDistance;
 
+	SATGeometry shell =
+	{
+		{
+			{ -s.rigidbody->radius,-s.rigidbody->radius },
+			{ 0,s.rigidbody->radius },
+			{ -s.rigidbody->radius,s.rigidbody->radius }
+		},
+		3
+	};
+	color = WHITE;
 	isEnabled = true;
 	if (transform == nullptr) { transform = new Transform(this); }
-	if (collider == nullptr){ collider = new Collider(this, phys); }
+	if (collider == nullptr){ collider = new Collider(shell, this, phys); }
 	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
 	rigidbody->radius = s.rigidbody->radius;
 	isEnabled = false;
@@ -87,9 +107,19 @@ void Shell::setupShell(const Shell * s, Physics * phys)
 	damage = (*s).damage;
 	maxDistance = (*s).maxDistance;
 
+	SATGeometry shell =
+	{
+		{
+			{ -(*s).rigidbody->radius,-(*s).rigidbody->radius },
+			{ 0,(*s).rigidbody->radius },
+			{ -(*s).rigidbody->radius,(*s).rigidbody->radius }
+		},
+		3
+	};
+	color = WHITE;
 	isEnabled = true;
 	if (transform == nullptr) { transform = new Transform(this); }
-	if (collider == nullptr) { collider = new Collider(this, phys); }
+	if (collider == nullptr) { collider = new Collider(shell, this, phys); }
 	if (rigidbody == nullptr) { rigidbody = new Rigidbody(this); }
 	rigidbody->radius = (*s).rigidbody->radius;
 	isEnabled = false;
@@ -113,9 +143,10 @@ void Shell::update(float dt)
 	//std::cout << magnitude(collider->velocity) << std::endl;
 }
 
-void Shell::draw()
+void Shell::draw(mat3x3 cam)
 {
 	if (!isEnabled) { return; }
-	drawVecCircle((parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy, rigidbody->radius, 12);
+	collider->draw(cam * transform->GetGlobalTransform());
+	//drawVecCircle((parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy, rigidbody->radius, 4);
 	//DrawMatrix(parentShip->cam->mat * transform->GetGlobalTransform(), 10);
 }

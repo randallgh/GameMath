@@ -93,6 +93,25 @@ void Physics::update(float dt)
 						break;
 					}
 
+					switch (isCollide(i, o, "Shell", "Hull"))
+					{
+					case 0:
+						//tag1 == tag2 = 0
+						//Shell Hatsuzuki
+						//i		o
+						colliders[i]->gameObject->isEnabled = false;
+						continue;
+					case 1:
+						//tag2 == tag1 = 1
+						//Hatsuzuki  Shell
+						//i		  o
+						colliders[o]->gameObject->isEnabled = false;
+						//std::cout << "Damaged Hatsuzuki" << std::endl;
+						continue;
+					default:
+						break;
+					}
+
 					//continue;
 
 					/*if (colliders[i]->gameObject->tag.compare("Akizuki Hull") == 0 && colliders[o]->gameObject->tag.compare("Hatsuzuki Hull") == 0)

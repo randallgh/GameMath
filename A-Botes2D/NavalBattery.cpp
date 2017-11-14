@@ -55,7 +55,7 @@ void NavalBattery::draw()
 	for (int i = 0; i < MAX_SHELLS; ++i) 
 	{
 		if (shells[i] == nullptr || !shells[i]->isEnabled) { continue; }
-		shells[i]->draw();
+		shells[i]->draw(parentShip->cam->mat);
 	}
 }
 
@@ -86,6 +86,8 @@ void NavalBattery::shoot(vec2 pos)
 				shell->transform->e_parent = nullptr;
 				shell->transform->angle = VectorToDegree(norm);
 				//std::cout << "Norm X: " << norm.x << "Y: " << norm.y << std::endl;
+
+				shell->transform->position += norm * 50;
 
 				float dist = distance(pos, (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
 				shell->maxDistance = dist;
