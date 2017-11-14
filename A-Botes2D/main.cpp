@@ -445,7 +445,7 @@ Ship * gameLoadShip(std::string ship)
 				shipMainGuns[i]->transform->position.x = std::stof(buffer);
 				std::getline(file, buffer);
 				shipMainGuns[i]->transform->position.y = std::stof(buffer);
-				shipMainGuns[i]->numBarrels = 2;
+				shipMainGuns[i]->numBarrels = 6;
 			}
 		}
 		else { return false; }

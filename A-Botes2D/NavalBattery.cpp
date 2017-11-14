@@ -68,22 +68,24 @@ void NavalBattery::shoot(vec2 pos)
 			Shell * shell = findNextShell();
 			if (shell != nullptr)
 			{
+				vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
 				//std::cout << "Pos X: " << pos.x << "Y: " << pos.y << std::endl;
 				shell->setupShell(shellType1, physics);
 				shell->parentShip = parentShip;
 				shell->reset();
-				shell->transform->position = transform->GetGlobalTransform().c[2].xy;
 
-				vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
-				//std::cout << "Norm X: " << norm.x << "Y: " << norm.y << std::endl;
-				shell->transform->angle = VectorToDegree(norm);
 
+				shell->transform->position = vec2{ 0,0 };
+				shell->transform->e_parent = this->transform;
 				if (numBarrels > 1)
 				{
 					float distanceBetweenGuns = 4;
-					shell->transform->position -= vec2{ (-distanceBetweenGuns/2 * (float)numBarrels-1),0 } + i * vec2{ distanceBetweenGuns ,0 };
+					shell->transform->position -= vec2{ 0,(-distanceBetweenGuns / 2 * (float)numBarrels - 1) } +i * vec2{ 0 ,distanceBetweenGuns };
 				}
-
+				shell->transform->position = shell->transform->GetGlobalTransform().c[2].xy;
+				shell->transform->e_parent = nullptr;
+				shell->transform->angle = VectorToDegree(norm);
+				//std::cout << "Norm X: " << norm.x << "Y: " << norm.y << std::endl;
 
 				float dist = distance(pos, (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
 				shell->maxDistance = dist;
