@@ -42,8 +42,9 @@ int main()
 	Sprite testSprite("test.png");
 	Spritesheet * testSheet = new Spritesheet("exp2_0.png", 4, 4);
 	Spritesheet * testSheetRedCell = new Spritesheet("canvas.png", 6, 10);
+	Spritesheet * explosion = new Spritesheet("explosion.png", 9, 9);
 
-	SpriteAnimation testAnimation(testSheet,0.5f);
+	SpriteAnimation testAnimation(explosion,1.0f);
 	SpriteAnimation testRedAnimation(testSheetRedCell, 2.0f);
 
 	unsigned testTex = sfw::loadTextureMap("test.png");
