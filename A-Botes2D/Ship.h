@@ -57,13 +57,13 @@ public:
 	}
 	*/
 	
-	//Fires all guns at vec2 pos
+	//Fires all guns at vec2 pos in world cords
 	void shootAllGuns(vec2 pos);
 
 	//To be implemented
 	//void shootOneGun(vec2 pos);
 
-	//Fire all torpedo mounts at vec2 Pos
+	//Fire all torpedo mounts at vec2 Pos in world cords
 	void launchAllTorpedoes(vec2 pos);
 
 	//Fire a single torpedo mount at vec2 Pos

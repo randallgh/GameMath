@@ -33,5 +33,6 @@ public:
 	void update(float dt);
 
 	void integrate(Transform &T, float dt);
+	void integrate(Transform *T, float dt);
 };
 

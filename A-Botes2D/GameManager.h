@@ -14,6 +14,6 @@ public:
 	GameManager();
 	~GameManager();
 
-	PROGRAM_STATE pState = PROGRAM_STATE::_EDITOR_;
+	PROGRAM_STATE pState = PROGRAM_STATE::_MAINMENU_;
 };
 

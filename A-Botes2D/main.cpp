@@ -67,7 +67,6 @@ Editor * editor = new Editor(input, mainCam, &stringBitmap,gameManager);
 Ship * Akizuki;
 Ship * Hatsuzuki;
 Ship * Suzutsuki;
-
 Ship * test;
 
 //Ship* gameSetupNewAkizukiClass(std::string n);
@@ -177,10 +176,15 @@ void game()
 	{
 		mainCam->setZoom(mainCam->getZoom() + 0.1);
 	}
+	
+	if (input->getKeyDown(KEY_ENTER))
+	{
+		test = gameLoadShip("test");
+	}
 
 
-	std::string mouseText = "Mouse Screen X: " + std::to_string((mousePos.GetGlobalTransform()).c[2].x) + " Y: " + std::to_string((mousePos.GetGlobalTransform()).c[2].y);
-	sfw::drawString(stringBitmap, mouseText.c_str(), 0, 200, 25, 25);
+	//std::string mouseText = "Mouse Screen X: " + std::to_string((mousePos.GetGlobalTransform()).c[2].x) + " Y: " + std::to_string((mousePos.GetGlobalTransform()).c[2].y);
+	//sfw::drawString(stringBitmap, mouseText.c_str(), 0, 200, 25, 25);
 	//std::string mouseWorldS = "Mouse Screen X: " + std::to_string(mouseWorldPosV.x) + " Y: " + std::to_string(mouseWorldPosV.y);
 	//sfw::drawString(stringBitmap, mouseWorldS.c_str(), 0, 175, 25, 25);
 
@@ -312,7 +316,7 @@ void gameInput(float dt)
 		Akizuki->transform->angle += 0.01 * magnitude(Akizuki->rigidbody->velocity);
 	}
 	else if (right) {
-		Akizuki->transform->angle -= 0.01 * magnitude(Akizuki->rigidbody->velocity);
+		Akizuki->transform->angle -=  0.01 * magnitude(Akizuki->rigidbody->velocity);
 	}
 
 	if (inputTimer >= inputTimeMax)

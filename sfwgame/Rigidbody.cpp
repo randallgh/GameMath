@@ -45,3 +45,17 @@ void Rigidbody::integrate(Transform & T, float dt)
 	T.angle += angularVelocity * dt;
 	torque = -angularVelocity * angularDrag;
 }
+
+void Rigidbody::integrate(Transform * T, float dt)
+{
+	acceleration = force / mass;
+	velocity += acceleration * dt + impulse / mass;
+	T->position += velocity * dt;
+	impulse = { 0,0 };
+	force = -velocity * drag;
+
+	angularAcceleration = torque / mass;
+	angularVelocity = angularAcceleration * dt;
+	T->angle += angularVelocity * dt;
+	torque = -angularVelocity * angularDrag;
+}
