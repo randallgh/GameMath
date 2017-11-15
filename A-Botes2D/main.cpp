@@ -152,6 +152,7 @@ void game()
 {
 
 	mousePos.position = vec2{ sfw::getMouseX(), sfw::getMouseY() };
+	vec2 mousePosVec = (mousePos.GetGlobalTransform()).c[2].xy;
 
 	gameInput(dt);
 
@@ -164,7 +165,7 @@ void game()
 	mainCam->SetupMatrix(Akizuki->transform);
 
 	//Draw mouse pos as a circle
-	vec2 mousePosVec = (mousePos.GetGlobalTransform()).c[2].xy;
+	
 	sfw::drawCircle(mousePosVec.x, mousePosVec.y, 5, 12, RED);
 	//drawVecCircle(, 5, 12, WHITE);
 
@@ -177,10 +178,24 @@ void game()
 		mainCam->setZoom(mainCam->getZoom() + 0.1);
 	}
 
+
+	std::string mouseText = "Mouse Screen X: " + std::to_string((mousePos.GetGlobalTransform()).c[2].x) + " Y: " + std::to_string((mousePos.GetGlobalTransform()).c[2].y);
+	sfw::drawString(stringBitmap, mouseText.c_str(), 0, 200, 25, 25);
+	//std::string mouseWorldS = "Mouse Screen X: " + std::to_string(mouseWorldPosV.x) + " Y: " + std::to_string(mouseWorldPosV.y);
+	//sfw::drawString(stringBitmap, mouseWorldS.c_str(), 0, 175, 25, 25);
+
+	//mat3x3 mouseWorldPosM2 = mousePos.GetGlobalTransform();
+	//vec2 mouseWorldPosV2 = mouseWorldPosM2.c[2].xy - vec2{(float)SCR_INFO.SCR_WIDTH/2,(float)SCR_INFO.SCR_HEIGHT/2} + Akizuki->transform->GetGlobalTransform().c[2].xy;
+	//mouseWorldPosV2 /= mainCam->getZoom();
+	//std::string mouseWorldS2 = "Mouse Screen X: " + std::to_string(mouseWorldPosV2.x) + " Y: " + std::to_string(mouseWorldPosV2.y);
+	//sfw::drawString(stringBitmap, mouseWorldS2.c_str(), 0, 150, 25, 25);
+
 	Akizuki->setWeaponsAngle(mousePos.GetGlobalTransform().c[2].xy);
 
+	//drawVecLine3(mouseWorldPosV, Akizuki->transform->GetGlobalTransform().c[2].xy, WHITE, mainCam->mat);
+
 	Hatsuzuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
-	Hatsuzuki->shootAllGuns((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
+	Hatsuzuki->shootAllGuns(Akizuki->transform->GetGlobalTransform().c[2].xy);
 
 	Suzutsuki->setWeaponsAngle((mainCam->mat * Akizuki->transform->GetGlobalTransform()).c[2].xy);
 
@@ -307,14 +322,17 @@ void gameInput(float dt)
 		inputTimer = 0;
 	}
 
+	mat3x3 mouseWorldPosM = inverse(mainCam->mat) * mousePos.GetGlobalTransform();
+	vec2 mouseWorldPosV = mouseWorldPosM.c[2].xy;
+
 	if (sfw::getMouseButton(0))
 	{
-		Akizuki->shootAllGuns((mousePos.GetGlobalTransform()).c[2].xy);
+		Akizuki->shootAllGuns(mouseWorldPosV);
 	}
 
 	if (sfw::getMouseButton(1))
 	{
-		Akizuki->launchAllTorpedoes((mousePos.GetGlobalTransform()).c[2].xy);
+		Akizuki->launchAllTorpedoes(mouseWorldPosV);
 	}
 
 	if (sfw::getKey(KEY_ESCAPE)) { gameManager->pState = PROGRAM_STATE::_MAINMENU_; }

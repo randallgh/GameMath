@@ -67,7 +67,8 @@ void TorpedoMount::launchAll(vec2 pos)
 			Torpedo * torp = findNextTorp();
 			if (torp != nullptr)
 			{
-				vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
+				//vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
+				vec2 norm = normal(pos - transform->GetGlobalTransform().c[2].xy);
 
 				torp->setup(physics, torpedo);
 				torp->parentMount = this;

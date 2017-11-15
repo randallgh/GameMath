@@ -68,7 +68,14 @@ void NavalBattery::shoot(vec2 pos)
 			Shell * shell = findNextShell();
 			if (shell != nullptr)
 			{
-				vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
+
+
+				//vec2 norm = normal(pos - (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
+				vec2 norm = normal(pos - transform->GetGlobalTransform().c[2].xy);
+
+				//float dist = distance(pos, (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
+				float dist = distance(pos, transform->GetGlobalTransform().c[2].xy);
+
 				//std::cout << "Pos X: " << pos.x << "Y: " << pos.y << std::endl;
 				shell->setupShell(shellType1, physics);
 				shell->parentShip = parentShip;
@@ -89,7 +96,7 @@ void NavalBattery::shoot(vec2 pos)
 
 				shell->transform->position += norm * 50;
 
-				float dist = distance(pos, (parentShip->cam->mat * transform->GetGlobalTransform()).c[2].xy);
+				
 				shell->maxDistance = dist;
 				//std::cout << dist << std::endl;
 
