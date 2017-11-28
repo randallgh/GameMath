@@ -14,7 +14,8 @@
 
 #include "Polygon.h"
 
-
+#include <random>
+#include <chrono>
 #include <cmath>
 
 void printNormals(const vec2 * points, int count)
@@ -34,17 +35,60 @@ void printNormals(const vec2 * points, int count)
 	}
 }
 
+
+size_t screen_width = 800;
+size_t screen_height = 600;
+
 int main() 
 {
-	sfw::initContext(800,600,"SFW MathLib Test");
+	sfw::initContext(screen_width, screen_height, "SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
+
+	std::default_random_engine gen(time(NULL));
+	std::uniform_real_distribution<float> urd(0, 1);
+
+	Spritesheet * tileset = new Spritesheet("Bisasam_16x16.png", 16, 16);
+
+	const int horzSprites = screen_width / tileset->GetSpriteWidth();
+	const int vertSprites = screen_height / tileset->GetSpriteHeight() + 1;
+
+	vec2 * spriteLocations = new vec2[horzSprites * vertSprites];
+	float * heightmap = new float[horzSprites * vertSprites];
+
+	for (int y = 0; y < vertSprites; ++y)
+	{
+		for (int x = 0; x < horzSprites; ++x)
+		{
+			spriteLocations[x + y * horzSprites] 
+				= vec2{ tileset->GetSpriteWidth() * (float)x, tileset->GetSpriteHeight() * (float)y };
+			heightmap[x + y * horzSprites] = urd(gen);
+		}
+	}
+
+	while (sfw::stepContext())
+	{
+		for (int i = 0; i < horzSprites * vertSprites; ++i)
+		{
+			tileset->draw(spriteLocations[i], 11 * 16 + 1,
+				1, BLACK - WHITE * heightmap[i], 0, Spritesheet::BOTTOM_LEFT);
+		}
+
+	}
+		
+
+	sfw::termContext();
+	return 0;
+}
+
+void transformTesting()
+{
 
 	Sprite testSprite("test.png");
 	Spritesheet * testSheet = new Spritesheet("exp2_0.png", 4, 4);
 	Spritesheet * testSheetRedCell = new Spritesheet("canvas.png", 6, 10);
 	Spritesheet * explosion = new Spritesheet("explosion.png", 9, 9);
 
-	SpriteAnimation testAnimation(explosion,1.0f);
+	SpriteAnimation testAnimation(explosion, 1.0f);
 	SpriteAnimation testRedAnimation(testSheetRedCell, 2.0f);
 
 	unsigned testTex = sfw::loadTextureMap("test.png");
@@ -54,13 +98,13 @@ int main()
 
 	Polygon box = {
 		{
-			{200,100},
-			{400,100},
-			{400,400},
-			{200,400}
+			{ 200,100 },
+			{ 400,100 },
+			{ 400,400 },
+			{ 200,400 }
 		},
 		{
-			{0,0}
+			{ 0,0 }
 		},
 		4,
 		Transform(nullptr)
@@ -73,7 +117,7 @@ int main()
 			{ 600,400 }
 		},
 		{
-			{0,0}
+			{ 0,0 }
 		},
 		3,
 		Transform(nullptr)
@@ -86,7 +130,7 @@ int main()
 	vec2 axes[7];
 	int naxes = 0;
 	for (int i = 0; i < box.numPoints; ++i)
-		axes[naxes++] = normal(perpendicular(box.points[i] - box.points[(i + 1)% box.numPoints], false));
+		axes[naxes++] = normal(perpendicular(box.points[i] - box.points[(i + 1) % box.numPoints], false));
 	for (int i = 0; i < triangle.numPoints; ++i)
 		axes[naxes++] = normal(perpendicular(triangle.points[i] - triangle.points[(i + 1) % triangle.numPoints], false));
 
@@ -95,7 +139,7 @@ int main()
 	bool  res = true;
 
 	// For Each Axis
-	for(int i = 0; i < naxes; ++i)
+	for (int i = 0; i < naxes; ++i)
 	{
 		AExtent Aex = EvalAxialExtents(axes[i], box.points, 4);
 		AExtent Bex = EvalAxialExtents(axes[i], triangle.points, 3);
@@ -103,14 +147,14 @@ int main()
 		float lPD = Aex.max - Bex.min;
 		float rPD = Bex.max - Aex.min;
 
-		float PD  = min(lPD, rPD);
-		float H   = copysignf(1, rPD - lPD); 
-		vec2  CN  = axes[i] * H;
+		float PD = min(lPD, rPD);
+		float H = copysignf(1, rPD - lPD);
+		vec2  CN = axes[i] * H;
 
 		res = res && PD >= 0;
 
-		if((res && PD < fPD)  ||
-		  (!res && (PD < 0) && (PD > fPD || fPD >= 0)))
+		if ((res && PD < fPD) ||
+			(!res && (PD < 0) && (PD > fPD || fPD >= 0)))
 		{
 			fPD = PD;
 			fCN = CN;
@@ -129,14 +173,14 @@ int main()
 
 
 	////// Test 1D collision across each axis
-		//// project points of each hull onto axis, finding the min/max extents
-		//// find the overlap
+	//// project points of each hull onto axis, finding the min/max extents
+	//// find the overlap
 
 	///// Of all axes:
-		//// if any overlap is non-overlapping:
-			//// the result is the smallest non-overlapping axis ( shortest distance)
-		//// else if return the axis of least separation (axis w/smallest overlap)
-	
+	//// if any overlap is non-overlapping:
+	//// the result is the smallest non-overlapping axis ( shortest distance)
+	//// else if return the axis of least separation (axis w/smallest overlap)
+
 
 	printNormals(box.points, 4);
 	printNormals(triangle.points, 3);
@@ -191,9 +235,6 @@ int main()
 		//	sfw::setBackgroundColor(BLACK);
 		//}
 	}
-
-	sfw::termContext();
-	return 0;
 }
 
 void playerThing()
