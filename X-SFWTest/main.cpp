@@ -203,6 +203,7 @@ int main()
 		}
 		for (int i = 0; i < horzSprites * vertSprites; ++i)
 		{
+
 			if (heightmap[i] >= 0.6f)
 			{
 				color.set(WHITE);
