@@ -12,18 +12,34 @@ float max(float a, float b)
 	return a > b ? a : b;
 }
 
-float clamp(float &v, float max, float min)
-{
-	if (v > max) {
-		v = max;
-		return v;
-	}
-	else if (v < min) {
-		v = min;
-		return v;
-	}
-	else {
-		return v;
-	}
-
-}
+//float clamp(const float &v, float max, float min)
+//{
+//	if (v > max)
+//	{
+//		return max;
+//	}
+//	else if (v < min)
+//	{
+//		return min;
+//	}
+//	else
+//	{
+//		return v;
+//	}
+//}
+//
+//int clamp(const int &v, int max, int min)
+//{
+//	if (v > max)
+//	{
+//		return max;
+//	}
+//	else if (v < min)
+//	{
+//		return min;
+//	}
+//	else
+//	{
+//		return v;
+//	}
+//}

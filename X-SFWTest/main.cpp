@@ -13,10 +13,14 @@
 #include "Spritesheet.h"
 
 #include "Polygon.h"
-
 #include <random>
 #include <chrono>
 #include <cmath>
+
+#include "Input.h"
+
+#include "noise\noise.h"
+#include "noiseutils.h"
 
 void printNormals(const vec2 * points, int count)
 {
@@ -35,14 +39,37 @@ void printNormals(const vec2 * points, int count)
 	}
 }
 
+size_t screen_width = 1280;
+size_t screen_height = 720;
 
-size_t screen_width = 800;
-size_t screen_height = 600;
+struct rgba
+{
+	unsigned r;
+	unsigned g;
+	unsigned b;
+	unsigned a;
+
+	unsigned hex()
+	{
+		return r << 24 | g << 16 | b << 8 | a << 0;
+	}
+
+	void set(unsigned hex)
+	{
+		r = (hex >> 24) & 0xFF;
+		g = (hex >> 16) & 0xFF;
+		b = (hex >>  8) & 0xFF;
+		a = hex & 0xFF;
+	}
+};
 
 int main() 
 {
 	sfw::initContext(screen_width, screen_height, "SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
+
+	Input * input = new Input();
+
 
 	std::default_random_engine gen(time(NULL));
 	std::uniform_real_distribution<float> urd(0, 1);
@@ -50,29 +77,163 @@ int main()
 	Spritesheet * tileset = new Spritesheet("Bisasam_16x16.png", 16, 16);
 
 	const int horzSprites = screen_width / tileset->GetSpriteWidth();
-	const int vertSprites = screen_height / tileset->GetSpriteHeight() + 1;
+	const int vertSprites = screen_height / tileset->GetSpriteHeight();
 
 	vec2 * spriteLocations = new vec2[horzSprites * vertSprites];
 	float * heightmap = new float[horzSprites * vertSprites];
 
-	for (int y = 0; y < vertSprites; ++y)
-	{
-		for (int x = 0; x < horzSprites; ++x)
-		{
-			spriteLocations[x + y * horzSprites] 
-				= vec2{ tileset->GetSpriteWidth() * (float)x, tileset->GetSpriteHeight() * (float)y };
-			heightmap[x + y * horzSprites] = urd(gen);
-		}
-	}
+	noise::module::Perlin perlin;
+
+
+	int octave = 6;
+	float freq = 50;
+	perlin.SetFrequency(freq);
+	perlin.SetOctaveCount(octave);
+
+	float lowerXBound = 0;
+	float upperXBound = 0.1;
+	
+	float lowerYBound = 0;
+	float upperYBound = 0.1;
+
+
+	utils::NoiseMap map;
+	utils::NoiseMapBuilderPlane heightMapBuilder;
+	heightMapBuilder.SetSourceModule(perlin);
+	heightMapBuilder.SetDestNoiseMap(map);
+	heightMapBuilder.SetDestSize(horzSprites, vertSprites);
+	heightMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
+	heightMapBuilder.Build();
+
+	//utils::RendererImage renderer;
+	//utils::Image image;
+	//renderer.SetSourceNoiseMap(map);
+	//renderer.SetDestImage(image);
+	//renderer.Render();
+
+	//utils::WriterBMP writer;
+	//writer.SetSourceImage(image);
+	//writer.SetDestFilename("tutorial.bmp");
+	//writer.WriteDestFile();
+
+
+	rgba color = { 255,255,255,255 };
+	//color.set(WHITE);
+
+	float panSpeed = 0.01;
+	int drawSprite = 11 * 16 + 1;
 
 	while (sfw::stepContext())
 	{
-		for (int i = 0; i < horzSprites * vertSprites; ++i)
+		input->poll();
+
+		//Increase detail
+		if (input->getKeyDown(KEY_L))
 		{
-			tileset->draw(spriteLocations[i], 11 * 16 + 1,
-				1, BLACK - WHITE * heightmap[i], 0, Spritesheet::BOTTOM_LEFT);
+			octave++;
+			octave = clamp(octave, 10, 1);
+		}
+		//Decrease detail
+		else if (input->getKeyDown(KEY_K))
+		{
+			octave--;
+			octave = clamp(octave, 10, 1);
 		}
 
+		//Zoom out
+		if (sfw::getKey(KEY_N))
+		{
+			freq += 1;
+		}
+		//Zoom in
+		else if (sfw::getKey(KEY_M))
+		{
+			freq -= 1;
+		}
+
+		if (sfw::getKey(KEY_I))
+		{
+			perlin.SetPersistence(0.25f);
+		}
+		if (sfw::getKey(KEY_O))
+		{
+			perlin.SetPersistence(0.50f);
+		}
+		if (sfw::getKey(KEY_P))
+		{
+			perlin.SetPersistence(0.75f);
+		}
+
+
+		if (sfw::getKey(KEY_W))
+		{
+			lowerYBound += panSpeed;
+			upperYBound += panSpeed;
+		}
+		else if (sfw::getKey(KEY_A))
+		{
+			lowerXBound -= panSpeed;
+			upperXBound -= panSpeed;
+		}
+		else if (sfw::getKey(KEY_S))
+		{
+			lowerYBound -= panSpeed;
+			upperYBound -= panSpeed;
+		}
+		else if (sfw::getKey(KEY_D))
+		{
+			lowerXBound += panSpeed;
+			upperXBound += panSpeed;
+		}
+
+		perlin.SetOctaveCount(octave);
+		perlin.SetFrequency(freq);
+		heightMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
+		heightMapBuilder.Build();
+
+		for (int y = 0; y < vertSprites; ++y)
+		{
+			for (int x = 0; x < horzSprites; ++x)
+			{
+				spriteLocations[x + y * horzSprites]
+					= vec2{ tileset->GetSpriteWidth() * (float)x, tileset->GetSpriteHeight() * (float)y };
+				heightmap[x + y * horzSprites] = clamp( ((map.GetValue(x, y) + 1) / 2), 1.0f , 0.2f);
+
+			}
+		}
+		for (int i = 0; i < horzSprites * vertSprites; ++i)
+		{
+			if (heightmap[i] >= 0.6f)
+			{
+				color.set(WHITE);
+				color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
+				drawSprite = 1 * 16 + 14;
+			}
+			else if (heightmap[i] >= 0.4f)
+			{
+				color.set(GREEN);
+				color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
+				drawSprite = 9 * 16 + 15;
+			}
+			else if (heightmap[i] >= 0.3)
+			{
+				color.set(YELLOW);
+				color.a = 255 * clamp(heightmap[i], 1.0f, 0.7f);
+				drawSprite = 15 * 16 + 7;
+			}
+			else if (heightmap[i] >= 0)
+			{
+				color.set(BLUE);
+				color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
+				drawSprite = 15 * 16 + 7;
+			}
+
+			
+
+			tileset->draw(spriteLocations[i], drawSprite,
+				1, color.hex(), 0, Spritesheet::BOTTOM_LEFT);
+
+		}
 	}
 		
 

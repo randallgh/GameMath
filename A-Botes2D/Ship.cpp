@@ -127,7 +127,7 @@ void Ship::setWeaponsAngle(vec2 pos)
 
 void Ship::update(float dt)
 {
-	clamp(enginePower,1,-0.25f);
+	enginePower = clamp(enginePower,1.0f,-0.25f);
 	rigidbody->velocity = degreeToVector( transform->angle, 1) * ((horsepower / rigidbody->mass) * enginePower) * 10;
 	rigidbody->update(dt);
 
