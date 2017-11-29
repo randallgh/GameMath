@@ -39,8 +39,9 @@ void printNormals(const vec2 * points, int count)
 	}
 }
 
-size_t screen_width = 1280;
-size_t screen_height = 720;
+size_t screen_width = 1920;
+size_t screen_height = 1080;
+
 
 struct rgba
 {
@@ -65,6 +66,11 @@ struct rgba
 
 int main() 
 {
+#ifdef _DEBUG
+	screen_width = 1280;
+	screen_height = 720;
+#endif // DEBUG
+
 	sfw::initContext(screen_width, screen_height, "SFW MathLib Test");
 	sfw::setBackgroundColor(BLACK);
 
@@ -83,18 +89,59 @@ int main()
 	float * heightmap = new float[horzSprites * vertSprites];
 
 	noise::module::Perlin perlin;
+	noise::module::Voronoi voronoi;
+	noise::module::Billow billow;
+	noise::module::RidgedMulti ridgedMulti;
+	noise::module::Checkerboard checkers;
+
+	noise::module::Perlin perlinLarge;
+
+	perlinLarge.SetFrequency(100);
+	perlinLarge.SetOctaveCount(1);
 
 
 	int octave = 6;
+	float persistance = 0.5;
+	float lacunarity = 0.5;
 	float freq = 50;
 	perlin.SetFrequency(freq);
 	perlin.SetOctaveCount(octave);
+	perlin.SetLacunarity(lacunarity);
 
 	float lowerXBound = 0;
 	float upperXBound = 0.1;
 	
 	float lowerYBound = 0;
 	float upperYBound = 0.1;
+
+	bool isNumberMap = true;
+
+
+	noise::module::Cylinders vert;
+	noise::module::RotatePoint horz;
+	horz.SetSourceModule(0, vert);
+	horz.SetXAngle(90);
+	noise::module::Min cylnder;
+	cylnder.SetSourceModule(0, vert);
+	cylnder.SetSourceModule(1, horz);
+
+	noise::module::Curve curvedVoronoi;
+	//noise::module::Add 
+
+	curvedVoronoi.SetSourceModule(0, voronoi);
+	curvedVoronoi.AddControlPoint(0.1f, 0.2f);
+	curvedVoronoi.AddControlPoint(0.6f, 0.5f);
+
+	noise::module::Multiply combineTerrain;
+	combineTerrain.SetSourceModule(0, curvedVoronoi);
+	combineTerrain.SetSourceModule(1, perlin);
+
+
+	noise::module::Multiply finalTerrain;
+	finalTerrain.SetSourceModule(0, combineTerrain);
+	finalTerrain.SetSourceModule(1, cylnder);
+	//finalTerrain.SetControlModule(perlin);
+
 
 
 	utils::NoiseMap map;
@@ -104,6 +151,16 @@ int main()
 	heightMapBuilder.SetDestSize(horzSprites, vertSprites);
 	heightMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
 	heightMapBuilder.Build();
+
+	utils::NoiseMap continentMap;
+	utils::NoiseMapBuilderPlane continentMapBuilder;
+	continentMapBuilder.SetSourceModule(perlinLarge);
+	continentMapBuilder.SetDestNoiseMap(continentMap);
+	continentMapBuilder.SetDestSize(horzSprites, vertSprites);
+	continentMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
+	continentMapBuilder.Build();
+
+
 
 	//utils::RendererImage renderer;
 	//utils::Image image;
@@ -151,17 +208,30 @@ int main()
 			freq -= 1;
 		}
 
-		if (sfw::getKey(KEY_I))
+		//Change view type
+		if (input->getKeyDown(KEY_1))
 		{
-			perlin.SetPersistence(0.25f);
+			isNumberMap = !isNumberMap;
 		}
+
+		//Persistance
 		if (sfw::getKey(KEY_O))
 		{
-			perlin.SetPersistence(0.50f);
+			persistance += 0.01;
 		}
 		if (sfw::getKey(KEY_P))
 		{
-			perlin.SetPersistence(0.75f);
+			persistance -= 0.01;
+		}
+
+		//Lacunarity
+		if (sfw::getKey(KEY_U))
+		{
+			lacunarity += 0.01;
+		}
+		else if (sfw::getKey(KEY_I))
+		{
+			lacunarity -= 0.01;
 		}
 
 
@@ -188,8 +258,16 @@ int main()
 
 		perlin.SetOctaveCount(octave);
 		perlin.SetFrequency(freq);
+		perlin.SetPersistence(persistance);
+		perlin.SetLacunarity(lacunarity);
+
+		voronoi.SetFrequency(freq);
+
 		heightMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
 		heightMapBuilder.Build();
+
+		continentMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
+		continentMapBuilder.Build();
 
 		for (int y = 0; y < vertSprites; ++y)
 		{
@@ -197,43 +275,91 @@ int main()
 			{
 				spriteLocations[x + y * horzSprites]
 					= vec2{ tileset->GetSpriteWidth() * (float)x, tileset->GetSpriteHeight() * (float)y };
-				heightmap[x + y * horzSprites] = clamp( ((map.GetValue(x, y) + 1) / 2), 1.0f , 0.2f);
+				heightmap[x + y * horzSprites] =
+					clamp(((map.GetValue(x, y) + 1) / 2), 1.0f, 0.0f);
+					//* clamp(((continentMap.GetValue(x, y) + 1) / 2), 1.0f, 0.0f);
 
 			}
 		}
+
 		for (int i = 0; i < horzSprites * vertSprites; ++i)
 		{
-
-			if (heightmap[i] >= 0.6f)
-			{
-				color.set(WHITE);
-				color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
-				drawSprite = 1 * 16 + 14;
-			}
-			else if (heightmap[i] >= 0.4f)
+			if (isNumberMap)
 			{
 				color.set(GREEN);
-				color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
-				drawSprite = 9 * 16 + 15;
+				if (heightmap[i] >= 0.9)
+				{
+					drawSprite = 3 * 16 + 9;
+				}
+				else if (heightmap[i] >= 0.8)
+				{
+					drawSprite = 3 * 16 + 8;
+				}
+				else if (heightmap[i] >= 0.7)
+				{
+					drawSprite = 3 * 16 + 7;
+				}
+				else if (heightmap[i] >= 0.6)
+				{
+					drawSprite = 3 * 16 + 6;
+				}
+				else if (heightmap[i] >= 0.5)
+				{
+					drawSprite = 3 * 16 + 5;
+				}
+				else if (heightmap[i] >= 0.4)
+				{
+					drawSprite = 3 * 16 + 4;
+				}
+				else if (heightmap[i] >= 0.3)
+				{
+					drawSprite = 3 * 16 + 3;
+				}
+				else if (heightmap[i] >= 0.2)
+				{
+					drawSprite = 3 * 16 + 2;
+				}
+				else if (heightmap[i] >= 0.1)
+				{
+					drawSprite = 3 * 16 + 1;
+				}
+				else if (heightmap[i] >= 0.0f)
+				{
+					drawSprite = 3 * 16 + 0;
+				}
+				color.a = 255 * clamp(heightmap[i], 1.0f, 0.0f);
+				color.b = 255 * clamp(heightmap[i], 1.0f, 0.0f);
+				color.r = 255 * clamp(heightmap[i], 1.0f, 0.0f);
 			}
-			else if (heightmap[i] >= 0.3)
+			else
 			{
-				color.set(YELLOW);
-				color.a = 255 * clamp(heightmap[i], 1.0f, 0.7f);
-				drawSprite = 15 * 16 + 7;
+				if (heightmap[i] >= 0.7f)
+				{
+					color.set(WHITE);
+					color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
+					drawSprite = 1 * 16 + 14;
+				}
+				else if (heightmap[i] >= 0.6f)
+				{
+					color.set(GREEN);
+					color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
+					drawSprite = 9 * 16 + 15;
+				}
+				//else if (heightmap[i] >= 0.3)
+				//{
+				//	color.set(YELLOW);
+				//	color.a = 255 * clamp(heightmap[i], 1.0f, 0.7f);
+				//	drawSprite = 15 * 16 + 7;
+				//}
+				else if (heightmap[i] >= 0)
+				{
+					color.set(BLUE);
+					color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
+					drawSprite = 15 * 16 + 7;
+				}
 			}
-			else if (heightmap[i] >= 0)
-			{
-				color.set(BLUE);
-				color.a = 255 * clamp(heightmap[i], 1.0f, 0.4f);
-				drawSprite = 15 * 16 + 7;
-			}
-
-			
-
 			tileset->draw(spriteLocations[i], drawSprite,
 				1, color.hex(), 0, Spritesheet::BOTTOM_LEFT);
-
 		}
 	}
 		
