@@ -152,14 +152,6 @@ int main()
 	heightMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
 	heightMapBuilder.Build();
 
-	utils::NoiseMap continentMap;
-	utils::NoiseMapBuilderPlane continentMapBuilder;
-	continentMapBuilder.SetSourceModule(perlinLarge);
-	continentMapBuilder.SetDestNoiseMap(continentMap);
-	continentMapBuilder.SetDestSize(horzSprites, vertSprites);
-	continentMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
-	continentMapBuilder.Build();
-
 
 
 	//utils::RendererImage renderer;
@@ -182,6 +174,12 @@ int main()
 
 	while (sfw::stepContext())
 	{
+		lowerXBound += sfw::getDeltaTime()/20;
+		upperXBound += sfw::getDeltaTime()/20;
+		lowerYBound += sfw::getDeltaTime()/20;
+		upperYBound += sfw::getDeltaTime()/20;
+
+
 		input->poll();
 
 		//Increase detail
@@ -266,9 +264,6 @@ int main()
 		heightMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
 		heightMapBuilder.Build();
 
-		continentMapBuilder.SetBounds(lowerXBound, upperXBound, lowerYBound, upperYBound);
-		continentMapBuilder.Build();
-
 		for (int y = 0; y < vertSprites; ++y)
 		{
 			for (int x = 0; x < horzSprites; ++x)
@@ -276,7 +271,7 @@ int main()
 				spriteLocations[x + y * horzSprites]
 					= vec2{ tileset->GetSpriteWidth() * (float)x, tileset->GetSpriteHeight() * (float)y };
 				heightmap[x + y * horzSprites] =
-					clamp(((map.GetValue(x, y) + 1) / 2), 1.0f, 0.0f);
+					clamp(((map.GetValue(x, y) + 1) / 2), 1.0f, 0.0f) * clamp(((sin(sfw::getTime()) + 1)/2), 1.0f, 0.0f);
 					//* clamp(((continentMap.GetValue(x, y) + 1) / 2), 1.0f, 0.0f);
 
 			}
